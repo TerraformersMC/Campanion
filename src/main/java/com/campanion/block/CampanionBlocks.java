@@ -1,9 +1,11 @@
 package com.campanion.block;
 
 import com.campanion.Campanion;
+import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -18,6 +20,7 @@ public class CampanionBlocks {
 	private static final Map<Identifier, BlockItem> ITEMS = new HashMap<>();
 	private static final Map<Identifier, Block> BLOCKS = new HashMap<>();
 
+	public static final Block ROPE_LADDER = add("rope_ladder", new RopeLadderBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(0.4F).build()), ItemGroup.DECORATIONS);
 
 	private static <B extends Block> B add(String name, B block, ItemGroup tab) {
 		return add(name, block, new BlockItem(block, new Item.Settings().group(tab)));

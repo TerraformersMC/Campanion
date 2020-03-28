@@ -1,9 +1,12 @@
 package com.campanion.client;
 
+import com.campanion.block.CampanionBlocks;
 import com.campanion.client.renderer.entity.SpearEntityRenderer;
 import com.campanion.entity.CampanionEntities;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.minecraft.client.render.RenderLayer;
 
 public class CampanionClient implements ClientModInitializer {
 	@Override
@@ -22,7 +25,7 @@ public class CampanionClient implements ClientModInitializer {
 	}
 
 	private static void registerRenderLayers() {
-
+		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.ROPE_LADDER, RenderLayer.getCutout());
 	}
 
 	private static void registerTextures() {
