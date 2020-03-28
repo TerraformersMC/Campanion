@@ -7,7 +7,8 @@
     "MixinWolfEntity"
   ],
   "client": [
-    "MixinWolfEntityModel"
+    "MixinWolfEntityModel",
+    "MixinClientPlayNetworkHandler"
   ],
   "injectors": {
     "defaultRequire": 1
