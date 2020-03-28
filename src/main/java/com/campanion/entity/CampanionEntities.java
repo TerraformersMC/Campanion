@@ -36,6 +36,6 @@ public class CampanionEntities {
 	}
 
 	private static EntityType<SpearEntity> createSpear(SpearItem item) {
-		return FabricEntityTypeBuilder.<SpearEntity>create(EntityCategory.MISC, (entity, world) -> new SpearEntity(entity, world, item)).size(EntityDimensions.fixed(1.375F, 0.5625F)).build();
+		return FabricEntityTypeBuilder.<SpearEntity>create(EntityCategory.MISC, (entity, world) -> new SpearEntity(entity, world, item)).size(EntityDimensions.fixed(0.5F, 0.5F)).build();
 	}
 }
