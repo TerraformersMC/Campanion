@@ -1,4 +1,4 @@
-package com.campanion.mixin;
+package com.campanion.mixin.client;
 
 import com.campanion.entity.HowlingEntity;
 import net.minecraft.client.model.ModelPart;

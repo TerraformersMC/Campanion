@@ -9,6 +9,7 @@ import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -22,7 +23,7 @@ public class CampanionBlocks {
 
 	public static final Block ROPE_BRIDGE_ANCHOR = add("rope_bridge_anchor", new RopeBridgeAnchor(Block.Settings.of(Material.ANVIL)), ItemGroup.TOOLS);
 	public static final Block ROPE_BRIDGE_PART = add("rope_bridge_part", new RopeBridgePart(FabricBlockSettings.of(Material.WOOD).dynamicBounds().build()));
-	public static final Block ROPE_LADDER = add("rope_ladder", new RopeLadderBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(0.4F).build()), ItemGroup.DECORATIONS);
+	public static final Block ROPE_LADDER = add("rope_ladder", new RopeLadderBlock(FabricBlockSettings.of(Material.WOOD).nonOpaque().hardness(0.2F).sounds(BlockSoundGroup.LADDER).build()), ItemGroup.DECORATIONS);
 
 	private static <B extends Block> B add(String name, B block, ItemGroup tab) {
 		return add(name, block, new BlockItem(block, new Item.Settings().group(tab)));

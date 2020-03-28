@@ -95,7 +95,7 @@ public class SpearEntity extends ProjectileEntity {
 
 	@Environment(EnvType.CLIENT)
 	public boolean method_23751() {
-		return (Boolean) this.dataTracker.get(ENCHANTMENT_GLINT);
+		return this.dataTracker.get(ENCHANTMENT_GLINT);
 	}
 
 	protected EntityHitResult getEntityCollision(Vec3d currentPosition, Vec3d nextPosition) {
@@ -195,4 +195,6 @@ public class SpearEntity extends ProjectileEntity {
 	public static DamageSource createSpearDamageSource(Entity trident, Entity owner) {
 		return (new ProjectileDamageSource("spear", trident, owner)).setProjectile();
 	}
+
+
 }

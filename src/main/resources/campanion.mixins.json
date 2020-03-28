@@ -4,10 +4,12 @@
   "package": "com.campanion.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinMobEntity",
     "MixinWolfEntity"
   ],
   "client": [
-    "MixinWolfEntityModel"
+    "client.MixinPlayerEntityRenderer",
+    "client.MixinWolfEntityModel"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,4 +1,4 @@
-package com.campanion.client.renderer.entity;
+package com.campanion.client.model.entity;
 
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.ModelPart;

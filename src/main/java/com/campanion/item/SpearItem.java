@@ -124,7 +124,7 @@ public class SpearItem extends TridentItem {
 					}
 
 					world.spawnEntity(spearEntity);
-					world.playSoundFromEntity(null, spearEntity, SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.PLAYERS, 1.0F, 1.0F);
+					world.playSoundFromEntity(null, spearEntity, SoundEvents.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
 					if (!playerEntity.abilities.creativeMode) {
 						playerEntity.inventory.removeOne(stack);
 					}

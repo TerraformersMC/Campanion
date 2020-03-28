@@ -1,20 +1,26 @@
 package com.campanion.client.renderer.entity;
 
+import com.campanion.Campanion;
+import com.campanion.client.model.entity.SpearEntityModel;
 import com.campanion.entity.SpearEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.model.TridentEntityModel;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SpearEntityRenderer extends EntityRenderer<SpearEntity> {
-	public static final Identifier SKIN = new Identifier("textures/entity/trident.png");
+	public static final Map<EntityType<?>, Identifier> TEXTURES = new HashMap<>();
 	private final SpearEntityModel model = new SpearEntityModel();
 
 	public SpearEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
@@ -22,7 +28,6 @@ public class SpearEntityRenderer extends EntityRenderer<SpearEntity> {
 	}
 
 	public void render(SpearEntity spear, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-		SpearEntityModel model = new SpearEntityModel();
 		matrixStack.push();
 		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(MathHelper.lerp(g, spear.prevYaw, spear.yaw) - 90.0F));
 		matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(MathHelper.lerp(g, spear.prevPitch, spear.pitch) + 90.0F));
@@ -33,6 +38,10 @@ public class SpearEntityRenderer extends EntityRenderer<SpearEntity> {
 	}
 
 	public Identifier getTexture(SpearEntity spear) {
-		return SKIN;
+		EntityType<?> type = spear.getType();
+		if (!TEXTURES.containsKey(type)) {
+			TEXTURES.put(type, new Identifier(Campanion.MOD_ID, "textures/entity/spear/" + Registry.ENTITY_TYPE.getId(type).getPath() + ".png"));
+		}
+		return TEXTURES.get(type);
 	}
 }
