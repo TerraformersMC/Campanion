@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "com.campanion.Campanion"
+    ],
+    "client": [
+      "com.campanion.client.CampanionClient"
     ]
   },
   "mixins": [
