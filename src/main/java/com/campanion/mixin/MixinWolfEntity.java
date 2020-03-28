@@ -64,7 +64,11 @@ public abstract class MixinWolfEntity extends TameableEntity implements HowlingE
 	}
 
 	public boolean isHowling() {
-		return (Boolean)this.dataTracker.get(HOWLING);
+		return this.dataTracker.get(HOWLING);
+	}
+
+	public float getHowlAnimationProgress(float delta) {
+		return this.lastHowlAnimationProgress + (this.howlAnimationProgress - this.lastHowlAnimationProgress) * delta;
 	}
 
 	@Inject(method = "initDataTracker", at = @At("TAIL"), cancellable = true)

@@ -6,4 +6,6 @@ public interface HowlingEntity {
 
 	void setHowling(boolean howling);
 
+	float getHowlAnimationProgress(float delta);
+
 }

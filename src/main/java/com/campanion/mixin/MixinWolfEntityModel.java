@@ -23,19 +23,14 @@ public abstract class MixinWolfEntityModel<T extends WolfEntity> extends Tintabl
 
 	@Inject(method = "animateModel", at = @At("TAIL"), cancellable = true)
 	public void animateModel(T wolfEntity, float f, float g, float h, CallbackInfo callbackInfo) {
-		if (((HowlingEntity)wolfEntity).isHowling()) {
-			this.neck.pitch = this.torso.pitch - 0.3F;
-			this.head.pitch = -0.8F;
-			this.head.setPivot(-1.0F, 11.5F, -7.0F);
-		} else {
-			this.neck.pitch = this.torso.pitch;
-			this.head.setPivot(-1.0F, 13.5F, -7.0F);
-		}
+		float progress = ((HowlingEntity) wolfEntity).getHowlAnimationProgress(h);
+		this.head.pitch = this.head.pitch + (-0.8F - this.head.pitch) * progress;
+		this.neck.pitch = this.torso.pitch + progress*-0.3F;
 	}
 
 	@Inject(method = "setAngles", at = @At("HEAD"), cancellable =  true)
 	public void setAngles(T wolfEntity, float f, float g, float h, float i, float j, CallbackInfo callbackInfo) {
-		if (((HowlingEntity)wolfEntity).isHowling()) {
+		if (((HowlingEntity) wolfEntity).getHowlAnimationProgress(1F) >= 0.001D) {
 			callbackInfo.cancel();
 		}
 	}
