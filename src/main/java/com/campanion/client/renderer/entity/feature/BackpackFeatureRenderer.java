@@ -22,7 +22,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.function.Supplier;
 
