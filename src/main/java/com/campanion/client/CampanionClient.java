@@ -5,11 +5,13 @@ import com.campanion.blockentity.CampanionBlockEntities;
 import com.campanion.client.renderer.blockentity.PlankBlockEntityRenderer;
 import com.campanion.client.renderer.entity.SpearEntityRenderer;
 import com.campanion.entity.CampanionEntities;
+import com.campanion.network.S2CEntitySpawnPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.container.PlayerContainer;
 import net.minecraft.util.Identifier;
@@ -21,6 +23,7 @@ public class CampanionClient implements ClientModInitializer {
 		registerBlockEntityRenderers();
 		registerRenderLayers();
 		registerTextures();
+		registerClientboundPackets();
 	}
 
 	private static void registerEntityRenderers() {
@@ -45,5 +48,9 @@ public class CampanionClient implements ClientModInitializer {
 				registry.register(plank);
 			}
 		});
+	}
+
+	public static void registerClientboundPackets() {
+		ClientSidePacketRegistry.INSTANCE.register(S2CEntitySpawnPacket.ID, S2CEntitySpawnPacket::onPacket);
 	}
 }

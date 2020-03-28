@@ -1,6 +1,7 @@
 package com.campanion.entity;
 
 import com.campanion.item.SpearItem;
+import com.campanion.network.S2CEntitySpawnPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -17,6 +18,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -71,6 +73,11 @@ public class SpearEntity extends ProjectileEntity {
 		}
 
 		super.tick();
+	}
+
+	@Override
+	public Packet<?> createSpawnPacket() {
+		return S2CEntitySpawnPacket.createPacket(this);
 	}
 
 	private boolean isOwnerAlive() {
