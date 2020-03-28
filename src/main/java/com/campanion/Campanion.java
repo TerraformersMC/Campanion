@@ -5,6 +5,7 @@ import com.campanion.blockentity.CampanionBlockEntities;
 import com.campanion.config.CampanionConfigManager;
 import com.campanion.entity.CampanionEntities;
 import com.campanion.item.CampanionItems;
+import com.campanion.sound.CampanionSoundEvents;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,6 +30,7 @@ public class Campanion implements ModInitializer {
 	public static void register() {
 		CampanionConfigManager.initializeConfig();
 
+		CampanionSoundEvents.register();
 		CampanionItems.register();
 		CampanionBlocks.register();
 		CampanionBlockEntities.register();

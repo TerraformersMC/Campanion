@@ -1,6 +1,7 @@
 package com.campanion.entity.ai.goal;
 
 import com.campanion.entity.HowlingEntity;
+import com.campanion.sound.CampanionSoundEvents;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.world.World;
@@ -23,6 +24,7 @@ public class HowlGoal extends Goal {
 		this.timer = 40;
 		this.world.sendEntityStatus(this.mob, (byte)64);
 		this.mob.getNavigation().stop();
+		this.mob.playSound(CampanionSoundEvents.HOWL, 0.15F, this.mob.getRandom().nextFloat() + 0.5F);
 	}
 
 	public void stop() {
@@ -42,7 +44,6 @@ public class HowlGoal extends Goal {
 		System.out.println(this.timer);
 		if (this.timer < 1) {
 			((HowlingEntity)mob).setHowling(false);
-			System.out.println("Set to " + ((HowlingEntity)mob).isHowling());
 			this.world.sendEntityStatus(this.mob, (byte)0);
 		}
 	}

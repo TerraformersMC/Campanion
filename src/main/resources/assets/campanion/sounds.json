@@ -1,0 +1,9 @@
+{
+	"howl": {
+		"subtitle": "subtitles.campanion.howl",
+		"sounds": [
+			"campanion:entity/wolf/howl_1",
+			"campanion:entity/wolf/howl_2"
+		]
+	}
+}
