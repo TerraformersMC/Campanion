@@ -41,7 +41,6 @@ public class HowlGoal extends Goal {
 
 	public void tick() {
 		this.timer = Math.max(0, this.timer - 1);
-		System.out.println(this.timer);
 		if (this.timer < 1) {
 			((HowlingEntity)mob).setHowling(false);
 			this.world.sendEntityStatus(this.mob, (byte)0);
