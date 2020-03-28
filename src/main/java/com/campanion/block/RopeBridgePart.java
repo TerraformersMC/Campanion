@@ -50,7 +50,6 @@ public class RopeBridgePart extends Block implements BlockEntityProvider {
             VoxelShape shape = VoxelShapes.empty();
             for (RopeBridgePlank plank : ((PlankBlockEntity) entity).getPlanks()) {
 
-                //TODO: fix the bounding boxes
                 double xRange = Math.abs(Math.sin(plank.getyAngle()))*RopeBridge.PLANK_LENGTH/2 + 2/16F;
                 double yRange = Math.abs(Math.sin(plank.getTiltAngle()))*RopeBridge.PLANK_WIDTH/2 + 2/16F;
                 double zRange = Math.abs(Math.cos(plank.getyAngle()))*RopeBridge.PLANK_LENGTH/2 + 2/16F;
