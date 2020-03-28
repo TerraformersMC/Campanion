@@ -16,11 +16,19 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
+import net.redstoneparadox.climbable.api.event.block.ClimbingCallback;
 
 public class RopeLadderBlock extends LadderBlock {
 
 	public RopeLadderBlock(Settings settings) {
 		super(settings);
+		ClimbingCallback.EVENT.register((climber, state, pos) -> {
+			if (state.getBlock() == this) {
+				return 0.4F;
+			} else {
+				return Double.NaN;
+			}
+		});
 	}
 
 	@Override
@@ -51,7 +59,11 @@ public class RopeLadderBlock extends LadderBlock {
 				if (upperState.getBlock() != this && !upperState.isAir()) {
 					return ActionResult.FAIL;
 				}
+				ItemStack previousStack = stackInHand.copy();
 				ActionResult actionResult = stackInHand.useOnBlock(new ItemUsageContext(player, hand, new BlockHitResult(Vec3d.ZERO, Direction.UP, attemptPos, false)));
+				if (player.abilities.creativeMode && stackInHand == player.getStackInHand(hand) && stackInHand.getCount() < previousStack.getCount()) {
+					stackInHand.setCount(previousStack.getCount());
+				}
 				if (actionResult.isAccepted()) {
 					return actionResult;
 				}

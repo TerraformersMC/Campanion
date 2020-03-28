@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "net.redstoneparadox.climbable.mixin.entity",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinLivingEntity",
+    "damage.MixinDamageTracker"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
