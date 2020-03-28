@@ -1,3 +1,6 @@
 {
-  "campanion.items": "Campanion Items"
+  "itemGroup.campanion.items": "Campanion Items",
+  
+  "item.campanion.rope": "Rope",
+  "item.campanion.mre": "MRE"
 }
