@@ -4,10 +4,10 @@
   "package": "com.campanion.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-  
+    "MixinWolfEntity"
   ],
   "client": [
-  
+    "MixinWolfEntityModel"
   ],
   "injectors": {
     "defaultRequire": 1
