@@ -17,8 +17,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
 public class RopeBridgeAnchor extends Block implements BlockEntityProvider {
 
     private static final String CLICKED_POSITION_KEY = "ClickedPosition";
@@ -43,7 +41,6 @@ public class RopeBridgeAnchor extends Block implements BlockEntityProvider {
         return ActionResult.CONSUME;
     }
 
-    @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockView view) {
         return new PlankBlockEntity();

@@ -21,7 +21,7 @@ public class HowlGoal extends Goal {
 	}
 
 	public void start() {
-		this.timer = 40;
+		this.timer = 60;
 		this.world.sendEntityStatus(this.mob, (byte)64);
 		this.mob.getNavigation().stop();
 		this.mob.playSound(CampanionSoundEvents.HOWL, 0.15F, this.mob.getRandom().nextFloat() + 0.5F);

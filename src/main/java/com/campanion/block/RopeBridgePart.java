@@ -14,15 +14,12 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-import javax.annotation.Nullable;
-
 public class RopeBridgePart extends Block implements BlockEntityProvider {
 
     public RopeBridgePart(Settings settings) {
         super(settings);
     }
 
-    @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockView view) {
         return new PlankBlockEntity();
