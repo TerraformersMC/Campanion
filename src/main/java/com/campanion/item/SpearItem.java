@@ -1,6 +1,7 @@
 package com.campanion.item;
 
 import com.campanion.entity.SpearEntity;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -100,7 +101,7 @@ public class SpearItem extends TridentItem {
 
 	@Override
 	public Multimap<String, EntityAttributeModifier> getModifiers(EquipmentSlot slot) {
-		Multimap<String, EntityAttributeModifier> multimap = super.getModifiers(slot);
+		Multimap<String, EntityAttributeModifier> multimap = HashMultimap.create();
 		if (slot == EquipmentSlot.MAINHAND) {
 			multimap.put(EntityAttributes.ATTACK_DAMAGE.getId(), new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_UUID, "Weapon modifier", this.attackDamage, EntityAttributeModifier.Operation.ADDITION));
 			multimap.put(EntityAttributes.ATTACK_SPEED.getId(), new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_UUID, "Weapon modifier", this.attackSpeed, EntityAttributeModifier.Operation.ADDITION));
