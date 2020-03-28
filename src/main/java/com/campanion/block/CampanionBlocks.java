@@ -13,13 +13,13 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CampanionBlocks {
 
-	private static final Map<Identifier, BlockItem> ITEMS = new HashMap<>();
-	private static final Map<Identifier, Block> BLOCKS = new HashMap<>();
+	private static final Map<Identifier, BlockItem> ITEMS = new LinkedHashMap<>();
+	private static final Map<Identifier, Block> BLOCKS = new LinkedHashMap<>();
 
 	public static final Block ROPE_BRIDGE_ANCHOR = add("rope_bridge_anchor", new RopeBridgeAnchor(FabricBlockSettings.of(Material.ANVIL).sounds(BlockSoundGroup.ANVIL).build()), ItemGroup.TOOLS);
 	public static final Block ROPE_BRIDGE_PLANKS = add("rope_bridge_planks", new RopeBridgePlanks(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).dynamicBounds().build()));
