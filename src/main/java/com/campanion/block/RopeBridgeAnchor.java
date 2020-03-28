@@ -1,6 +1,6 @@
 package com.campanion.block;
 
-import com.campanion.blockentity.PlankBlockEntity;
+import com.campanion.blockentity.RopeBridgePlanksBlockEntity;
 import com.campanion.item.CampanionItems;
 import com.campanion.ropebridge.RopeBridge;
 import net.minecraft.block.Block;
@@ -43,6 +43,6 @@ public class RopeBridgeAnchor extends Block implements BlockEntityProvider {
 
     @Override
     public BlockEntity createBlockEntity(BlockView view) {
-        return new PlankBlockEntity();
+        return new RopeBridgePlanksBlockEntity();
     }
 }

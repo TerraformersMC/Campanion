@@ -16,7 +16,7 @@ public class CampanionBlockEntities {
 
 	private static final Map<Identifier, BlockEntityType<? extends BlockEntity>> BLOCK_ENTITY_TYPES = new HashMap<>();
 
-	public static final BlockEntityType<PlankBlockEntity> RBP_BLOCK_ENTITY = add("rope_bridge_part", PlankBlockEntity::new, CampanionBlocks.ROPE_BRIDGE_ANCHOR, CampanionBlocks.ROPE_BRIDGE_PART);
+	public static final BlockEntityType<RopeBridgePlanksBlockEntity> ROPE_BRIDGE_PLANK = add("rope_bridge_planks", RopeBridgePlanksBlockEntity::new, CampanionBlocks.ROPE_BRIDGE_ANCHOR, CampanionBlocks.ROPE_BRIDGE_PLANKS);
 
 	private static <T extends BlockEntity> BlockEntityType<T> add(String name, Supplier<? extends T> supplier, Block... blocks) {
 		return add(name, BlockEntityType.Builder.create(supplier, blocks));

@@ -10,12 +10,12 @@ import net.minecraft.nbt.Tag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlankBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
 
     private final List<RopeBridgePlank> planks = new ArrayList<>();
 
-    public PlankBlockEntity() {
-        super(CampanionBlockEntities.RBP_BLOCK_ENTITY);
+    public RopeBridgePlanksBlockEntity() {
+        super(CampanionBlockEntities.ROPE_BRIDGE_PLANK);
     }
 
     public List<RopeBridgePlank> getPlanks() {

@@ -21,8 +21,8 @@ public class CampanionBlocks {
 	private static final Map<Identifier, BlockItem> ITEMS = new HashMap<>();
 	private static final Map<Identifier, Block> BLOCKS = new HashMap<>();
 
-	public static final Block ROPE_BRIDGE_ANCHOR = add("rope_bridge_anchor", new RopeBridgeAnchor(Block.Settings.of(Material.ANVIL)), ItemGroup.TOOLS);
-	public static final Block ROPE_BRIDGE_PART = add("rope_bridge_part", new RopeBridgePart(FabricBlockSettings.of(Material.WOOD).dynamicBounds().build()));
+	public static final Block ROPE_BRIDGE_ANCHOR = add("rope_bridge_anchor", new RopeBridgeAnchor(FabricBlockSettings.of(Material.ANVIL).sounds(BlockSoundGroup.ANVIL).build()), ItemGroup.TOOLS);
+	public static final Block ROPE_BRIDGE_PLANKS = add("rope_bridge_planks", new RopeBridgePlanks(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).dynamicBounds().build()));
 	public static final Block ROPE_LADDER = add("rope_ladder", new RopeLadderBlock(FabricBlockSettings.of(Material.WOOD).nonOpaque().hardness(0.2F).sounds(BlockSoundGroup.LADDER).build()), ItemGroup.DECORATIONS);
 
 	private static <B extends Block> B add(String name, B block, ItemGroup tab) {

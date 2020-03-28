@@ -1,8 +1,7 @@
 package com.campanion.ropebridge;
 
 import com.campanion.block.CampanionBlocks;
-import com.campanion.blockentity.PlankBlockEntity;
-import com.campanion.client.renderer.blockentity.PlankBlockEntityRenderer;
+import com.campanion.blockentity.RopeBridgePlanksBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -75,15 +74,15 @@ public class RopeBridge {
 
             BlockPos pos = new BlockPos(x, y, z);
             BlockEntity entity = world.getBlockEntity(pos);
-            if(!(entity instanceof PlankBlockEntity)) {
-                world.setBlockState(pos, CampanionBlocks.ROPE_BRIDGE_PART.getDefaultState());
+            if(!(entity instanceof RopeBridgePlanksBlockEntity)) {
+                world.setBlockState(pos, CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState());
                 entity = world.getBlockEntity(pos);
             }
             //Should always be true
-            if(entity instanceof PlankBlockEntity) {
+            if(entity instanceof RopeBridgePlanksBlockEntity) {
                 Vec3d vec3d = new Vec3d(MathHelper.floorMod(x, 1D), MathHelper.floorMod(y, 1), MathHelper.floorMod(z, 1));
                 double tileAngle = Math.atan(this.beizerCurveGradient(d) / Math.sqrt(deltaX*deltaX + deltaZ*deltaZ));
-                ((PlankBlockEntity) entity).getPlanks().add(new RopeBridgePlank(vec3d, this.angle, tileAngle, world.random.nextInt(PLANK_VARIENTS)));
+                ((RopeBridgePlanksBlockEntity) entity).getPlanks().add(new RopeBridgePlank(vec3d, this.angle, tileAngle, world.random.nextInt(PLANK_VARIENTS)));
             }
         }
     }

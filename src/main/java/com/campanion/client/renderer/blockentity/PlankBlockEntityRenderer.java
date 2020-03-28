@@ -1,7 +1,7 @@
 package com.campanion.client.renderer.blockentity;
 
 import com.campanion.Campanion;
-import com.campanion.blockentity.PlankBlockEntity;
+import com.campanion.blockentity.RopeBridgePlanksBlockEntity;
 import com.campanion.ropebridge.RopeBridge;
 import com.campanion.ropebridge.RopeBridgePlank;
 import net.minecraft.client.MinecraftClient;
@@ -19,7 +19,7 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.stream.IntStream;
 
-public class PlankBlockEntityRenderer extends BlockEntityRenderer<PlankBlockEntity> {
+public class PlankBlockEntityRenderer extends BlockEntityRenderer<RopeBridgePlanksBlockEntity> {
 
     public static final Identifier[] PLANKS = IntStream.range(0, RopeBridge.PLANK_VARIENTS)
         .mapToObj(i -> new Identifier(Campanion.MOD_ID, "ropebridge/plank"+i))
@@ -30,7 +30,7 @@ public class PlankBlockEntityRenderer extends BlockEntityRenderer<PlankBlockEnti
     }
 
     @Override
-    public void render(PlankBlockEntity blockEntity, float tickDelta, MatrixStack stack, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(RopeBridgePlanksBlockEntity blockEntity, float tickDelta, MatrixStack stack, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         VertexConsumer buffer = vertexConsumers.getBuffer(RenderLayer.getCutout());
 
         for (RopeBridgePlank plank : blockEntity.getPlanks()) {
