@@ -15,7 +15,7 @@ public class BackpackItem extends Item {
 	public final Type type;
 
 	public BackpackItem(Type type, Item.Settings settings) {
-		super(settings);
+		super(settings.maxCount(1));
 		this.type = type;
 		DispenserBlock.registerBehavior(this, ArmorItem.DISPENSER_BEHAVIOR);
 	}
