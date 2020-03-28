@@ -1,14 +1,10 @@
 package com.campanion.blockentity;
 
 import com.campanion.Campanion;
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.registry.FuelRegistry;
+import com.campanion.block.CampanionBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -20,7 +16,7 @@ public class CampanionBlockEntities {
 
 	private static final Map<Identifier, BlockEntityType<? extends BlockEntity>> BLOCK_ENTITY_TYPES = new HashMap<>();
 
-
+	public static final BlockEntityType<PlankBlockEntity> RBP_BLOCK_ENTITY = add("rope_bridge_part", PlankBlockEntity::new, CampanionBlocks.ROPE_BRIDGE_ANCHOR, CampanionBlocks.ROPE_BRIDGE_PART);
 
 	private static <T extends BlockEntity> BlockEntityType<T> add(String name, Supplier<? extends T> supplier, Block... blocks) {
 		return add(name, BlockEntityType.Builder.create(supplier, blocks));
