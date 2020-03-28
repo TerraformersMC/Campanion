@@ -13,6 +13,9 @@ public class CampanionSoundEvents {
 	public static final ArrayList<SoundEvent> SOUNDS = new ArrayList<>();
 
 	public static final SoundEvent HOWL = add("howl");
+	public static final SoundEvent SPEAR_HIT_GROUND = add("spear_hit_ground");
+	public static final SoundEvent SPEAR_HIT_FLESH = add("spear_hit_flesh");
+	public static final SoundEvent SPEAR_THROW = add("spear_throw");
 
 	private static SoundEvent add(String id) {
 		SoundEvent event = (new SoundEvent(new Identifier(MOD_ID, id)));

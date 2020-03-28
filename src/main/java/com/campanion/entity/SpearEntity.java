@@ -2,6 +2,7 @@ package com.campanion.entity;
 
 import com.campanion.item.SpearItem;
 import com.campanion.network.S2CEntitySpawnPacket;
+import com.campanion.sound.CampanionSoundEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -113,7 +114,7 @@ public class SpearEntity extends ProjectileEntity {
 		Entity owner = this.getOwner();
 		DamageSource damageSource = createSpearDamageSource(this, owner == null ? this : owner);
 		this.dealtDamage = true;
-		SoundEvent soundEvent = SoundEvents.ITEM_TRIDENT_HIT;
+		SoundEvent soundEvent = CampanionSoundEvents.SPEAR_HIT_FLESH;
 		if (entity.damage(damageSource, f)) {
 			if (entity.getType() == EntityType.ENDERMAN) {
 				return;
@@ -147,7 +148,7 @@ public class SpearEntity extends ProjectileEntity {
 	}
 
 	protected SoundEvent getHitSound() {
-		return SoundEvents.ITEM_TRIDENT_HIT_GROUND;
+		return CampanionSoundEvents.SPEAR_HIT_GROUND;
 	}
 
 	public void onPlayerCollision(PlayerEntity player) {

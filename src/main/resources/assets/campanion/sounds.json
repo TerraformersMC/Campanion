@@ -5,5 +5,23 @@
 			"campanion:entity/wolf/howl_1",
 			"campanion:entity/wolf/howl_2"
 		]
+	},
+	"spear_hit_ground": {
+		"subtitle": "subtitles.campanion.spear_hit_ground",
+		"sounds": [
+			"campanion:spear/spear_hit_ground"
+		]
+	},
+	"spear_hit_flesh": {
+		"subtitle": "subtitles.campanion.spear_hit_flesh",
+		"sounds": [
+			"campanion:spear/spear_hit_flesh"
+		]
+	},
+	"spear_throw": {
+		"subtitle": "subtitles.campanion.spear_throw",
+		"sounds": [
+			"campanion:spear/spear_throw"
+		]
 	}
 }

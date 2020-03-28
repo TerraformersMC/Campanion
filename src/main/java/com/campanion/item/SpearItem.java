@@ -1,6 +1,7 @@
 package com.campanion.item;
 
 import com.campanion.entity.SpearEntity;
+import com.campanion.sound.CampanionSoundEvents;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -124,7 +125,7 @@ public class SpearItem extends TridentItem {
 					}
 
 					world.spawnEntity(spearEntity);
-					world.playSoundFromEntity(null, spearEntity, SoundEvents.ITEM_TRIDENT_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
+					world.playSoundFromEntity(null, spearEntity, CampanionSoundEvents.SPEAR_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
 					if (!playerEntity.abilities.creativeMode) {
 						playerEntity.inventory.removeOne(stack);
 					}
