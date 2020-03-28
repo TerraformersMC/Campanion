@@ -1,12 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "campanion.mixin",
+  "package": "com.campanion.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+  
   ],
   "client": [
-    "ExampleMixin"
+  
   ],
   "injectors": {
     "defaultRequire": 1

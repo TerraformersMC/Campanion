@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "campanion.Campanion"
+      "com.campanion.Campanion"
     ]
   },
   "mixins": [
