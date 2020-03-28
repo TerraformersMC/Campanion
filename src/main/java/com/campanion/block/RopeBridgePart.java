@@ -51,16 +51,20 @@ public class RopeBridgePart extends Block implements BlockEntityProvider {
             for (RopeBridgePlank plank : ((PlankBlockEntity) entity).getPlanks()) {
 
                 //TODO: fix the bounding boxes
-//                double minY = plank.getDeltaPosition().getY() - Math.abs(Math.sin(plank.getTiltAngle()))*RopeBridge.PLANK_WIDTH;
-//                double maxY = plank.getDeltaPosition().getY() + Math.abs(Math.sin(plank.getTiltAngle()))*RopeBridge.PLANK_WIDTH;
-//
-//                double minX = plank.getDeltaPosition().getX() - Math.abs(Math.cos(plank.getyAngle()))*RopeBridge.PLANK_LENGTH;
-//                double maxX = plank.getDeltaPosition().getX() + Math.abs(Math.cos(plank.getyAngle()))*RopeBridge.PLANK_LENGTH;
-//
-//                double minZ = plank.getDeltaPosition().getZ() - Math.abs(Math.sin(plank.getyAngle()))*RopeBridge.PLANK_WIDTH;
-//                double maxZ = plank.getDeltaPosition().getZ() + Math.abs(Math.sin(plank.getyAngle()))*RopeBridge.PLANK_WIDTH;
-//
-//                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(minX, minY, minZ, maxX, maxY, maxZ));
+                double xRange = Math.abs(Math.sin(plank.getyAngle()))*RopeBridge.PLANK_LENGTH/2 + 2/16F;
+                double yRange = Math.abs(Math.sin(plank.getTiltAngle()))*RopeBridge.PLANK_WIDTH/2 + 2/16F;
+                double zRange = Math.abs(Math.cos(plank.getyAngle()))*RopeBridge.PLANK_LENGTH/2 + 2/16F;
+
+                double minY = plank.getDeltaPosition().getY() - yRange;
+                double maxY = plank.getDeltaPosition().getY() + yRange;
+
+                double minX = plank.getDeltaPosition().getX() - xRange;
+                double maxX = plank.getDeltaPosition().getX() + xRange;
+
+                double minZ = plank.getDeltaPosition().getZ() - zRange;
+                double maxZ = plank.getDeltaPosition().getZ() + zRange;
+
+                shape = VoxelShapes.union(shape, VoxelShapes.cuboid(minX, minY, minZ, maxX, maxY, maxZ));
             }
 
             return shape;
