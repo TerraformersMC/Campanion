@@ -49,11 +49,13 @@ public abstract class MixinWolfEntity extends TameableEntity implements HowlingE
 	@Inject(method = "handleStatus", at = @At("HEAD"), cancellable = true)
 	@Environment(EnvType.CLIENT)
 	public void handleStatus(byte status, CallbackInfo callbackInfo) {
-		if (status == 10) {
+		if (status == 64) {
 			setHowling(true);
 			this.howlAnimationProgress = 0.0F;
 			this.lastHowlAnimationProgress = 0.0F;
 			callbackInfo.cancel();
+		} else {
+			setHowling(false);
 		}
 	}
 

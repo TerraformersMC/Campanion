@@ -24,7 +24,7 @@ public abstract class MixinWolfEntityModel<T extends WolfEntity> extends Tintabl
 	@Inject(method = "animateModel", at = @At("TAIL"), cancellable = true)
 	public void animateModel(T wolfEntity, float f, float g, float h, CallbackInfo callbackInfo) {
 		if (((HowlingEntity)wolfEntity).isHowling()) {
-			System.out.println("Howling Anim");
+			System.out.println("Howling Anim " + ((HowlingEntity) wolfEntity).isHowling());
 			this.neck.pitch = this.torso.pitch - 0.3F;
 			this.head.pitch = -0.8F;
 			this.head.setPivot(-1.0F, 11.5F, -7.0F);

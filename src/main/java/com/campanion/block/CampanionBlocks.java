@@ -22,6 +22,7 @@ public class CampanionBlocks {
 
 	public static final Block ROPE_BRIDGE_ANCHOR = add("rope_bridge_anchor", new RopeBridgeAnchor(Block.Settings.of(Material.ANVIL)), ItemGroup.TOOLS);
 	public static final Block ROPE_BRIDGE_PART = add("rope_bridge_part", new RopeBridgePart(FabricBlockSettings.of(Material.WOOD).dynamicBounds().build()));
+	public static final Block ROPE_LADDER = add("rope_ladder", new RopeLadderBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(0.4F).build()), ItemGroup.DECORATIONS);
 
 	private static <B extends Block> B add(String name, B block, ItemGroup tab) {
 		return add(name, block, new BlockItem(block, new Item.Settings().group(tab)));

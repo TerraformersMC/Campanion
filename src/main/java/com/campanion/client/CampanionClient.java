@@ -1,15 +1,16 @@
 package com.campanion.client;
 
+import com.campanion.block.CampanionBlocks;
 import com.campanion.blockentity.CampanionBlockEntities;
 import com.campanion.client.renderer.blockentity.PlankBlockEntityRenderer;
 import com.campanion.client.renderer.entity.SpearEntityRenderer;
 import com.campanion.entity.CampanionEntities;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
-import net.fabricmc.fabric.impl.client.texture.FabricSprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.container.PlayerContainer;
 import net.minecraft.util.Identifier;
 
@@ -35,7 +36,7 @@ public class CampanionClient implements ClientModInitializer {
 	}
 
 	private static void registerRenderLayers() {
-
+		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.ROPE_LADDER, RenderLayer.getCutout());
 	}
 
 	private static void registerTextures() {

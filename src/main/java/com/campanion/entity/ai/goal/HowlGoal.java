@@ -21,7 +21,7 @@ public class HowlGoal extends Goal {
 
 	public void start() {
 		this.timer = 40;
-		this.world.sendEntityStatus(this.mob, (byte)10);
+		this.world.sendEntityStatus(this.mob, (byte)64);
 		this.mob.getNavigation().stop();
 	}
 
@@ -42,7 +42,8 @@ public class HowlGoal extends Goal {
 		System.out.println(this.timer);
 		if (this.timer < 1) {
 			((HowlingEntity)mob).setHowling(false);
-			System.out.println("Set to false" + ((HowlingEntity)mob).isHowling());
+			System.out.println("Set to " + ((HowlingEntity)mob).isHowling());
+			this.world.sendEntityStatus(this.mob, (byte)0);
 		}
 	}
 
