@@ -3,16 +3,23 @@ package com.campanion.block;
 import com.campanion.blockentity.RopeBridgePlanksBlockEntity;
 import com.campanion.ropebridge.RopeBridge;
 import com.campanion.ropebridge.RopeBridgePlank;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
+
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 public class RopeBridgePlanks extends Block implements BlockEntityProvider {
 
@@ -31,13 +38,54 @@ public class RopeBridgePlanks extends Block implements BlockEntityProvider {
 	}
 
 	@Override
-	public VoxelShape getCullingShape(BlockState state, BlockView view, BlockPos pos) {
+	public VoxelShape getCullingShape(BlockState STATE, BlockView view, BlockPos pos) {
 		return VoxelShapes.empty();
 	}
 
 	@Override
 	public boolean isSimpleFullBlock(BlockState state, BlockView view, BlockPos pos) {
 		return super.isSimpleFullBlock(state, view, pos);
+	}
+
+	@Override
+	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+		if (this.shouldBreak(world, pos)) {
+			world.breakBlock(pos, true);
+		}
+	}
+
+	@Override
+	public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+		Set<BlockPos> neighbours = new HashSet<>();
+		BlockEntity entity = world.getBlockEntity(pos);
+		if(entity instanceof RopeBridgePlanksBlockEntity) {
+			for (RopeBridgePlank plank : ((RopeBridgePlanksBlockEntity) entity).getPlanks()) {
+				neighbours.add(plank.getPrevious());
+				neighbours.add(plank.getNext());
+			}
+		}
+
+		neighbours.remove(BlockPos.ORIGIN);
+		for (BlockPos neighbour : neighbours) {
+			world.getBlockTickScheduler().schedule(neighbour, this, 1);
+		}
+		super.onBlockRemoved(state, world, pos, newState, moved);
+	}
+
+	public boolean shouldBreak(WorldView world, BlockPos pos) {
+		BlockEntity entity = world.getBlockEntity(pos);
+		if(entity instanceof RopeBridgePlanksBlockEntity) {
+			for (RopeBridgePlank plank : ((RopeBridgePlanksBlockEntity) entity).getPlanks()) {
+				if(!BlockPos.ORIGIN.equals(plank.getPrevious()) && !(world.getBlockEntity(plank.getPrevious()) instanceof RopeBridgePlanksBlockEntity)) {
+					return true;
+				}
+				if(!BlockPos.ORIGIN.equals(plank.getNext()) && !(world.getBlockEntity(plank.getNext()) instanceof RopeBridgePlanksBlockEntity)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		return true;
 	}
 
 	@Override

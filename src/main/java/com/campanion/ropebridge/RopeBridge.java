@@ -8,6 +8,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class RopeBridge {
 
     public static final double PLANK_WIDTH = 4/16F;
@@ -66,6 +71,9 @@ public class RopeBridge {
         double deltaX = this.to.getX() - this.from.getX();
         double deltaZ = this.to.getZ() - this.from.getZ();
 
+        BlockPos previousPostion = BlockPos.ORIGIN;
+        BlockPos previousPreviousPosition = BlockPos.ORIGIN;
+        List<RopeBridgePlank> previousPlanks = new ArrayList<>();
         for (double d = 0; d <= 1D; d += this.increment) {
 
             double x = this.from.getX() + deltaX * d;
@@ -82,7 +90,20 @@ public class RopeBridge {
             if(entity instanceof RopeBridgePlanksBlockEntity) {
                 Vec3d vec3d = new Vec3d(MathHelper.floorMod(x, 1D), MathHelper.floorMod(y, 1), MathHelper.floorMod(z, 1));
                 double tileAngle = Math.atan(this.beizerCurveGradient(d) / Math.sqrt(deltaX*deltaX + deltaZ*deltaZ));
-                ((RopeBridgePlanksBlockEntity) entity).getPlanks().add(new RopeBridgePlank(vec3d, this.angle, tileAngle, world.random.nextInt(PLANK_VARIENTS)));
+                RopeBridgePlank plank = new RopeBridgePlank(vec3d, this.angle, tileAngle, world.random.nextInt(PLANK_VARIENTS));
+                ((RopeBridgePlanksBlockEntity) entity).getPlanks().add(plank);
+
+                if(!previousPostion.equals(pos)) {
+                    for (RopeBridgePlank previousPlank : previousPlanks) {
+                        previousPlank.setPrevious(previousPreviousPosition);
+                        previousPlank.setNext(pos);
+                    }
+                    previousPreviousPosition = previousPostion;
+                    previousPostion = pos;
+
+                    previousPlanks.clear();
+                }
+                previousPlanks.add(plank);
             }
         }
     }

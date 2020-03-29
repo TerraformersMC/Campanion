@@ -1,6 +1,7 @@
 package com.campanion.ropebridge;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class RopeBridgePlank {
@@ -8,6 +9,8 @@ public class RopeBridgePlank {
     private final double yAngle;
     private final double tiltAngle;
     private final int variant;
+    private BlockPos previous = BlockPos.ORIGIN;
+    private BlockPos next = BlockPos.ORIGIN;
 
     public Vec3d getDeltaPosition() {
         return deltaPosition;
@@ -25,6 +28,22 @@ public class RopeBridgePlank {
         return variant;
     }
 
+    public BlockPos getPrevious() {
+        return previous;
+    }
+
+    public void setPrevious(BlockPos previous) {
+        this.previous = previous;
+    }
+
+    public BlockPos getNext() {
+        return next;
+    }
+
+    public void setNext(BlockPos next) {
+        this.next = next;
+    }
+
     public RopeBridgePlank(Vec3d deltaPosition, double yAngle, double tiltAngle, int variant) {
         this.deltaPosition = deltaPosition;
         this.yAngle = yAngle;
@@ -33,12 +52,14 @@ public class RopeBridgePlank {
     }
 
     public static RopeBridgePlank deserailize(CompoundTag tag) {
-        return new RopeBridgePlank(
+        RopeBridgePlank plank = new RopeBridgePlank(
             new Vec3d(tag.getDouble("DeltaPosX"), tag.getDouble("DeltaPosY"), tag.getDouble("DeltaPosZ")),
             tag.getDouble("YAng"),
             tag.getDouble("TiltAng"),
-            tag.getInt("Variant")
-        );
+            tag.getInt("Variant"));
+        plank.previous = BlockPos.fromLong(tag.getLong("Previous"));
+        plank.next = BlockPos.fromLong(tag.getLong("Next"));
+        return plank;
     }
 
     public static CompoundTag seralize(RopeBridgePlank plank) {
@@ -49,6 +70,8 @@ public class RopeBridgePlank {
         tag.putDouble("YAng", plank.yAngle);
         tag.putDouble("TiltAng", plank.tiltAngle);
         tag.putInt("Variant", plank.variant);
+        tag.putLong("Previous", plank.previous.asLong());
+        tag.putLong("Next", plank.next.asLong());
         return tag;
     }
 }
