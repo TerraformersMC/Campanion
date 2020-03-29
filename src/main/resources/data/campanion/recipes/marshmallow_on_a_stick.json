@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "campanion:marshmallow"
+    },
+    {
+      "item": "minecraft:stick"
+    }
+  ],
+  "result": {
+    "item": "campanion:marshmallow_on_a_stick"
+  }
+}

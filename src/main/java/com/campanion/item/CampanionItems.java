@@ -19,6 +19,15 @@ public class CampanionItems {
 	public static final Item ROPE = add("rope", new Item(new Item.Settings().group(ItemGroup.MATERIALS)));
 	public static final Item MRE = add("mre", new Item(new Item.Settings().group(ItemGroup.FOOD).food(new FoodComponent.Builder().hunger(8).saturationModifier(0.8F).build())));
 
+	public static final Item CRACKER = add("cracker", new Item(new Item.Settings().group(ItemGroup.FOOD).food(new FoodComponent.Builder().hunger(1).build())));
+	public static final Item MARSHMALLOW = add("marshmallow", new Item(new Item.Settings().group(ItemGroup.FOOD).food(new FoodComponent.Builder().hunger(1).build())));
+	public static final Item COOKED_MARSHMALLOW = add("cooked_marshmallow", new Item(new Item.Settings().group(ItemGroup.FOOD).food(new FoodComponent.Builder().hunger(1).build())));
+	public static final Item BLACKENED_MARSHMALLOW = add("blackened_marshmallow", new Item(new Item.Settings().group(ItemGroup.FOOD).food(new FoodComponent.Builder().hunger(1).build())));
+	public static final Item MARSHMALLOW_ON_A_STICK = add("marshmallow_on_a_stick", new MarshmallowOnAStickItem(new Item.Settings().group(ItemGroup.MISC), MarshmallowOnAStickItem.UNCOOKED));
+	public static final Item COOKED_MARSHMALLOW_ON_A_STICK = add("cooked_marshmallow_on_a_stick", new MarshmallowOnAStickItem(new Item.Settings().group(ItemGroup.MISC), MarshmallowOnAStickItem.COOKED));
+	public static final Item BLACKENED_MARSHMALLOW_ON_A_STICK = add("blackened_marshmallow_on_a_stick", new MarshmallowOnAStickItem(new Item.Settings().group(ItemGroup.MISC), MarshmallowOnAStickItem.BLACKENED));
+	public static final Item SMORE = add("smore", new Item(new Item.Settings().group(ItemGroup.FOOD).food(new FoodComponent.Builder().hunger(3).build())));
+
 	public static final BackpackItem DAY_PACK = add("day_pack", new BackpackItem(BackpackItem.Type.DAY_PACK, new Item.Settings().group(ItemGroup.TOOLS)));
 	public static final BackpackItem CAMPING_PACK = add("camping_pack", new BackpackItem(BackpackItem.Type.CAMPING_PACK, new Item.Settings().group(ItemGroup.TOOLS)));
 	public static final BackpackItem HIKING_PACK = add("hiking_pack", new BackpackItem(BackpackItem.Type.HIKING_PACK, new Item.Settings().group(ItemGroup.TOOLS)));

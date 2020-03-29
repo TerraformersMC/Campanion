@@ -8,7 +8,8 @@
     "MixinMobEntity",
     "MixinWolfEntity",
     "MixinPlayerEntity",
-    "MixinLivingEntity"
+    "MixinLivingEntity",
+    "MixinCampfireBlock"
   ],
   "client": [
     "client.MixinPlayerEntityRenderer",
