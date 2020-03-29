@@ -20,5 +20,7 @@
 
   "container.campanion.day_pack": "Day Pack",
   "container.campanion.camping_pack": "Camping Pack",
-  "container.campanion.hiking_pack": "Hiking Pack"
+  "container.campanion.hiking_pack": "Hiking Pack",
+
+  "key.campanion.open_backpack": "Open Backpack"
 }
