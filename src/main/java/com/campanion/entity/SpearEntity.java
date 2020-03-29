@@ -3,6 +3,8 @@ package com.campanion.entity;
 import com.campanion.item.SpearItem;
 import com.campanion.network.S2CEntitySpawnPacket;
 import com.campanion.sound.CampanionSoundEvents;
+import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -27,10 +29,14 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class SpearEntity extends ProjectileEntity {
 	private static final TrackedData<Boolean> ENCHANTMENT_GLINT;
 	private ItemStack spearStack;
 	private boolean dealtDamage;
+	private IntOpenHashSet piercedEntities;
+	private List<Entity> piercingKilledEntities;
 
 	public SpearEntity(EntityType<? extends SpearEntity> entityType, World world, SpearItem item) {
 		super(entityType, world);
@@ -53,6 +59,17 @@ public class SpearEntity extends ProjectileEntity {
 	protected void initDataTracker() {
 		super.initDataTracker();
 		this.dataTracker.startTracking(ENCHANTMENT_GLINT, false);
+	}
+
+	private void clearPiercingStatus() {
+		if (this.piercingKilledEntities != null) {
+			this.piercingKilledEntities.clear();
+		}
+
+		if (this.piercedEntities != null) {
+			this.piercedEntities.clear();
+		}
+
 	}
 
 	public void tick() {
@@ -102,12 +119,12 @@ public class SpearEntity extends ProjectileEntity {
 	}
 
 	protected void onEntityHit(EntityHitResult entityHitResult) {
-		Entity entity = entityHitResult.getEntity();
+		Entity hitEntity = entityHitResult.getEntity();
 		float damage = 8.0F;
-		if (entity instanceof AnimalEntity) {
+		if (hitEntity instanceof AnimalEntity) {
 			int impalingLevel = EnchantmentHelper.getLevel(Enchantments.IMPALING, this.spearStack);
 			if (impalingLevel > 0) {
-				damage += impalingLevel * 2.5F;
+				damage += impalingLevel * 1.5F;
 			}
 		}
 
@@ -115,23 +132,29 @@ public class SpearEntity extends ProjectileEntity {
 		DamageSource damageSource = createSpearDamageSource(this, owner == null ? this : owner);
 		this.dealtDamage = true;
 		SoundEvent soundEvent = CampanionSoundEvents.SPEAR_HIT_FLESH;
-		if (entity.damage(damageSource, damage)) {
-			if (entity.getType() == EntityType.ENDERMAN) {
+		if (hitEntity.damage(damageSource, damage)) {
+			if (hitEntity.getType() == EntityType.ENDERMAN) {
 				return;
 			}
 
-			if (entity instanceof LivingEntity) {
-				LivingEntity livingEntity2 = (LivingEntity) entity;
+			if (hitEntity instanceof LivingEntity) {
+				LivingEntity hitLivingEntity = (LivingEntity) hitEntity;
 				if (owner instanceof LivingEntity) {
-					EnchantmentHelper.onUserDamaged(livingEntity2, owner);
-					EnchantmentHelper.onTargetDamaged((LivingEntity) owner, livingEntity2);
+					EnchantmentHelper.onUserDamaged(hitLivingEntity, owner);
+					EnchantmentHelper.onTargetDamaged((LivingEntity) owner, hitLivingEntity);
 				}
 
-				this.onHit(livingEntity2);
+				this.onHit(hitLivingEntity);
+
+				if (!hitEntity.isAlive() && this.piercingKilledEntities != null) {
+					this.piercingKilledEntities.add(hitLivingEntity);
+				}
 			}
 		}
 
-		this.setVelocity(this.getVelocity().multiply(-0.01D, -0.1D, -0.01D));
+		if (this.getPierceLevel() <= 0) {
+			this.setVelocity(this.getVelocity().multiply(-0.01D, -0.1D, -0.01D));
+		}
 		this.playSound(soundEvent, 1.0F, 1.0F);
 	}
 
