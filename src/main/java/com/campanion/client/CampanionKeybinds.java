@@ -16,7 +16,7 @@ public class CampanionKeybinds {
         new Identifier(Campanion.MOD_ID, "open_backpack"),
         InputUtil.Type.KEYSYM,
         GLFW.GLFW_KEY_B,
-        "Gameplay"
+        "key.categories.gameplay"
     ).build();
 
     public static void initialize() {
