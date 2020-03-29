@@ -50,7 +50,6 @@ public class BackpackFeatureRenderer<T extends LivingEntity, M extends EntityMod
 			model.setAngles(entity, limbAngle, limbDistance, customAngle, headYaw, headPitch);
 			VertexConsumer vertexConsumer = ItemRenderer.getArmorVertexConsumer(vertexConsumers, model.getLayer(type.getTexture()), false, stack.hasEnchantmentGlint());
 			model.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
-
 		}
 	}
 

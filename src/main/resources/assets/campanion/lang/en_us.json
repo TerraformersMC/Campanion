@@ -7,12 +7,15 @@
   "item.campanion.day_pack": "Day Pack",
   "item.campanion.camping_pack": "Camping Pack",
   "item.campanion.hiking_pack": "Hiking Pack",
-  
+  "item.campanion.sleeping_bag": "Sleeping Bag",
+  "item.campanion.sleeping_bag.not_on_ground": "Can't sleep in the air!",
+
   "item.campanion.wooden_spear": "Wooden Spear",
   "item.campanion.stone_spear": "Stone Spear",
   "item.campanion.iron_spear": "Iron Spear",
   "item.campanion.golden_spear": "Golden Spear",
   "item.campanion.diamond_spear": "Diamond Spear",
-  
+
+
   "block.campanion.rope_ladder": "Rope Ladder"
 }

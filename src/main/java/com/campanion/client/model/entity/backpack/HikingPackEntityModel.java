@@ -1,15 +1,13 @@
 package com.campanion.client.model.entity.backpack;
 
-import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.AnimalModel;
 import net.minecraft.entity.LivingEntity;
 
 /**
- * ModelPlayer - Either Mojang or a mod author
+ * SleepingBagModel - Either Mojang or a mod author
  * Created using Tabula 7.0.100
  */
-public class HikingPackEntityModel<T extends LivingEntity> extends BaseBackpackModel<T> {
+public class HikingPackEntityModel<T extends LivingEntity> extends TorsoParentedModel<T> {
 
 	public HikingPackEntityModel() {
 		super(32, 48);
