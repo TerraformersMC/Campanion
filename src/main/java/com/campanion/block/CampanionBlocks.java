@@ -44,6 +44,11 @@ public class CampanionBlocks {
 
 	public static final Block LEATHER_TANNER = add("leather_tanner", new LeatherTanner(FabricBlockSettings.of(Material.WOOD).nonOpaque().sounds(BlockSoundGroup.WOOD).build()), ItemGroup.DECORATIONS);
 
+	public static final Block TENT_SIDE = add("tent_side", new TentSideBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(0.2F).sounds(BlockSoundGroup.WOOL).build()), ItemGroup.DECORATIONS);
+	public static final Block TENT_TOP = add("tent_top", new TentTopBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(0.2F).sounds(BlockSoundGroup.WOOL).build()), ItemGroup.DECORATIONS);
+	public static final Block TENT_TOP_POLE = add("tent_top_pole", new TentTopPoleBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(0.2F).sounds(BlockSoundGroup.WOOL).build()), ItemGroup.DECORATIONS);
+	public static final Block TENT_POLE = add("tent_pole", new TentPoleBlock(FabricBlockSettings.of(Material.WOOD).nonOpaque().hardness(0.2F).sounds(BlockSoundGroup.WOOD).build()), ItemGroup.DECORATIONS);
+
 	private static <B extends Block> B add(String name, B block, ItemGroup tab) {
 		return add(name, block, new BlockItem(block, new Item.Settings().group(tab)));
 	}
