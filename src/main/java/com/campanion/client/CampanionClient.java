@@ -3,18 +3,23 @@ package com.campanion.client;
 import com.campanion.block.CampanionBlocks;
 import com.campanion.blockentity.CampanionBlockEntities;
 import com.campanion.client.renderer.blockentity.PlankBlockEntityRenderer;
-import com.campanion.client.renderer.blockentity.SleepingBagBlockEntityRenderer;
 import com.campanion.client.renderer.entity.SpearEntityRenderer;
 import com.campanion.entity.CampanionEntities;
+import com.campanion.item.CampanionItems;
+import com.campanion.item.SleepingBagItem;
 import com.campanion.network.S2CEntitySpawnPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.container.PlayerContainer;
+import net.minecraft.item.DyeableItem;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
 public class CampanionClient implements ClientModInitializer {
@@ -22,6 +27,7 @@ public class CampanionClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		registerEntityRenderers();
 		registerBlockEntityRenderers();
+		registerColorProviders();
 		registerRenderLayers();
 		registerTextures();
 		registerClientboundPackets();
@@ -38,11 +44,14 @@ public class CampanionClient implements ClientModInitializer {
 
 	private static void registerBlockEntityRenderers() {
 		BlockEntityRendererRegistry.INSTANCE.register(CampanionBlockEntities.ROPE_BRIDGE_PLANK, PlankBlockEntityRenderer::new);
-		BlockEntityRendererRegistry.INSTANCE.register(CampanionBlockEntities.SLEEPING_BAG, SleepingBagBlockEntityRenderer::new);
 	}
 
 	private static void registerRenderLayers() {
 		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.ROPE_LADDER, RenderLayer.getCutout());
+	}
+
+	private static void registerColorProviders() {
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0 ? ((DyeableItem)stack.getItem()).getColor(stack) : -1, CampanionItems.SLEEPING_BAG);
 	}
 
 	private static void registerTextures() {

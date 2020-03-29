@@ -4,10 +4,10 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.entity.LivingEntity;
 
 /**
- * ModelPlayer - Either Mojang or a mod author
+ * SleepingBagModel - Either Mojang or a mod author
  * Created using Tabula 7.0.100
  */
-public class DayPackEntityModel<T extends LivingEntity> extends BaseBackpackModel<T> {
+public class DayPackEntityModel<T extends LivingEntity> extends TorsoParentedModel<T> {
 
 	public DayPackEntityModel() {
 		super(24, 24);
