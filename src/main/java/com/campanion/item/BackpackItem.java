@@ -1,17 +1,34 @@
 package com.campanion.item;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
+import net.minecraft.command.arguments.ItemSlotArgumentType;
+import net.minecraft.container.Container;
+import net.minecraft.container.ContainerType;
+import net.minecraft.container.GenericContainer;
+import net.minecraft.container.NameableContainerFactory;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.BasicInventory;
+import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class BackpackItem extends Item {
+
 	public final Type type;
 
 	public BackpackItem(Type type, Item.Settings settings) {
@@ -34,18 +51,58 @@ public class BackpackItem extends Item {
 	}
 
 	public enum Type {
-		DAY_PACK(9),
-		CAMPING_PACK(18),
-		HIKING_PACK(27);
+		DAY_PACK(1, ContainerType.GENERIC_9X1),
+		CAMPING_PACK(2, ContainerType.GENERIC_9X2),
+		HIKING_PACK(3, ContainerType.GENERIC_9X3);
 
-		private int slots;
+		private final int rows;
+		private final int slots;
+		private final ContainerType<GenericContainer> containerType;
 
-		Type(int slots) {
-			this.slots = slots;
+		Type(int rows, ContainerType<GenericContainer> containerType) {
+			this.rows = rows;
+			this.slots = rows*9;
+			this.containerType = containerType;
 		}
 
-		public int getSlots() {
-			return slots;
+		public ContainerFactory createFactory(ItemStack stack) {
+			return new ContainerFactory(this, stack);
 		}
 	}
+
+	public static class ContainerFactory implements NameableContainerFactory {
+
+		private final Type type;
+		private final ItemStack stack;
+
+		public ContainerFactory(Type type, ItemStack stack) {
+			this.type = type;
+			this.stack = stack;
+		}
+
+		@Override
+		public Text getDisplayName() {
+			return new TranslatableText("container.campnion." + this.type.name().toLowerCase());
+		}
+
+		@Nullable
+		@Override
+		public Container createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+			DefaultedList<ItemStack> list = DefaultedList.ofSize(this.type.slots, ItemStack.EMPTY);
+			Inventories.fromTag(this.stack.getOrCreateTag().getCompound("Inventory"), list);
+
+			BasicInventory inventory = new BasicInventory(list.toArray(new ItemStack[0]));
+			inventory.addListener(newinv -> {
+				DefaultedList<ItemStack> invList = DefaultedList.ofSize(newinv.getInvSize(), ItemStack.EMPTY);
+				for (int slot = 0; slot < newinv.getInvSize(); slot++) {
+					invList.set(slot, newinv.getInvStack(slot));
+				}
+				this.stack.getOrCreateTag().put("Inventory", Inventories.toTag(new CompoundTag(), invList));
+			});
+
+			return new GenericContainer(this.type.containerType, syncId, inv, inventory, this.type.rows);
+		}
+	}
+
+
 }

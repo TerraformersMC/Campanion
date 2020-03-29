@@ -125,10 +125,6 @@ public class SpearItem extends TridentItem {
 					if (playerEntity.abilities.creativeMode) {
 						spearEntity.pickupType = ProjectileEntity.PickupPermission.CREATIVE_ONLY;
 					}
-					int pierceLevel = EnchantmentHelper.getLevel(Enchantments.PIERCING, stack);
-					if (pierceLevel > 0) {
-						spearEntity.setPierceLevel((byte) pierceLevel);
-					}
 
 					world.spawnEntity(spearEntity);
 					world.playSoundFromEntity(null, spearEntity, CampanionSoundEvents.SPEAR_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);

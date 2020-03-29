@@ -5,12 +5,16 @@ import com.campanion.blockentity.CampanionBlockEntities;
 import com.campanion.config.CampanionConfigManager;
 import com.campanion.entity.CampanionEntities;
 import com.campanion.item.CampanionItems;
+import com.campanion.network.C2SOpenBackpack;
+import com.campanion.network.S2CEntitySpawnPacket;
 import com.campanion.sound.CampanionSoundEvents;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.DefaultedList;
@@ -41,6 +45,12 @@ public class Campanion implements ModInitializer {
 				item.appendStacks(item.getGroup(), (DefaultedList<ItemStack>) stacks);
 			}
 		})).build();
+
+		registerServerboundPackets();
+	}
+
+	public static void registerServerboundPackets() {
+		ServerSidePacketRegistry.INSTANCE.register(C2SOpenBackpack.ID, C2SOpenBackpack::onPacket);
 	}
 
 }
