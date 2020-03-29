@@ -6,26 +6,24 @@ import com.campanion.sound.CampanionSoundEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.ProjectileDamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -105,17 +103,19 @@ public class SpearEntity extends ProjectileEntity {
 
 	protected void onEntityHit(EntityHitResult entityHitResult) {
 		Entity entity = entityHitResult.getEntity();
-		float f = 8.0F;
-		if (entity instanceof LivingEntity) {
-			LivingEntity livingEntity = (LivingEntity) entity;
-			f += EnchantmentHelper.getAttackDamage(this.spearStack, livingEntity.getGroup());
+		float damage = 8.0F;
+		if (entity instanceof AnimalEntity) {
+			int impalingLevel = EnchantmentHelper.getLevel(Enchantments.IMPALING, this.spearStack);
+			if (impalingLevel > 0) {
+				damage += impalingLevel * 2.5F;
+			}
 		}
 
 		Entity owner = this.getOwner();
 		DamageSource damageSource = createSpearDamageSource(this, owner == null ? this : owner);
 		this.dealtDamage = true;
 		SoundEvent soundEvent = CampanionSoundEvents.SPEAR_HIT_FLESH;
-		if (entity.damage(damageSource, f)) {
+		if (entity.damage(damageSource, damage)) {
 			if (entity.getType() == EntityType.ENDERMAN) {
 				return;
 			}
@@ -132,19 +132,7 @@ public class SpearEntity extends ProjectileEntity {
 		}
 
 		this.setVelocity(this.getVelocity().multiply(-0.01D, -0.1D, -0.01D));
-		float g = 1.0F;
-		if (this.world instanceof ServerWorld && this.world.isThundering() && EnchantmentHelper.hasChanneling(this.spearStack)) {
-			BlockPos blockPos = entity.getBlockPos();
-			if (this.world.isSkyVisible(blockPos)) {
-				LightningEntity lightningEntity = new LightningEntity(this.world, (double) blockPos.getX() + 0.5D, (double) blockPos.getY(), (double) blockPos.getZ() + 0.5D, false);
-				lightningEntity.setChanneller(owner instanceof ServerPlayerEntity ? (ServerPlayerEntity) owner : null);
-				((ServerWorld) this.world).addLightning(lightningEntity);
-				soundEvent = SoundEvents.ITEM_TRIDENT_THUNDER;
-				g = 5.0F;
-			}
-		}
-
-		this.playSound(soundEvent, g, 1.0F);
+		this.playSound(soundEvent, 1.0F, 1.0F);
 	}
 
 	protected SoundEvent getHitSound() {

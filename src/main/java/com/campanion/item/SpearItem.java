@@ -1,13 +1,15 @@
 package com.campanion.item;
 
 import com.campanion.entity.SpearEntity;
-import com.google.common.collect.HashMultimap;
 import com.campanion.sound.CampanionSoundEvents;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -20,7 +22,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.TridentItem;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
@@ -123,6 +124,10 @@ public class SpearItem extends TridentItem {
 					spearEntity.setProperties(playerEntity, playerEntity.pitch, playerEntity.yaw, 0.0F, 2.5F, 1.0F);
 					if (playerEntity.abilities.creativeMode) {
 						spearEntity.pickupType = ProjectileEntity.PickupPermission.CREATIVE_ONLY;
+					}
+					int pierceLevel = EnchantmentHelper.getLevel(Enchantments.PIERCING, stack);
+					if (pierceLevel > 0) {
+						spearEntity.setPierceLevel((byte) pierceLevel);
 					}
 
 					world.spawnEntity(spearEntity);

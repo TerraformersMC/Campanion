@@ -4,6 +4,7 @@
   "package": "com.campanion.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinEnchantment",
     "MixinMobEntity",
     "MixinWolfEntity"
   ],

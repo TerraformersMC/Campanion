@@ -22,7 +22,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -41,7 +40,7 @@ public class BackpackFeatureRenderer<T extends LivingEntity, M extends EntityMod
 			AnimalModel model = Objects.requireNonNull(type.createModel());
 
 			//Should always be true
-			if(model instanceof BipedEntityModel && this.getContextModel() instanceof BipedEntityModel) {
+			if (model instanceof BipedEntityModel && this.getContextModel() instanceof BipedEntityModel) {
 				((BipedEntityModel) this.getContextModel()).setAttributes((BipedEntityModel) model);
 			} else {
 				this.getContextModel().copyStateTo(model);
