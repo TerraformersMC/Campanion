@@ -25,8 +25,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
 public class BackpackItem extends Item {
 
 	public final Type type;
@@ -85,7 +83,6 @@ public class BackpackItem extends Item {
 			return new TranslatableText("container.campnion." + this.type.name().toLowerCase());
 		}
 
-		@Nullable
 		@Override
 		public Container createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
 			DefaultedList<ItemStack> list = DefaultedList.ofSize(this.type.slots, ItemStack.EMPTY);
