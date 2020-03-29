@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "campanion:block/tent_top" },
+    "facing=south": { "model": "campanion:block/tent_top" },
+    "facing=west":  { "model": "campanion:block/tent_top", "y": 90 },
+    "facing=east":  { "model": "campanion:block/tent_top", "y": 90 }
+  }
+}
