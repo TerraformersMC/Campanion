@@ -20,13 +20,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SpearEntityRenderer extends EntityRenderer<SpearEntity> {
-	public static final Map<EntityType<?>, Identifier> TEXTURES = new HashMap<>();
+	private static final Map<EntityType<?>, Identifier> TEXTURES = new HashMap<>();
 	private final SpearEntityModel model = new SpearEntityModel();
 
 	public SpearEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
 		super(entityRenderDispatcher);
 	}
 
+	@Override
 	public void render(SpearEntity spear, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
 		matrixStack.push();
 		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(MathHelper.lerp(g, spear.prevYaw, spear.yaw) - 90.0F));
@@ -37,8 +38,12 @@ public class SpearEntityRenderer extends EntityRenderer<SpearEntity> {
 		super.render(spear, f, g, matrixStack, vertexConsumerProvider, i);
 	}
 
+	@Override
 	public Identifier getTexture(SpearEntity spear) {
-		EntityType<?> type = spear.getType();
+		return getTexture(spear.getType());
+	}
+
+	public static Identifier getTexture(EntityType<?> type) {
 		if (!TEXTURES.containsKey(type)) {
 			TEXTURES.put(type, new Identifier(Campanion.MOD_ID, "textures/entity/spear/" + Registry.ENTITY_TYPE.getId(type).getPath() + ".png"));
 		}

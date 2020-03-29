@@ -13,7 +13,8 @@
   "client": [
     "client.MixinPlayerEntityRenderer",
     "client.MixinWolfEntityModel",
-    "client.MixinCamera"
+    "client.MixinCamera",
+    "client.MixinItemRenderer"
   ],
   "injectors": {
     "defaultRequire": 1
