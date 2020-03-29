@@ -77,7 +77,7 @@ public class BackpackItem extends Item {
 
 		@Override
 		public Text getDisplayName() {
-			return new TranslatableText("container.campnion." + this.type.name().toLowerCase());
+			return new TranslatableText("container.campanion." + this.type.name().toLowerCase());
 		}
 
 		@Override
