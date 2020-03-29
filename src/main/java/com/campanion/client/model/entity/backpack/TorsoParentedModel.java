@@ -5,8 +5,8 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;
 
-public class BaseBackpackModel<T extends LivingEntity> extends BipedEntityModel<T> {
-    protected BaseBackpackModel(int textureWidth, int textureHeight) {
+public class TorsoParentedModel<T extends LivingEntity> extends BipedEntityModel<T> {
+    protected TorsoParentedModel(int textureWidth, int textureHeight) {
         super(1/16F, 0, textureWidth, textureHeight);
         this.torso = new ModelPart(this, 16, 16);
     }

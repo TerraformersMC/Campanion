@@ -1,0 +1,14 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "campanion:item/sleeping_bag"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "campanion:open": 1
+            },
+            "model": "campanion:item/sleeping_bag_open"
+        }
+    ]
+}
