@@ -78,8 +78,9 @@ public class SpearEntity extends ProjectileEntity {
 
 	@Override
 	protected void onEntityHit(EntityHitResult entityHitResult) {
+		int level = EnchantmentHelper.getLevel(Enchantments.PIERCING, this.spearStack);
 		Entity hitEntity = entityHitResult.getEntity();
-		if(this.piercedEntities.contains(hitEntity.getUuid())) {
+		if(this.piercedEntities.contains(hitEntity.getUuid()) || this.piercedEntities.size() > level) {
 			return;
 		}
 		this.piercedEntities.add(hitEntity.getUuid());
@@ -110,8 +111,10 @@ public class SpearEntity extends ProjectileEntity {
 			}
 		}
 
-		if (this.piercedEntities.size() > EnchantmentHelper.getLevel(Enchantments.PIERCING, this.spearStack)) {
+		if (this.piercedEntities.size() > level) {
 			this.setVelocity(this.getVelocity().multiply(-0.01D, -0.1D, -0.01D));
+		} else {
+			this.setVelocity(this.getVelocity().multiply(0.75));
 		}
 		this.playSound(soundEvent, 1.0F, 1.0F);
 	}
