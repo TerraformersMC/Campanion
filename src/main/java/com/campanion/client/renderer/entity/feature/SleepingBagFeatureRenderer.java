@@ -1,7 +1,7 @@
 package com.campanion.client.renderer.entity.feature;
 
 import com.campanion.Campanion;
-import com.campanion.client.model.entity.backpack.SleepingBagModel;
+import com.campanion.client.model.entity.SleepingBagModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

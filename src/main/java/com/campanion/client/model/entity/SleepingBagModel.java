@@ -1,4 +1,4 @@
-package com.campanion.client.model.entity.backpack;
+package com.campanion.client.model.entity;
 
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
@@ -22,7 +22,7 @@ public class SleepingBagModel<T extends LivingEntity> extends BipedEntityModel<T
         ModelPart headPiece = new ModelPart(this, 37, 28);
         headPiece.addCuboid(-5.0F, -9.5F, 0.2F, 10, 10, 3, 0.0F);
 
-        ModelPart bump = new ModelPart(this, 40, 0);
+        ModelPart bump = new ModelPart(this, 0, 31);
         bump.addCuboid(-5.0F, 0.0F, -4.3F, 10, 23, 2, 0.0F);
 
         this.head.addChild(base);
