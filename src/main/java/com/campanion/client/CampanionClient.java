@@ -25,6 +25,7 @@ public class CampanionClient implements ClientModInitializer {
 		registerRenderLayers();
 		registerTextures();
 		registerClientboundPackets();
+		CampanionKeybinds.initialize();
 	}
 
 	private static void registerEntityRenderers() {
