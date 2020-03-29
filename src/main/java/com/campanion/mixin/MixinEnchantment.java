@@ -13,8 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinEnchantment {
 	@Inject(method = "isAcceptableItem", at = @At("HEAD"), cancellable = true)
 	private void isAcceptableItem(ItemStack stack, CallbackInfoReturnable<Boolean> info) {
-		//Todo: Fix piercing enchant and re-enable this
-		if ((/*(Object) this == Enchantments.PIERCING ||*/ (Object) this == Enchantments.IMPALING) && stack.getItem() instanceof SpearItem) {
+		if (((Object) this == Enchantments.PIERCING || (Object) this == Enchantments.IMPALING) && stack.getItem() instanceof SpearItem) {
 			info.setReturnValue(true);
 		}
 	}
