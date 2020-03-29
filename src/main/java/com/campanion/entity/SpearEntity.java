@@ -22,6 +22,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
@@ -29,14 +31,12 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class SpearEntity extends ProjectileEntity {
 	private static final TrackedData<Boolean> ENCHANTMENT_GLINT;
 	private ItemStack spearStack;
-	private final List<UUID> piercedEntities = new ArrayList<>();
+	private final Set<UUID> piercedEntities = new HashSet<>();
 
 	public SpearEntity(EntityType<? extends SpearEntity> entityType, World world, SpearItem item) {
 		super(entityType, world);
@@ -82,7 +82,6 @@ public class SpearEntity extends ProjectileEntity {
 		if(this.piercedEntities.contains(hitEntity.getUuid())) {
 			return;
 		}
-		System.out.println(hitEntity);
 		this.piercedEntities.add(hitEntity.getUuid());
 		float damage = 8.0F;
 		if (hitEntity instanceof AnimalEntity) {
@@ -134,11 +133,26 @@ public class SpearEntity extends ProjectileEntity {
 			this.spearStack = ItemStack.fromTag(tag.getCompound("Trident"));
 			this.dataTracker.set(ENCHANTMENT_GLINT, this.spearStack.hasEnchantmentGlint());
 		}
+
+		this.piercedEntities.clear();
+		if(tag.contains("HitEntities", 9)) {
+			for (Tag hitEntity : tag.getList("HitEntities", 10)) {
+				this.piercedEntities.add(((CompoundTag)hitEntity).getUuid("UUID"));
+			}
+		}
 	}
 
 	public void writeCustomDataToTag(CompoundTag tag) {
 		super.writeCustomDataToTag(tag);
 		tag.put("Trident", this.spearStack.toTag(new CompoundTag()));
+
+		ListTag tags = new ListTag();
+		for (UUID uuid : this.piercedEntities) {
+			CompoundTag c = new CompoundTag();
+			c.putUuid("UUID", uuid);
+			tags.add(c);
+		}
+		tag.put("HitEntities", tags);
 	}
 
 	public void age() {
