@@ -3,6 +3,7 @@ package com.campanion.client;
 import com.campanion.block.CampanionBlocks;
 import com.campanion.blockentity.CampanionBlockEntities;
 import com.campanion.client.renderer.blockentity.PlankBlockEntityRenderer;
+import com.campanion.client.renderer.blockentity.SleepingBagBlockEntityRenderer;
 import com.campanion.client.renderer.entity.SpearEntityRenderer;
 import com.campanion.entity.CampanionEntities;
 import com.campanion.network.S2CEntitySpawnPacket;
@@ -36,6 +37,7 @@ public class CampanionClient implements ClientModInitializer {
 
 	private static void registerBlockEntityRenderers() {
 		BlockEntityRendererRegistry.INSTANCE.register(CampanionBlockEntities.ROPE_BRIDGE_PLANK, PlankBlockEntityRenderer::new);
+		BlockEntityRendererRegistry.INSTANCE.register(CampanionBlockEntities.SLEEPING_BAG, SleepingBagBlockEntityRenderer::new);
 	}
 
 	private static void registerRenderLayers() {
