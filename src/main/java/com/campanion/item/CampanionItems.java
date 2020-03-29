@@ -23,11 +23,11 @@ public class CampanionItems {
 	public static final BackpackItem CAMPING_PACK = add("camping_pack", new BackpackItem(BackpackItem.Type.CAMPING_PACK, new Item.Settings().group(ItemGroup.TOOLS)));
 	public static final BackpackItem HIKING_PACK = add("hiking_pack", new BackpackItem(BackpackItem.Type.HIKING_PACK, new Item.Settings().group(ItemGroup.TOOLS)));
 
-	public static final SpearItem WOODEN_SPEAR = add("wooden_spear", new SpearItem(ToolMaterials.WOOD, 3, -3.2F, () -> CampanionEntities.WOODEN_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
-	public static final SpearItem STONE_SPEAR = add("stone_spear", new SpearItem(ToolMaterials.STONE, 3, -3.2F, () -> CampanionEntities.STONE_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
-	public static final SpearItem IRON_SPEAR = add("iron_spear", new SpearItem(ToolMaterials.IRON, 3, -3.1F, () -> CampanionEntities.IRON_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
-	public static final SpearItem GOLDEN_SPEAR = add("golden_spear", new SpearItem(ToolMaterials.GOLD, 3, -3.0F, () -> CampanionEntities.GOLDEN_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
-	public static final SpearItem DIAMOND_SPEAR = add("diamond_spear", new SpearItem(ToolMaterials.DIAMOND, 3, -3.0F, () -> CampanionEntities.DIAMOND_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
+	public static final SpearItem WOODEN_SPEAR = add("wooden_spear", new SpearItem(ToolMaterials.WOOD, 1, -3.2F, () -> CampanionEntities.WOODEN_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
+	public static final SpearItem STONE_SPEAR = add("stone_spear", new SpearItem(ToolMaterials.STONE, 1, -3.2F, () -> CampanionEntities.STONE_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
+	public static final SpearItem IRON_SPEAR = add("iron_spear", new SpearItem(ToolMaterials.IRON, 1, -3.1F, () -> CampanionEntities.IRON_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
+	public static final SpearItem GOLDEN_SPEAR = add("golden_spear", new SpearItem(ToolMaterials.GOLD, 1, -3.0F, () -> CampanionEntities.GOLDEN_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
+	public static final SpearItem DIAMOND_SPEAR = add("diamond_spear", new SpearItem(ToolMaterials.DIAMOND, 1, -3.0F, () -> CampanionEntities.DIAMOND_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
 
 	private static <I extends Item> I add(String name, I item) {
 		ITEMS.put(new Identifier(Campanion.MOD_ID, name), item);
