@@ -84,7 +84,7 @@ public class SpearEntity extends ProjectileEntity {
 			return;
 		}
 		this.piercedEntities.add(hitEntity.getUuid());
-		float damage = 8.0F;
+		float damage = ((SpearItem)this.spearStack.getItem()).getAttackDamage()*2;
 		if (hitEntity instanceof AnimalEntity) {
 			int impalingLevel = EnchantmentHelper.getLevel(Enchantments.IMPALING, this.spearStack);
 			if (impalingLevel > 0) {
@@ -162,11 +162,6 @@ public class SpearEntity extends ProjectileEntity {
 		if (this.pickupType != ProjectileEntity.PickupPermission.ALLOWED) {
 			super.age();
 		}
-	}
-
-	@Override
-	public byte getPierceLevel() {
-		return 0;
 	}
 
 	protected float getDragInWater() {
