@@ -6,11 +6,14 @@
   "mixins": [
     "MixinEnchantment",
     "MixinMobEntity",
-    "MixinWolfEntity"
+    "MixinWolfEntity",
+    "MixinPlayerEntity",
+    "MixinLivingEntity"
   ],
   "client": [
     "client.MixinPlayerEntityRenderer",
-    "client.MixinWolfEntityModel"
+    "client.MixinWolfEntityModel",
+    "client.MixinCamera"
   ],
   "injectors": {
     "defaultRequire": 1
