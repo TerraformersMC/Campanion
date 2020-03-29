@@ -1,7 +1,7 @@
 package com.campanion.client;
 
 import com.campanion.Campanion;
-import com.campanion.network.C2SOpenBackpack;
+import com.campanion.network.C2SEmptyBackpack;
 import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
 import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
@@ -24,7 +24,7 @@ public class CampanionKeybinds {
         ClientTickCallback.EVENT.register(e -> {
             ClientPlayerEntity player = MinecraftClient.getInstance().player;
             if(player != null && OPEN_BACKPACK_KEY.isPressed()) {
-                player.networkHandler.sendPacket(C2SOpenBackpack.createPacket());
+                player.networkHandler.sendPacket(C2SEmptyBackpack.createPacket());
             }
         });
     }

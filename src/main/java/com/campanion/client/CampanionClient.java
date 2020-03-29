@@ -6,6 +6,7 @@ import com.campanion.client.renderer.blockentity.PlankBlockEntityRenderer;
 import com.campanion.client.renderer.blockentity.SleepingBagBlockEntityRenderer;
 import com.campanion.client.renderer.entity.SpearEntityRenderer;
 import com.campanion.entity.CampanionEntities;
+import com.campanion.network.S2CClearBackpackHeldItem;
 import com.campanion.network.S2CEntitySpawnPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -55,5 +56,6 @@ public class CampanionClient implements ClientModInitializer {
 
 	public static void registerClientboundPackets() {
 		ClientSidePacketRegistry.INSTANCE.register(S2CEntitySpawnPacket.ID, S2CEntitySpawnPacket::onPacket);
+		ClientSidePacketRegistry.INSTANCE.register(S2CClearBackpackHeldItem.ID, S2CClearBackpackHeldItem::onPacket);
 	}
 }

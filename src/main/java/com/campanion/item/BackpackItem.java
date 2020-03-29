@@ -1,8 +1,6 @@
 package com.campanion.item;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
-import net.minecraft.command.arguments.ItemSlotArgumentType;
 import net.minecraft.container.Container;
 import net.minecraft.container.ContainerType;
 import net.minecraft.container.GenericContainer;
@@ -13,7 +11,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -88,10 +85,7 @@ public class BackpackItem extends Item {
 		@Nullable
 		@Override
 		public Container createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-			DefaultedList<ItemStack> list = DefaultedList.ofSize(this.type.slots, ItemStack.EMPTY);
-			Inventories.fromTag(this.stack.getOrCreateTag().getCompound("Inventory"), list);
-
-			BasicInventory inventory = new BasicInventory(list.toArray(new ItemStack[0]));
+			BasicInventory inventory = new BasicInventory(getItems(this.stack).toArray(new ItemStack[0]));
 			inventory.addListener(newinv -> {
 				DefaultedList<ItemStack> invList = DefaultedList.ofSize(newinv.getInvSize(), ItemStack.EMPTY);
 				for (int slot = 0; slot < newinv.getInvSize(); slot++) {
@@ -102,6 +96,12 @@ public class BackpackItem extends Item {
 
 			return new GenericContainer(this.type.containerType, syncId, inv, inventory, this.type.rows);
 		}
+	}
+
+	public static DefaultedList<ItemStack> getItems(ItemStack stack) {
+		DefaultedList<ItemStack> list = DefaultedList.ofSize(((BackpackItem) stack.getItem()).type.slots, ItemStack.EMPTY);
+		Inventories.fromTag(stack.getOrCreateTag().getCompound("Inventory"), list);
+		return list;
 	}
 
 
