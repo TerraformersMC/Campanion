@@ -27,20 +27,9 @@ public class C2SOpenBackpack {
     public static void onPacket(PacketContext context, PacketByteBuf byteBuf) {
         PlayerEntity player = context.getPlayer();
         ItemStack stack = player.getEquippedStack(EquipmentSlot.CHEST);
-        if(!(stack.getItem() instanceof BackpackItem)) {
-            boolean set = false;
-            for (Hand value : Hand.values()) {
-                ItemStack held = player.getStackInHand(value);
-                if(held.getItem() instanceof BackpackItem) {
-                    stack = held;
-                    set = true;
-                }
-            }
-            if(!set) {
-                return;
-            }
+        if(stack.getItem() instanceof BackpackItem) {
+            BackpackItem.Type type = ((BackpackItem) stack.getItem()).type;
+            player.openContainer(type.createFactory(stack));
         }
-        BackpackItem.Type type = ((BackpackItem) stack.getItem()).type;
-        player.openContainer(type.createFactory(stack));
     }
 }
