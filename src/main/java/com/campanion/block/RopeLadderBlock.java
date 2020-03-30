@@ -1,8 +1,10 @@
 package com.campanion.block;
 
+import com.campanion.item.CampanionItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LadderBlock;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -89,7 +91,18 @@ public class RopeLadderBlock extends LadderBlock {
 	}
 
 	@Override
+	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+		if (!player.abilities.creativeMode) {
+			world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CampanionBlocks.ROPE_LADDER.asItem())));
+		}
+	}
+
+	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
-		return !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, facing, neighborState, world, pos, neighborPos);
+		if (!state.canPlaceAt(world, pos)) {
+			world.spawnEntity(new ItemEntity(world.getWorld(), pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CampanionBlocks.ROPE_LADDER.asItem())));
+			return Blocks.AIR.getDefaultState();
+		}
+		return super.getStateForNeighborUpdate(state, facing, neighborState, world, pos, neighborPos);
 	}
 }
