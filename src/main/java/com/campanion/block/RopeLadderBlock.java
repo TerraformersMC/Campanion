@@ -99,13 +99,9 @@ public class RopeLadderBlock extends LadderBlock {
 				if (!world.getBlockState(progress).getBlock().equals(CampanionBlocks.ROPE_LADDER)) {
 					break;
 				}
+				world.setBlockState(progress, Blocks.AIR.getDefaultState());
 				player.giveItemStack(new ItemStack(CampanionBlocks.ROPE_LADDER.asItem()));
 			}
 		}
-	}
-
-	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
-		return !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, facing, neighborState, world, pos, neighborPos);
 	}
 }
