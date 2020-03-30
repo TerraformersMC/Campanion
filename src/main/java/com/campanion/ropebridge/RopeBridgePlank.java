@@ -92,6 +92,9 @@ public class RopeBridgePlank {
     }
 
     public Mesh getOrGenerateMesh() {
+        if(this.mesh != null) {
+            return this.mesh;
+        }
         MeshBuilder builder = IndigoRenderer.INSTANCE.meshBuilder();
         QuadEmitter emitter = builder.getEmitter();
 
