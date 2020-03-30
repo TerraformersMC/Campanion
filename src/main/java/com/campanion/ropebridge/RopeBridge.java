@@ -9,9 +9,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class RopeBridge {
 
@@ -74,6 +72,7 @@ public class RopeBridge {
         BlockPos previousPostion = BlockPos.ORIGIN;
         BlockPos previousPreviousPosition = BlockPos.ORIGIN;
         List<RopeBridgePlank> previousPlanks = new ArrayList<>();
+        Vec3d previousPlankPosition = null;
         for (double d = 0; d <= 1D; d += this.increment) {
 
             double x = this.from.getX() + deltaX * d;
@@ -88,9 +87,13 @@ public class RopeBridge {
             }
             //Should always be true
             if(entity instanceof RopeBridgePlanksBlockEntity) {
+                Vec3d worldPosition = new Vec3d(x, y, z);
+                Vec3d fromPosition = previousPlankPosition == null ? Vec3d.ZERO : previousPlankPosition.subtract(worldPosition);
+
                 Vec3d vec3d = new Vec3d(MathHelper.floorMod(x, 1D), MathHelper.floorMod(y, 1), MathHelper.floorMod(z, 1));
                 double tileAngle = Math.atan(this.beizerCurveGradient(d) / Math.sqrt(deltaX*deltaX + deltaZ*deltaZ));
-                RopeBridgePlank plank = new RopeBridgePlank(vec3d, this.angle, tileAngle, world.random.nextInt(PLANK_VARIENTS));
+
+                RopeBridgePlank plank = new RopeBridgePlank(vec3d, this.angle, tileAngle, (float) fromPosition.length(), world.random.nextInt(PLANK_VARIENTS), world.random.nextInt(128));
                 ((RopeBridgePlanksBlockEntity) entity).getPlanks().add(plank);
 
                 if(!previousPostion.equals(pos)) {
@@ -104,6 +107,7 @@ public class RopeBridge {
                     previousPlanks.clear();
                 }
                 previousPlanks.add(plank);
+                previousPlankPosition = worldPosition;
             }
         }
     }
