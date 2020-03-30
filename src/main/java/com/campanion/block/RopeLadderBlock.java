@@ -3,6 +3,7 @@ package com.campanion.block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LadderBlock;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -47,6 +48,21 @@ public class RopeLadderBlock extends LadderBlock {
 	@Override
 	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
 		return super.canPlaceAt(state, world, pos) || world.getBlockState(pos.up()).getBlock() instanceof RopeLadderBlock;
+	}
+
+	@Override
+	public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+		BlockPos.Mutable progrees = new BlockPos.Mutable(pos);
+		for (int i = pos.getY(); i > 0 ; i--) {
+			progrees.setOffset(Direction.DOWN);
+			if (!canPlaceAt(state, world, progrees) || !world.getBlockState(progrees).isAir() || itemStack.getCount() < 1) {
+				return;
+			}
+			if (!((PlayerEntity)placer).abilities.creativeMode) {
+				itemStack.setCount(itemStack.getCount() - 1);
+			}
+			world.setBlockState(progrees, state);
+		}
 	}
 
 	@Override
