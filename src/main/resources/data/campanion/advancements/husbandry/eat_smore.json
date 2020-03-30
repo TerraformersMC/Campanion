@@ -1,0 +1,33 @@
+{
+  "parent": "campanion:husbandry/cook_marshmallow",
+  "display": {
+    "icon": {
+      "item": "campanion:smore"
+    },
+    "title": {
+      "translate": "advancements.campanion.husbandry.eat_smore.title"
+    },
+    "description": {
+      "translate": "advancements.campanion.husbandry.eat_smore.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "eat_smore": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "campanion:smore"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "eat_smore"
+    ]
+  ]
+}

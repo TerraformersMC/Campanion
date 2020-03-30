@@ -1,6 +1,7 @@
 package com.campanion.item;
 
 import com.campanion.Campanion;
+import com.campanion.advancement.criterion.CampanionCriteria;
 import com.campanion.entity.SleepNoSetSpawnPlayer;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
@@ -11,6 +12,7 @@ import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -68,6 +70,9 @@ public class SleepingBagItem extends Item implements DyeableItem {
 				}
 				if (canSleep) {
 					((SleepNoSetSpawnPlayer) user).sleepWithSpawnPoint(pos);
+					if (user instanceof ServerPlayerEntity) {
+						CampanionCriteria.SLEPT_IN_SLEEPING_BAG.trigger((ServerPlayerEntity) user);
+					}
 					setInUse(stack, true);
 				}
 			}

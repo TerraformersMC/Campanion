@@ -1,5 +1,6 @@
 package com.campanion;
 
+import com.campanion.advancement.criterion.CampanionCriteria;
 import com.campanion.block.CampanionBlocks;
 import com.campanion.blockentity.CampanionBlockEntities;
 import com.campanion.config.CampanionConfigManager;
@@ -45,6 +46,7 @@ public class Campanion implements ModInitializer {
 		CampanionBlocks.register();
 		CampanionBlockEntities.register();
 		CampanionEntities.register();
+		CampanionCriteria.loadClass();
 
 		FabricItemGroupBuilder.create(new Identifier(MOD_ID, "items")).icon(() -> Items.CAMPFIRE.asItem().getStackForRender()).appendItems(stacks -> Registry.ITEM.forEach(item -> {
 			if (Registry.ITEM.getId(item).getNamespace().equals(MOD_ID)) {
@@ -66,7 +68,7 @@ public class Campanion implements ModInitializer {
 			for (ServerWorld world : e.getWorlds()) {
 				for (ServerPlayerEntity player : world.getPlayers()) {
 					ItemStack cursorItem = player.inventory.getCursorStack();
-					if(cursorItem.getItem() instanceof BackpackItem && cursorItem.hasTag() && Objects.requireNonNull(cursorItem.getTag()).contains("Inventory", 10)) {
+					if (cursorItem.getItem() instanceof BackpackItem && cursorItem.hasTag() && Objects.requireNonNull(cursorItem.getTag()).contains("Inventory", 10)) {
 						ItemScatterer.spawn(player.world, player.getBlockPos().add(0, player.getEyeHeight(player.getPose()), 0), BackpackItem.getItems(cursorItem));
 						cursorItem.getTag().remove("Inventory");
 						player.networkHandler.sendPacket(S2CClearBackpackHeldItem.createPacket());
