@@ -1,35 +1,37 @@
 package com.campanion.client;
 
 import com.campanion.block.CampanionBlocks;
-import com.campanion.blockentity.CampanionBlockEntities;
-import com.campanion.client.renderer.blockentity.PlankBlockEntityRenderer;
 import com.campanion.client.renderer.entity.SpearEntityRenderer;
+import com.campanion.client.renderer.model.BridgePlanksUnbakedModel;
 import com.campanion.entity.CampanionEntities;
 import com.campanion.item.CampanionItems;
 import com.campanion.network.S2CClearBackpackHeldItem;
 import com.campanion.network.S2CEntitySpawnPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.container.PlayerContainer;
+import net.minecraft.client.render.block.BlockModels;
 import net.minecraft.item.DyeableItem;
-import net.minecraft.util.Identifier;
 
 public class CampanionClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		registerEntityRenderers();
-		registerBlockEntityRenderers();
 		registerColorProviders();
 		registerRenderLayers();
-		registerTextures();
 		registerClientboundPackets();
 		CampanionKeybinds.initialize();
+
+		ModelLoadingRegistry.INSTANCE.registerVariantProvider(rm -> (modelId, context) -> {
+			if(modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState()))) {
+				return new BridgePlanksUnbakedModel();
+			}
+			return null;
+		});
 	}
 
 	private static void registerEntityRenderers() {
@@ -39,26 +41,12 @@ public class CampanionClient implements ClientModInitializer {
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.GOLDEN_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.DIAMOND_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
 	}
-
-	private static void registerBlockEntityRenderers() {
-		BlockEntityRendererRegistry.INSTANCE.register(CampanionBlockEntities.ROPE_BRIDGE_PLANK, PlankBlockEntityRenderer::new);
-	}
-
 	private static void registerRenderLayers() {
 		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.ROPE_LADDER, RenderLayer.getCutout());
 	}
 
 	private static void registerColorProviders() {
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0 ? ((DyeableItem)stack.getItem()).getColor(stack) : -1, CampanionItems.SLEEPING_BAG);
-	}
-
-	private static void registerTextures() {
-		ClientSpriteRegistryCallback.event(PlayerContainer.BLOCK_ATLAS_TEXTURE).register((atlasTexture, registry) -> {
-			for (Identifier plank : PlankBlockEntityRenderer.PLANKS) {
-				registry.register(plank);
-			}
-			registry.register(PlankBlockEntityRenderer.ROPE);
-		});
 	}
 
 	public static void registerClientboundPackets() {

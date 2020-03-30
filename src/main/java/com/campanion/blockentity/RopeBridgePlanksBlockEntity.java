@@ -37,7 +37,7 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
     public void fromClientTag(CompoundTag tag) {
         this.planks.clear();
         for (Tag nbt : tag.getList("Planks", 10)) {
-            this.planks.add(RopeBridgePlank.deserailize((CompoundTag) nbt));
+            this.planks.add(RopeBridgePlank.deserialize((CompoundTag) nbt));
         }
     }
 
@@ -45,7 +45,7 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
     public CompoundTag toClientTag(CompoundTag tag) {
         ListTag list = new ListTag();
         for (RopeBridgePlank plank : this.planks) {
-            list.add(RopeBridgePlank.seralize(plank));
+            list.add(RopeBridgePlank.serialize(plank));
         }
         tag.put("Planks", list);
         return tag;

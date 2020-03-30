@@ -3,9 +3,12 @@ package com.campanion.block;
 import com.campanion.blockentity.RopeBridgePlanksBlockEntity;
 import com.campanion.ropebridge.RopeBridge;
 import com.campanion.ropebridge.RopeBridgePlank;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
+import net.minecraft.entity.EntityType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
@@ -34,7 +37,7 @@ public class RopeBridgePlanks extends Block implements BlockEntityProvider {
 
 	@Override
 	public BlockRenderType getRenderType(BlockState state) {
-		return BlockRenderType.INVISIBLE;
+		return BlockRenderType.MODEL;
 	}
 
 	@Override
@@ -43,8 +46,18 @@ public class RopeBridgePlanks extends Block implements BlockEntityProvider {
 	}
 
 	@Override
+	public boolean isTranslucent(BlockState state, BlockView view, BlockPos pos) {
+		return true;
+	}
+
+	@Override
+	public boolean canSuffocate(BlockState state, BlockView view, BlockPos pos) {
+		return false;
+	}
+
+	@Override
 	public boolean isSimpleFullBlock(BlockState state, BlockView view, BlockPos pos) {
-		return super.isSimpleFullBlock(state, view, pos);
+		return false;
 	}
 
 	@Override
