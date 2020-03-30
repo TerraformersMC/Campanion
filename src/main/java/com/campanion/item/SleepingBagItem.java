@@ -8,11 +8,9 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
-import net.minecraft.item.FishingRodItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -30,70 +28,70 @@ import java.util.Optional;
 
 public class SleepingBagItem extends Item implements DyeableItem {
 
-    public static final Text CANT_SLEEP_DAY = PlayerEntity.SleepFailureReason.NOT_POSSIBLE_NOW.toText();
-    public static final Text NOT_SAFE = PlayerEntity.SleepFailureReason.NOT_SAFE.toText();
-    public static final Text NOT_ON_GROUND = new TranslatableText("item.campanion.sleeping_bag.not_on_ground");
+	public static final Text CANT_SLEEP_DAY = PlayerEntity.SleepFailureReason.NOT_POSSIBLE_NOW.toText();
+	public static final Text NOT_SAFE = PlayerEntity.SleepFailureReason.NOT_SAFE.toText();
+	public static final Text NOT_ON_GROUND = new TranslatableText("item.campanion.sleeping_bag.not_on_ground");
 
-    public SleepingBagItem(Settings settings) {
-        super(settings);
-        this.addPropertyGetter(new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity) -> inUse(stack) ? 1 : 0);
-    }
+	public SleepingBagItem(Settings settings) {
+		super(settings);
+		this.addPropertyGetter(new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity) -> inUse(stack) ? 1 : 0);
+	}
 
-    @Override
-    public int getColor(ItemStack stack) {
-        CompoundTag compoundTag = stack.getSubTag("display");
-        return compoundTag != null && compoundTag.contains("color", 99) ? compoundTag.getInt("color") : 0x3495eb;
-    }
+	@Override
+	public int getColor(ItemStack stack) {
+		CompoundTag compoundTag = stack.getSubTag("display");
+		return compoundTag != null && compoundTag.contains("color", 99) ? compoundTag.getInt("color") : 0x3495eb;
+	}
 
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
-        if(!world.isClient) {
-            BlockPos pos = user.getBlockPos();
-            if(!world.dimension.canPlayersSleep() || world.getBiome(pos) == Biomes.NETHER) {
-                world.createExplosion(null, DamageSource.netherBed(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0F, true, Explosion.DestructionType.DESTROY);
-                stack.damage(25, user, e -> e.sendToolBreakStatus(hand));
-            } else if(!user.onGround) {
-                user.addChatMessage(NOT_ON_GROUND, true);
-            } else if (world.isDay()) {
-                user.addChatMessage(CANT_SLEEP_DAY, true);
-            } else if (world.dimension.hasVisibleSky()) {
-                boolean canSleep = true;
-                if (!user.isCreative()) {
-                    List<HostileEntity> list = world.getEntities(HostileEntity.class,
-                        new Box(pos).offset(0.5D, 0.0D, 0.5D).expand(8.0D, 5.0D, 8.0D),
-                        hostileEntity -> hostileEntity.isAngryAt(user));
-                    if (!list.isEmpty()) {
-                        canSleep = false;
-                        user.addChatMessage(NOT_SAFE, true);
-                    }
-                }
-                if(canSleep) {
-                    ((SleepNoSetSpawnPlayer)user).sleepWithSpawnPoint(pos);
-                    setInUse(stack, true);
-                }
-            }
-        }
-        return new TypedActionResult<>(ActionResult.SUCCESS, stack);
-    }
+	@Override
+	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+		ItemStack stack = user.getStackInHand(hand);
+		if (!world.isClient) {
+			BlockPos pos = user.getBlockPos();
+			if (!world.dimension.canPlayersSleep() || world.getBiome(pos) == Biomes.NETHER) {
+				world.createExplosion(null, DamageSource.netherBed(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0F, true, Explosion.DestructionType.DESTROY);
+				stack.damage(25, user, e -> e.sendToolBreakStatus(hand));
+			} else if (world.isDay()) {
+				user.addChatMessage(CANT_SLEEP_DAY, true);
+			} else if (!user.onGround) {
+				user.addChatMessage(NOT_ON_GROUND, true);
+			} else if (world.dimension.hasVisibleSky()) {
+				boolean canSleep = true;
+				if (!user.isCreative()) {
+					List<HostileEntity> list = world.getEntities(HostileEntity.class,
+							new Box(pos).offset(0.5D, 0.0D, 0.5D).expand(8.0D, 5.0D, 8.0D),
+							hostileEntity -> hostileEntity.isAngryAt(user));
+					if (!list.isEmpty()) {
+						canSleep = false;
+						user.addChatMessage(NOT_SAFE, true);
+					}
+				}
+				if (canSleep) {
+					((SleepNoSetSpawnPlayer) user).sleepWithSpawnPoint(pos);
+					setInUse(stack, true);
+				}
+			}
+		}
+		return new TypedActionResult<>(ActionResult.SUCCESS, stack);
+	}
 
-    public static Optional<ItemStack> getUsingStack(LivingEntity user) {
-        if (user.getPose() == EntityPose.SLEEPING || user.isSleeping()) {
-            for (Hand value : Hand.values()) {
-                ItemStack stack = user.getStackInHand(value);
-                if (inUse(stack)) {
-                    return Optional.of(stack);
-                }
-            }
-        }
-        return Optional.empty();
-    }
+	public static Optional<ItemStack> getUsingStack(LivingEntity user) {
+		if (user.getPose() == EntityPose.SLEEPING || user.isSleeping()) {
+			for (Hand value : Hand.values()) {
+				ItemStack stack = user.getStackInHand(value);
+				if (inUse(stack)) {
+					return Optional.of(stack);
+				}
+			}
+		}
+		return Optional.empty();
+	}
 
-    public static boolean inUse(ItemStack stack) {
-        return stack.getItem() == CampanionItems.SLEEPING_BAG && stack.getOrCreateTag().getBoolean("IsInUse");
-    }
+	public static boolean inUse(ItemStack stack) {
+		return stack.getItem() == CampanionItems.SLEEPING_BAG && stack.getOrCreateTag().getBoolean("IsInUse");
+	}
 
-    public static void setInUse(ItemStack stack, boolean inUse) {
-        stack.getOrCreateTag().putBoolean("IsInUse", inUse);
-    }
+	public static void setInUse(ItemStack stack, boolean inUse) {
+		stack.getOrCreateTag().putBoolean("IsInUse", inUse);
+	}
 }

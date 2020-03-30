@@ -2,13 +2,23 @@
   "itemGroup.campanion.items": "Campanion Items",
   
   "item.campanion.rope": "Rope",
+  "item.campanion.cracker": "Cracker",
+  "item.campanion.marshmallow": "Marshmallow",
+  "item.campanion.cooked_marshmallow": "Cooked Marshmallow",
+  "item.campanion.blackened_marshmallow": "Blackened Marshmallow",
+  "item.campanion.marshmallow_on_a_stick": "Marshmallow on a Stick",
+  "item.campanion.cooked_marshmallow_on_a_stick": "Cooked Marshmallow on a Stick",
+  "item.campanion.blackened_marshmallow_on_a_stick": "Blackened Marshmallow on a Stick",
+  
   "item.campanion.mre": "MRE",
+  "item.campanion.smore": "S'more",
   
   "item.campanion.day_pack": "Day Pack",
   "item.campanion.camping_pack": "Camping Pack",
   "item.campanion.hiking_pack": "Hiking Pack",
   "item.campanion.sleeping_bag": "Sleeping Bag",
-  "item.campanion.sleeping_bag.not_on_ground": "Can't sleep in the air!",
+  "item.campanion.sleeping_bag.not_on_ground": "You cannot sleep in the air",
+  "item.campanion.sleeping_bag.stop_sleeping": "Leave Sleeping Bag",
 
   "item.campanion.wooden_spear": "Wooden Spear",
   "item.campanion.stone_spear": "Stone Spear",
@@ -17,6 +27,7 @@
   "item.campanion.diamond_spear": "Diamond Spear",
   
   "block.campanion.rope_ladder": "Rope Ladder",
+  "block.campanion.rope_bridge_anchor": "Rope Bridge Anchor",
 
   "container.campanion.day_pack": "Day Pack",
   "container.campanion.camping_pack": "Camping Pack",
