@@ -7,7 +7,9 @@ import com.campanion.ropebridge.RopeBridgePlank;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
@@ -30,18 +32,22 @@ import java.util.stream.IntStream;
 
 public class BridgePlanksBakedModel implements FabricBakedModel, BakedModel {
 
-    public static final SpriteIdentifier[] PLANKS = IntStream.range(0, RopeBridge.PLANK_VARIENTS)
+    public static final SpriteIdentifier[] PLANKS = IntStream.range(0, RopeBridge.PLANK_VARIANT_TEXTURES)
         .mapToObj(i -> new SpriteIdentifier(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Campanion.MOD_ID, "ropebridge/plank"+i)))
         .toArray(SpriteIdentifier[]::new);
     public static final SpriteIdentifier ROPE = new SpriteIdentifier(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Campanion.MOD_ID, "ropebridge/rope"));
-
+    public static final SpriteIdentifier STOPPER = new SpriteIdentifier(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Campanion.MOD_ID, "ropebridge/stopper"));
 
     @Override
     public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
         BlockEntity entity = blockView.getBlockEntity(pos);
         if(entity instanceof RopeBridgePlanksBlockEntity) {
-            for (RopeBridgePlank plank : ((RopeBridgePlanksBlockEntity) entity).getPlanks()) {
-                context.meshConsumer().accept(plank.getOrGenerateMesh());
+            List<RopeBridgePlank> planks = ((RopeBridgePlanksBlockEntity) entity).getPlanks();
+            if(planks.isEmpty() || ((RopeBridgePlanksBlockEntity) entity).forceRenderStopper()) {
+                context.meshConsumer().accept(RopeBridgePlank.getEmptyPlanksMesh());
+            }
+            for (RopeBridgePlank plank : planks) {
+                plank.getOrGenerateMesh(false).ifPresent(context.meshConsumer());
             }
         }
     }
@@ -82,7 +88,7 @@ public class BridgePlanksBakedModel implements FabricBakedModel, BakedModel {
 
     @Override
     public Sprite getSprite() {
-        return PLANKS[0].getSprite();
+        return MinecraftClient.getInstance().getBlockRenderManager().getModel(Blocks.OAK_PLANKS.getDefaultState()).getSprite();
     }
 
     @Override
@@ -93,5 +99,25 @@ public class BridgePlanksBakedModel implements FabricBakedModel, BakedModel {
     @Override
     public ModelItemPropertyOverrideList getItemPropertyOverrides() {
         return ModelItemPropertyOverrideList.EMPTY;
+    }
+
+    public static BridgePlanksBakedModel createStaticModel(List<RopeBridgePlank> planks) {
+        return new StaticPlanksModel(planks);
+    }
+
+    private static class StaticPlanksModel extends BridgePlanksBakedModel {
+
+        private final List<RopeBridgePlank> planks;
+
+        private StaticPlanksModel(List<RopeBridgePlank> planks) {
+            this.planks = planks;
+        }
+
+        @Override
+        public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+            for (RopeBridgePlank plank : this.planks) {
+                plank.getOrGenerateMesh(true).ifPresent(context.meshConsumer());
+            }
+        }
     }
 }

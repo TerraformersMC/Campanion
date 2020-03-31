@@ -1,6 +1,8 @@
 package com.campanion.client;
 
 import com.campanion.block.CampanionBlocks;
+import com.campanion.blockentity.CampanionBlockEntities;
+import com.campanion.client.blockentity.RopeBridgePostBlockEntityRenderer;
 import com.campanion.client.renderer.entity.SpearEntityRenderer;
 import com.campanion.client.renderer.model.BridgePlanksUnbakedModel;
 import com.campanion.entity.CampanionEntities;
@@ -10,6 +12,7 @@ import com.campanion.network.S2CEntitySpawnPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
@@ -23,11 +26,12 @@ public class CampanionClient implements ClientModInitializer {
 		registerEntityRenderers();
 		registerColorProviders();
 		registerRenderLayers();
+		registerBlockEntityRenderers();
 		registerClientboundPackets();
 		CampanionKeybinds.initialize();
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(rm -> (modelId, context) -> {
-			if(modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState()))) {
+			if(modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState())) || modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_ANCHOR.getDefaultState()))) {
 				return new BridgePlanksUnbakedModel();
 			}
 			return null;
@@ -44,6 +48,11 @@ public class CampanionClient implements ClientModInitializer {
 	private static void registerRenderLayers() {
 		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.ROPE_LADDER, RenderLayer.getCutout());
 	}
+
+	private static void registerBlockEntityRenderers() {
+		BlockEntityRendererRegistry.INSTANCE.register(CampanionBlockEntities.ROPE_BRIDGE_POST, RopeBridgePostBlockEntityRenderer::new);
+	}
+
 
 	private static void registerColorProviders() {
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0 ? ((DyeableItem)stack.getItem()).getColor(stack) : -1, CampanionItems.SLEEPING_BAG);

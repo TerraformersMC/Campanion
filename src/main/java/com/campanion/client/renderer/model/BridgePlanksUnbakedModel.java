@@ -24,6 +24,7 @@ public class BridgePlanksUnbakedModel implements UnbakedModel {
         List<SpriteIdentifier> list = new ArrayList<>();
         Collections.addAll(list, BridgePlanksBakedModel.PLANKS);
         list.add(BridgePlanksBakedModel.ROPE);
+        list.add(BridgePlanksBakedModel.STOPPER);
         return list;
     }
 

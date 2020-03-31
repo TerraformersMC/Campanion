@@ -1,23 +1,35 @@
 package com.campanion.ropebridge;
 
-import com.campanion.block.CampanionBlocks;
-import com.campanion.blockentity.RopeBridgePlanksBlockEntity;
-import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class RopeBridge {
 
     public static final double PLANK_WIDTH = 4/16F;
-    public static final double PLANK_LENGTH = 16/16F;
+    public static final double PLANK_LENGTH = 15.9/16F;
     public static final double MIN_PLANK_PADDING = 2/16F;
+    public static final int PLANKS_PER_ROPE = 3;
+    public static final int PLANK_VARIANT_TEXTURES = 2;
+    public static final int PLANKS_PER_ITEM = 5;
 
-    public static final int PLANK_VARIENTS = 6;
+    public static final int ROPE_WIDTH = 1;
+    public static final float UNDER_ROPE_DIST_FROM_EDGE = 2F;
+    public static final float ROPE_LENGTH = 14.5F;
+    public static final int KNOT_SIZE = 1;
+
+    public static final int STOPPER_WIDTH = 4;
+    public static final int STOPPER_HEIGHT = 16;
+
+    public static final double LIMITING_ANGLE = 2D*Math.PI/3D;
+    public static final double LIMITING_XZ_DIST = 75;
 
     public static final double WEIGHT_OF_PLANK = 0.5/16F; //Per block
 
@@ -26,13 +38,12 @@ public class RopeBridge {
 
     private final double angle;
 
-    private final double increment;
+    private final int totalPlanks;
 
     //Bezier Curve Points:
     private final double a;
     private final double b;
     private final double c;
-
 
     public RopeBridge(BlockPos from, BlockPos to) {
         this.from = new Vec3d(from).add(0.5, 0, 0.5);
@@ -41,9 +52,8 @@ public class RopeBridge {
 
         double length = this.from.distanceTo(this.to);
         double totalPlankSize = PLANK_WIDTH + MIN_PLANK_PADDING;
-        int totalPlanks = MathHelper.floor(length / totalPlankSize);
+        this.totalPlanks = MathHelper.floor(length / totalPlankSize);
 
-        this.increment = 1D / totalPlanks;
         double s = from.getY();                                                     //beizer start
         double m = (from.getY() + to.getY()) / 2D - WEIGHT_OF_PLANK*totalPlanks;    //beizer middle
         double e = to.getY();                                                       //beizer end
@@ -65,50 +75,106 @@ public class RopeBridge {
         this.c = s;
     }
 
-    public void generateBlocks(World world) {
+    public Optional<Text> getFailureReason() {
+        double deltaX = this.to.getX() - this.from.getX();
+        double deltaZ = this.to.getZ() - this.from.getZ();
+        double xzDist = Math.sqrt(deltaX*deltaX + deltaZ*deltaZ);
+
+        double theta = Math.atan((this.to.getY() - this.from.getY()) / xzDist);
+        if(theta > LIMITING_ANGLE) {
+            return Optional.of(new TranslatableText("message.campanion.rope_bridge.angle", Math.round(theta*1800D/Math.PI)/10D, Math.round(LIMITING_ANGLE*1800D/Math.PI)/10F));
+        }
+        if(xzDist > LIMITING_XZ_DIST) {
+            return Optional.of(new TranslatableText("message.campanion.rope_bridge.length", Math.round(xzDist*10D)/10D, Math.round(LIMITING_XZ_DIST*10D)/10D));
+        }
+        return Optional.empty();
+    }
+
+    public List<Pair<BlockPos, List<RopeBridgePlank>>> generateBlocks(World world) {
+        double hl = RopeBridge.PLANK_LENGTH/2D;
+        BlockPos[] positionOrder = new BlockPos[this.totalPlanks + 1];
+        Map<BlockPos, List<Pair<Float, RopeBridgePlank>>> map = new HashMap<>();
+        this.generateBlocks(world, positionOrder, 0, 0, map);
+        this.generateBlocks(world, positionOrder, hl*Math.sin(this.angle), -hl*Math.cos(this.angle), map);
+        this.generateBlocks(world, positionOrder, -hl*Math.sin(this.angle), hl*Math.cos(this.angle), map);
+
+        //Sorting
+        List<Triple<BlockPos, Float, RopeBridgePlank>> fulList = new LinkedList<>();
+        map.forEach((pos, pairs) -> {
+            for (Pair<Float, RopeBridgePlank> pair : pairs) {
+                fulList.add(Triple.of(pos, pair.getLeft(), pair.getRight()));
+            }
+        });
+        fulList.sort(Comparator.comparing(Triple::getMiddle));
+
+        List<Pair<BlockPos, List<RopeBridgePlank>>> out = new LinkedList<>();
+        for (Triple<BlockPos, Float, RopeBridgePlank> triple : fulList) {
+            Optional<List<RopeBridgePlank>> first = out.stream().filter(blockPosListPair -> blockPosListPair.getLeft().equals(triple.getLeft())).map(Pair::getRight).findFirst();
+            List<RopeBridgePlank> list;
+            if(first.isPresent()) {
+                list = first.get();
+            } else {
+                list = new LinkedList<>();
+                out.add(Pair.of(triple.getLeft(), list));
+            }
+            list.add(triple.getRight());
+        }
+        return out;
+    }
+
+    private void generateBlocks(World world, BlockPos[] positionOrder, double xOff, double zOff,
+                                Map<BlockPos, List<Pair<Float, RopeBridgePlank>>> map
+    ) {
+        boolean master = xOff == 0 && zOff == 0;
         double deltaX = this.to.getX() - this.from.getX();
         double deltaZ = this.to.getZ() - this.from.getZ();
 
-        BlockPos previousPostion = BlockPos.ORIGIN;
-        BlockPos previousPreviousPosition = BlockPos.ORIGIN;
-        List<RopeBridgePlank> previousPlanks = new ArrayList<>();
-        Vec3d previousPlankPosition = null;
-        for (double d = 0; d <= 1D; d += this.increment) {
+        BlockPos fromPos = new BlockPos(this.from);
+        BlockPos toPos = new BlockPos(this.to);
 
-            double x = this.from.getX() + deltaX * d;
-            double y = this.beizerCurve(d);
-            double z = this.from.getZ() + deltaZ * d;
+        int index = 0;
+        int offset = world.random.nextInt(PLANKS_PER_ROPE);
 
-            BlockPos pos = new BlockPos(x, y, z);
-            BlockEntity entity = world.getBlockEntity(pos);
-            if(!(entity instanceof RopeBridgePlanksBlockEntity)) {
-                world.setBlockState(pos, CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState());
-                entity = world.getBlockEntity(pos);
+        Vec3d calculatedPosition = new Vec3d(xOff + this.from.getX(), this.from.getY(), zOff + this.from.getZ());
+        for (int i = 0; i <= this.totalPlanks; i++) {
+            double d = (double) i / this.totalPlanks;
+            double nextD = Math.min((double) (i + 1) / this.totalPlanks, 1D);
+
+            BlockPos pos = new BlockPos(calculatedPosition);
+            float ropesSubtract = 0;
+            boolean flat = pos.equals(fromPos) || pos.equals(toPos);
+            if(pos.equals(fromPos.down()) || pos.equals(toPos.down())) {
+                pos = pos.up();
+                ropesSubtract = (float) (pos.getY() - calculatedPosition.y);
+                calculatedPosition = new Vec3d(calculatedPosition.x, pos.getY(), calculatedPosition.z);
+                flat = true;
             }
-            //Should always be true
-            if(entity instanceof RopeBridgePlanksBlockEntity) {
-                Vec3d worldPosition = new Vec3d(x, y, z);
-                Vec3d fromPosition = previousPlankPosition == null ? Vec3d.ZERO : previousPlankPosition.subtract(worldPosition);
+            Vec3d newPos = new Vec3d(xOff + this.from.getX() + deltaX * nextD, this.beizerCurve(nextD), zOff + this.from.getZ() + deltaZ * nextD);
 
-                Vec3d vec3d = new Vec3d(MathHelper.floorMod(x, 1D), MathHelper.floorMod(y, 1), MathHelper.floorMod(z, 1));
-                double tileAngle = Math.atan(this.beizerCurveGradient(d) / Math.sqrt(deltaX*deltaX + deltaZ*deltaZ));
+            if((master || !positionOrder[index].equals(pos))) {
+                Vec3d vec3d = new Vec3d(MathHelper.floorMod(calculatedPosition.x, 1D)-xOff, MathHelper.floorMod(calculatedPosition.y + 0.001, 1), MathHelper.floorMod(calculatedPosition.z, 1)-zOff);
+                double tiltAngle = Math.atan(this.beizerCurveGradient(d) / Math.sqrt(deltaX*deltaX + deltaZ*deltaZ));
 
-                RopeBridgePlank plank = new RopeBridgePlank(vec3d, this.angle, tileAngle, (float) fromPosition.length(), world.random.nextInt(PLANK_VARIENTS), world.random.nextInt(128));
-                ((RopeBridgePlanksBlockEntity) entity).getPlanks().add(plank);
-
-                if(!previousPostion.equals(pos)) {
-                    for (RopeBridgePlank previousPlank : previousPlanks) {
-                        previousPlank.setPrevious(previousPreviousPosition);
-                        previousPlank.setNext(pos);
-                    }
-                    previousPreviousPosition = previousPostion;
-                    previousPostion = pos;
-
-                    previousPlanks.clear();
+                if(Double.isNaN(tiltAngle)) {
+                    tiltAngle = 0;
                 }
-                previousPlanks.add(plank);
-                previousPlankPosition = worldPosition;
+
+                map.computeIfAbsent(pos, p -> new LinkedList<>()).add(
+                    Pair.of(index + (master ? 0F : 0.5F),
+                        new RopeBridgePlank(
+                            fromPos, toPos, vec3d, this.angle, tiltAngle, (float) newPos.subtract(calculatedPosition).length(),
+                            ropesSubtract, world.random.nextInt(128), flat, master,
+                            (offset + index) % PLANKS_PER_ROPE == 0, i == 0 || i == this.totalPlanks
+                        )
+                    )
+                );
+
             }
+            if(master) {
+                positionOrder[index] = pos;
+            }
+            index++;
+            calculatedPosition = newPos;
         }
     }
 
