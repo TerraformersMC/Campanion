@@ -21,7 +21,7 @@ import java.util.List;
 
 public class RopeBridgePostBlockEntityRenderer extends BlockEntityRenderer<RopeBridgePostBlockEntity> {
 
-    private final ThreadLocal<BlockRenderContext> CONTEXTS = ThreadLocal.withInitial(BlockRenderContext::new);
+    private static final ThreadLocal<BlockRenderContext> CONTEXTS = ThreadLocal.withInitial(BlockRenderContext::new);
 
     public RopeBridgePostBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
         super(dispatcher);

@@ -133,10 +133,6 @@ public class RopeBridgePlank {
         return tag;
     }
 
-    public void deleteMeshCache() {
-        this.mesh = null;
-    }
-
     public Optional<Mesh> getOrGenerateMesh(boolean translucent) {
         if(!this.master) {
             return Optional.empty();
@@ -145,6 +141,11 @@ public class RopeBridgePlank {
             return Optional.of(this.mesh);
         }
         Random random = new Random(this.ropeVariant);
+
+        //Randoms at the start of their lifecycle will often give out the same data.
+        //The following is to ensure that what's given to us isn't going to be similar
+        byte[] discarded = new byte[256];
+        random.nextBytes(discarded);
 
         RenderMaterial material = RendererAccess.INSTANCE.getRenderer().materialFinder().blendMode(0, BlendMode.CUTOUT).find();
         MeshBuilder builder = IndigoRenderer.INSTANCE.meshBuilder();
@@ -169,10 +170,10 @@ public class RopeBridgePlank {
         if(!this.flat) {
             stack.multiply(Vector3f.POSITIVE_Z.getRadialQuaternion(this.tiltAngle));
         }
-        Sprite sprite = BridgePlanksBakedModel.PLANKS[random.nextInt(BridgePlanksBakedModel.PLANKS.length)].getSprite();
-        int vStart = random.nextInt((int) (RopeBridge.PLANK_WIDTH*16F));
-        float minV = sprite.getFrameV(vStart);
-        float maxV = sprite.getFrameV(vStart+RopeBridge.PLANK_WIDTH*16F);
+        Sprite sprite = BridgePlanksBakedModel.PLANKS[random.nextInt(RopeBridge.PLANK_VARIANT_TEXTURES)].getSprite();
+        double vStart = random.nextInt((int) (1F / RopeBridge.PLANK_WIDTH))*RopeBridge.PLANK_WIDTH;
+        float minV = sprite.getFrameV(vStart*16F);
+        float maxV = sprite.getFrameV((vStart+RopeBridge.PLANK_WIDTH)*16F);
 
         float hl = (float) (RopeBridge.PLANK_LENGTH / 2D); //half length
         float hw = (float) (RopeBridge.PLANK_WIDTH / 2D); //half width

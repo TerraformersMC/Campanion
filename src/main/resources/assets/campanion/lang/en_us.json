@@ -43,6 +43,7 @@
   "advancements.campanion.husbandry.eat_smore.title": "S'more than a Good Treat",
   "advancements.campanion.husbandry.eat_smore.description": "Eat a S'more",
 
+  "message.campanion.rope_bridge.same_position": "Cannot build a bridge to the same position",
   "message.campanion.rope_bridge.obstructed": "Unable to build rope bridge: Obstructed at %s, %s, %s",
   "message.campanion.rope_bridge.angle": "Angle too large! Current '%s', max '%s'",
   "message.campanion.rope_bridge.length": "Length too long! Current '%s', max '%s'",

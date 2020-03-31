@@ -3,7 +3,6 @@ package com.campanion.client;
 import com.campanion.block.CampanionBlocks;
 import com.campanion.blockentity.CampanionBlockEntities;
 import com.campanion.client.blockentity.RopeBridgePostBlockEntityRenderer;
-import com.campanion.client.renderer.blockentity.PlankBlockEntityRenderer;
 import com.campanion.client.renderer.entity.GrapplingHookEntityRenderer;
 import com.campanion.client.renderer.entity.SpearEntityRenderer;
 import com.campanion.client.renderer.model.BridgePlanksUnbakedModel;

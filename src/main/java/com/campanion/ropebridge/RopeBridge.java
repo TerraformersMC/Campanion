@@ -28,7 +28,7 @@ public class RopeBridge {
     public static final int STOPPER_WIDTH = 4;
     public static final int STOPPER_HEIGHT = 16;
 
-    public static final double LIMITING_ANGLE = 2D*Math.PI/3D;
+    public static final double LIMITING_ANGLE = Math.PI/4D;
     public static final double LIMITING_XZ_DIST = 75;
 
     public static final double WEIGHT_OF_PLANK = 0.5/16F; //Per block
@@ -80,7 +80,10 @@ public class RopeBridge {
         double deltaZ = this.to.getZ() - this.from.getZ();
         double xzDist = Math.sqrt(deltaX*deltaX + deltaZ*deltaZ);
 
-        double theta = Math.atan((this.to.getY() - this.from.getY()) / xzDist);
+        double theta = Math.abs(Math.atan((this.to.getY() - this.from.getY()) / xzDist));
+        if(this.to.equals(this.from)) {
+            return Optional.of(new TranslatableText("message.campanion.rope_bridge.same_position"));
+        }
         if(theta > LIMITING_ANGLE) {
             return Optional.of(new TranslatableText("message.campanion.rope_bridge.angle", Math.round(theta*1800D/Math.PI)/10D, Math.round(LIMITING_ANGLE*1800D/Math.PI)/10F));
         }
