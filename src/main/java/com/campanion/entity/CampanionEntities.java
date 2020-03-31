@@ -23,6 +23,8 @@ public class CampanionEntities {
 	public static final EntityType<SpearEntity> GOLDEN_SPEAR = add("golden_spear", createSpear(CampanionItems.GOLDEN_SPEAR));
 	public static final EntityType<SpearEntity> DIAMOND_SPEAR = add("diamond_spear", createSpear(CampanionItems.DIAMOND_SPEAR));
 
+	public static final EntityType<GrapplingHookEntity> GRAPPLING_HOOK = add("grappling_hook", FabricEntityTypeBuilder.<GrapplingHookEntity>create(EntityCategory.MISC).disableSaving().disableSummon().size(EntityDimensions.fixed(0.25F, 0.25F)).build());
+
 	public static void register() {
 		for (Identifier id : ENTITY_TYPES.keySet()) {
 			Registry.register(Registry.ENTITY_TYPE, id, ENTITY_TYPES.get(id));

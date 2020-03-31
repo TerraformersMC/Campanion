@@ -37,6 +37,8 @@ public class CampanionItems {
 
 	public static final SleepingBagItem SLEEPING_BAG = add("sleeping_bag", new SleepingBagItem(new Item.Settings().maxDamage(250).group(ItemGroup.TOOLS)));
 
+	public static final GrapplingHookItem GRAPPLING_HOOK = add("grappling_hook", new GrapplingHookItem(new Item.Settings().maxDamage(250).group(ItemGroup.TOOLS)));
+
 	private static <I extends Item> I add(String name, I item) {
 		ITEMS.put(new Identifier(Campanion.MOD_ID, name), item);
 		return item;

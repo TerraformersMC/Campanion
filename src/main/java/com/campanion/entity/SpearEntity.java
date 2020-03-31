@@ -3,8 +3,6 @@ package com.campanion.entity;
 import com.campanion.item.SpearItem;
 import com.campanion.network.S2CEntitySpawnPacket;
 import com.campanion.sound.CampanionSoundEvents;
-import com.google.common.collect.Lists;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -25,13 +23,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.Packet;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 public class SpearEntity extends ProjectileEntity {
 	private static final TrackedData<Boolean> ENCHANTMENT_GLINT;
@@ -59,7 +57,6 @@ public class SpearEntity extends ProjectileEntity {
 	protected void initDataTracker() {
 		super.initDataTracker();
 		this.dataTracker.startTracking(ENCHANTMENT_GLINT, false);
-
 	}
 
 	@Override
@@ -80,11 +77,11 @@ public class SpearEntity extends ProjectileEntity {
 	protected void onEntityHit(EntityHitResult entityHitResult) {
 		int level = EnchantmentHelper.getLevel(Enchantments.PIERCING, this.spearStack);
 		Entity hitEntity = entityHitResult.getEntity();
-		if(this.piercedEntities.contains(hitEntity.getUuid()) || this.piercedEntities.size() > level) {
+		if (this.piercedEntities.contains(hitEntity.getUuid()) || this.piercedEntities.size() > level) {
 			return;
 		}
 		this.piercedEntities.add(hitEntity.getUuid());
-		float damage = ((SpearItem)this.spearStack.getItem()).getAttackDamage()*2;
+		float damage = ((SpearItem) this.spearStack.getItem()).getAttackDamage() * 2;
 		if (hitEntity instanceof AnimalEntity) {
 			int impalingLevel = EnchantmentHelper.getLevel(Enchantments.IMPALING, this.spearStack);
 			if (impalingLevel > 0) {
@@ -138,9 +135,9 @@ public class SpearEntity extends ProjectileEntity {
 		}
 
 		this.piercedEntities.clear();
-		if(tag.contains("HitEntities", 9)) {
+		if (tag.contains("HitEntities", 9)) {
 			for (Tag hitEntity : tag.getList("HitEntities", 10)) {
-				this.piercedEntities.add(((CompoundTag)hitEntity).getUuid("UUID"));
+				this.piercedEntities.add(((CompoundTag) hitEntity).getUuid("UUID"));
 			}
 		}
 	}
