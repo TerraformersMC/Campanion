@@ -47,5 +47,7 @@
   "message.campanion.rope_bridge.obstructed": "Unable to build rope bridge: Obstructed at %s, %s, %s",
   "message.campanion.rope_bridge.angle": "Angle too large! Current '%s', max '%s'",
   "message.campanion.rope_bridge.length": "Length too long! Current '%s', max '%s'",
+  "message.campanion.rope_bridge.ropes": "Not enough ropes! %s more ropes needed.",
+  "message.campanion.rope_bridge.constructed": "%s planks left",
   "message.campanion.rope_bridge.finished": "Bridge Built!"
 }

@@ -1,5 +1,6 @@
 package com.campanion.ropebridge;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
@@ -24,6 +25,7 @@ public class RopeBridge {
     public static final float UNDER_ROPE_DIST_FROM_EDGE = 2F;
     public static final float ROPE_LENGTH = 14.5F;
     public static final int KNOT_SIZE = 1;
+    public static final int BLOCKS_PER_ROPE = 5;
 
     public static final int STOPPER_WIDTH = 4;
     public static final int STOPPER_HEIGHT = 16;
