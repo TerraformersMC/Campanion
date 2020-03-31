@@ -2,10 +2,7 @@ package com.campanion.item;
 
 import com.campanion.Campanion;
 import com.campanion.entity.CampanionEntities;
-import net.minecraft.item.FoodComponent;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ToolMaterials;
+import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -39,6 +36,8 @@ public class CampanionItems {
 	public static final SpearItem DIAMOND_SPEAR = add("diamond_spear", new SpearItem(ToolMaterials.DIAMOND, 1, -3.0F, () -> CampanionEntities.DIAMOND_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
 
 	public static final SleepingBagItem SLEEPING_BAG = add("sleeping_bag", new SleepingBagItem(new Item.Settings().maxDamage(250).group(ItemGroup.TOOLS)));
+
+	public static final GrapplingHookItem GRAPPLING_HOOK = add("grappling_hook", new GrapplingHookItem(new Item.Settings().maxDamage(250).group(ItemGroup.TOOLS)));
 
 	private static <I extends Item> I add(String name, I item) {
 		ITEMS.put(new Identifier(Campanion.MOD_ID, name), item);

@@ -3,6 +3,8 @@ package com.campanion.client;
 import com.campanion.block.CampanionBlocks;
 import com.campanion.blockentity.CampanionBlockEntities;
 import com.campanion.client.blockentity.RopeBridgePostBlockEntityRenderer;
+import com.campanion.client.renderer.blockentity.PlankBlockEntityRenderer;
+import com.campanion.client.renderer.entity.GrapplingHookEntityRenderer;
 import com.campanion.client.renderer.entity.SpearEntityRenderer;
 import com.campanion.client.renderer.model.BridgePlanksUnbakedModel;
 import com.campanion.entity.CampanionEntities;
@@ -44,6 +46,8 @@ public class CampanionClient implements ClientModInitializer {
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.IRON_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.GOLDEN_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.DIAMOND_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
+
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.GRAPPLING_HOOK, (dispatcher, context) -> new GrapplingHookEntityRenderer(dispatcher));
 	}
 	private static void registerRenderLayers() {
 		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.ROPE_LADDER, RenderLayer.getCutout());

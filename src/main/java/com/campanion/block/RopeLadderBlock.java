@@ -93,16 +93,15 @@ public class RopeLadderBlock extends LadderBlock {
 	@Override
 	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
 		if (!player.abilities.creativeMode) {
-			world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CampanionBlocks.ROPE_LADDER.asItem())));
+			BlockPos.Mutable progress = new BlockPos.Mutable(pos);
+			for (int i = pos.getY(); i > 0; i--) {
+				progress.setOffset(Direction.DOWN);
+				if (!world.getBlockState(progress).getBlock().equals(CampanionBlocks.ROPE_LADDER)) {
+					break;
+				}
+				world.setBlockState(progress, Blocks.AIR.getDefaultState());
+				player.giveItemStack(new ItemStack(CampanionBlocks.ROPE_LADDER.asItem()));
+			}
 		}
-	}
-
-	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
-		if (!state.canPlaceAt(world, pos)) {
-			world.spawnEntity(new ItemEntity(world.getWorld(), pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CampanionBlocks.ROPE_LADDER.asItem())));
-			return Blocks.AIR.getDefaultState();
-		}
-		return super.getStateForNeighborUpdate(state, facing, neighborState, world, pos, neighborPos);
 	}
 }
