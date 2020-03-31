@@ -1,21 +1,23 @@
 package com.campanion.mixin;
 
+import com.campanion.entity.GrapplingHookEntity;
+import com.campanion.entity.GrapplingHookUser;
 import com.campanion.entity.SleepNoSetSpawnPlayer;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(PlayerEntity.class)
-public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoSetSpawnPlayer {
+public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoSetSpawnPlayer, GrapplingHookUser {
+
+	public GrapplingHookEntity campanion_grapplingHook;
 
 	protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World world) {
 		super(type, world);
@@ -36,5 +38,15 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 
 	@Shadow
 	public void resetStat(Stat<?> stat) {
+	}
+
+	@Override
+	public GrapplingHookEntity getGrapplingHook() {
+		return campanion_grapplingHook;
+	}
+
+	@Override
+	public void setGrapplingHook(GrapplingHookEntity hook) {
+		campanion_grapplingHook = hook;
 	}
 }
