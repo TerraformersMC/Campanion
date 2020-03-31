@@ -27,8 +27,12 @@
   "item.campanion.golden_spear": "Golden Spear",
   "item.campanion.diamond_spear": "Diamond Spear",
 
+  "item.campanion.grappling_hook": "Grappling Hook",
+
   "block.campanion.rope_ladder": "Rope Ladder",
-  "block.campanion.rope_bridge_anchor": "Rope Bridge Anchor",
+  "block.campanion.rope_bridge_post": "Rope Bridge Post",
+
+  "block.campanion.lawn_chair": "Lawn Chair",
 
   "container.campanion.day_pack": "Day Pack",
   "container.campanion.camping_pack": "Camping Pack",
