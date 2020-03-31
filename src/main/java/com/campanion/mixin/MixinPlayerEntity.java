@@ -25,7 +25,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 	private int sleepTimer;
 
 	@Override
-	public void sleepWithSpawnPoint(BlockPos pos) {
+	public void sleepWithoutSpawnPoint(BlockPos pos) {
 		this.resetStat(Stats.CUSTOM.getOrCreateStat(Stats.TIME_SINCE_REST));
 		super.sleep(pos);
 		this.sleepTimer = 0;
