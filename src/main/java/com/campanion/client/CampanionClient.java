@@ -60,6 +60,7 @@ public class CampanionClient implements ClientModInitializer {
 			for (Identifier plank : PlankBlockEntityRenderer.PLANKS) {
 				registry.register(plank);
 			}
+			registry.register(PlankBlockEntityRenderer.ROPE);
 		});
 	}
 

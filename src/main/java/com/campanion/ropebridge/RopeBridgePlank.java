@@ -8,7 +8,9 @@ public class RopeBridgePlank {
     private final Vec3d deltaPosition;
     private final double yAngle;
     private final double tiltAngle;
+    private final float distToPrevious;
     private final int variant;
+    private final int ropeVariant; //Between 0-127
     private BlockPos previous = BlockPos.ORIGIN;
     private BlockPos next = BlockPos.ORIGIN;
 
@@ -24,8 +26,16 @@ public class RopeBridgePlank {
         return tiltAngle;
     }
 
+    public float getDistToPrevious() {
+        return distToPrevious;
+    }
+
     public int getVariant() {
         return variant;
+    }
+
+    public int getRopeVariant() {
+        return ropeVariant;
     }
 
     public BlockPos getPrevious() {
@@ -44,11 +54,13 @@ public class RopeBridgePlank {
         this.next = next;
     }
 
-    public RopeBridgePlank(Vec3d deltaPosition, double yAngle, double tiltAngle, int variant) {
+    public RopeBridgePlank(Vec3d deltaPosition, double yAngle, double tiltAngle, float distToPrevious, int variant, int ropeVariant) {
         this.deltaPosition = deltaPosition;
         this.yAngle = yAngle;
         this.tiltAngle = tiltAngle;
+        this.distToPrevious = distToPrevious;
         this.variant = variant;
+        this.ropeVariant = ropeVariant;
     }
 
     public static RopeBridgePlank deserailize(CompoundTag tag) {
@@ -56,7 +68,9 @@ public class RopeBridgePlank {
             new Vec3d(tag.getDouble("DeltaPosX"), tag.getDouble("DeltaPosY"), tag.getDouble("DeltaPosZ")),
             tag.getDouble("YAng"),
             tag.getDouble("TiltAng"),
-            tag.getInt("Variant"));
+            tag.getFloat("DistToPrevious"),
+            tag.getInt("Variant"),
+            tag.getByte("RopeValiant"));
         plank.previous = BlockPos.fromLong(tag.getLong("Previous"));
         plank.next = BlockPos.fromLong(tag.getLong("Next"));
         return plank;
@@ -69,7 +83,9 @@ public class RopeBridgePlank {
         tag.putDouble("DeltaPosZ", plank.deltaPosition.z);
         tag.putDouble("YAng", plank.yAngle);
         tag.putDouble("TiltAng", plank.tiltAngle);
+        tag.putDouble("DistToPrevious", plank.distToPrevious);
         tag.putInt("Variant", plank.variant);
+        tag.putByte("RopeValiant", (byte) plank.ropeVariant);
         tag.putLong("Previous", plank.previous.asLong());
         tag.putLong("Next", plank.next.asLong());
         return tag;

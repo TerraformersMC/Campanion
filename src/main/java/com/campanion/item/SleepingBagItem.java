@@ -21,6 +21,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.explosion.Explosion;
@@ -33,6 +34,7 @@ public class SleepingBagItem extends Item implements DyeableItem {
 	public static final Text CANT_SLEEP_DAY = PlayerEntity.SleepFailureReason.NOT_POSSIBLE_NOW.toText();
 	public static final Text NOT_SAFE = PlayerEntity.SleepFailureReason.NOT_SAFE.toText();
 	public static final Text NOT_ON_GROUND = new TranslatableText("item.campanion.sleeping_bag.not_on_ground");
+	public static final Text TOO_WET = new TranslatableText("item.campanion.sleeping_bag.too_wet");
 
 	public SleepingBagItem(Settings settings) {
 		super(settings);
@@ -58,26 +60,39 @@ public class SleepingBagItem extends Item implements DyeableItem {
 			} else if (!user.onGround) {
 				user.addChatMessage(NOT_ON_GROUND, true);
 			} else if (world.dimension.hasVisibleSky()) {
-				boolean canSleep = true;
 				if (!user.isCreative()) {
 					List<HostileEntity> list = world.getEntities(HostileEntity.class,
 							new Box(pos).offset(0.5D, 0.0D, 0.5D).expand(8.0D, 5.0D, 8.0D),
 							hostileEntity -> hostileEntity.isAngryAt(user));
 					if (!list.isEmpty()) {
-						canSleep = false;
 						user.addChatMessage(NOT_SAFE, true);
+						return new TypedActionResult<>(ActionResult.SUCCESS, stack);
 					}
 				}
-				if (canSleep) {
-					((SleepNoSetSpawnPlayer) user).sleepWithSpawnPoint(pos);
-					if (user instanceof ServerPlayerEntity) {
-						CampanionCriteria.SLEPT_IN_SLEEPING_BAG.trigger((ServerPlayerEntity) user);
+				if (world.isRaining()) {
+					if (!checkForCover(world, new BlockPos.Mutable(user.getBlockPos()))) {
+						user.addChatMessage(TOO_WET, true);
+						return new TypedActionResult<>(ActionResult.SUCCESS, stack);
 					}
-					setInUse(stack, true);
 				}
+				((SleepNoSetSpawnPlayer) user).sleepWithoutSpawnPoint(pos);
+				if (user instanceof ServerPlayerEntity) {
+					CampanionCriteria.SLEPT_IN_SLEEPING_BAG.trigger((ServerPlayerEntity) user);
+				}
+				setInUse(stack, true);
 			}
 		}
 		return new TypedActionResult<>(ActionResult.SUCCESS, stack);
+	}
+
+	private boolean checkForCover(World world, BlockPos.Mutable pos) {
+		for (int i = pos.getY(); i < world.getHeight(); i++) {
+			pos.setOffset(Direction.UP);
+			if (!world.getBlockState(pos).isAir()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static Optional<ItemStack> getUsingStack(LivingEntity user) {

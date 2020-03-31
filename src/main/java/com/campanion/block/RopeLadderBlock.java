@@ -1,8 +1,11 @@
 package com.campanion.block;
 
+import com.campanion.item.CampanionItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LadderBlock;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -50,6 +53,21 @@ public class RopeLadderBlock extends LadderBlock {
 	}
 
 	@Override
+	public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+		BlockPos.Mutable progrees = new BlockPos.Mutable(pos);
+		for (int i = pos.getY(); i > 0 ; i--) {
+			progrees.setOffset(Direction.DOWN);
+			if (!canPlaceAt(state, world, progrees) || !world.getBlockState(progrees).isAir() || itemStack.getCount() < 1) {
+				return;
+			}
+			if (!((PlayerEntity)placer).abilities.creativeMode) {
+				itemStack.setCount(itemStack.getCount() - 1);
+			}
+			world.setBlockState(progrees, state);
+		}
+	}
+
+	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		ItemStack stackInHand = player.getStackInHand(hand);
 		if (stackInHand.getItem() == CampanionBlocks.ROPE_LADDER.asItem()) {
@@ -73,7 +91,17 @@ public class RopeLadderBlock extends LadderBlock {
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
-		return !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, facing, neighborState, world, pos, neighborPos);
+	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+		if (!player.abilities.creativeMode) {
+			BlockPos.Mutable progress = new BlockPos.Mutable(pos);
+			for (int i = pos.getY(); i > 0; i--) {
+				progress.setOffset(Direction.DOWN);
+				if (!world.getBlockState(progress).getBlock().equals(CampanionBlocks.ROPE_LADDER)) {
+					break;
+				}
+				world.setBlockState(progress, Blocks.AIR.getDefaultState());
+				player.giveItemStack(new ItemStack(CampanionBlocks.ROPE_LADDER.asItem()));
+			}
+		}
 	}
 }
