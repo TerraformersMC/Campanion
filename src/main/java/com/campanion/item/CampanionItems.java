@@ -2,10 +2,7 @@ package com.campanion.item;
 
 import com.campanion.Campanion;
 import com.campanion.entity.CampanionEntities;
-import net.minecraft.item.FoodComponent;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ToolMaterials;
+import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
