@@ -1,0 +1,6 @@
+{
+  "parent": "campanion:block/lawn_chair",
+  "textures": {
+    "wool": "block/light_gray_wool"
+  }
+}

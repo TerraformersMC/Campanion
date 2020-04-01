@@ -3,8 +3,7 @@
 	"textures": {
 		"particle": "block/oak_planks",
 		"legs": "block/stripped_oak_log",
-		"back": "block/oak_planks",
-		"cushions": "block/white_wool"
+		"back": "block/oak_planks"
 	},
 	"elements": [
 		{
@@ -87,12 +86,12 @@
 			"from": [1, 6, 1],
 			"to": [15, 7, 15],
 			"faces": {
-				"north": {"uv": [0, 0, 14, 1], "texture": "#cushions"},
-				"east": {"uv": [0, 0, 14, 1], "texture": "#cushions"},
-				"south": {"uv": [0, 0, 14, 1], "texture": "#cushions"},
-				"west": {"uv": [0, 0, 14, 1], "texture": "#cushions"},
-				"up": {"uv": [1, 1, 15, 15], "texture": "#cushions"},
-				"down": {"uv": [1, 1, 15, 15], "texture": "#cushions"}
+				"north": {"uv": [0, 0, 14, 1], "texture": "#wool"},
+				"east": {"uv": [0, 0, 14, 1], "texture": "#wool"},
+				"south": {"uv": [0, 0, 14, 1], "texture": "#wool"},
+				"west": {"uv": [0, 0, 14, 1], "texture": "#wool"},
+				"up": {"uv": [1, 1, 15, 15], "texture": "#wool"},
+				"down": {"uv": [1, 1, 15, 15], "texture": "#wool"}
 			}
 		},
 		{

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "campanion:lawn_chair_recolored",
+  "ingredients": [
+    {
+      "tag": "campanion:lawn_chairs"
+    },
+    {
+      "item": "minecraft:pink_dye"
+    }
+  ],
+  "result": {
+    "item": "campanion:pink_lawn_chair"
+  }
+}

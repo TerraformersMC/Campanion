@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "campanion:block/pink_lawn_chair" },
+    "facing=east":  { "model": "campanion:block/pink_lawn_chair", "y": 90 },
+    "facing=south": { "model": "campanion:block/pink_lawn_chair", "y": 180 },
+    "facing=west":  { "model": "campanion:block/pink_lawn_chair", "y": 270 }
+  }
+}
