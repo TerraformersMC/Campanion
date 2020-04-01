@@ -1,34 +1,20 @@
 package com.campanion.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 
-public class TentTopPoleBlock extends HorizontalFacingBlock {
-
-	public static final DirectionProperty FACING;
+public class TentTopPoleBlock extends BaseTentBlock {
 
 	public TentTopPoleBlock(Settings settings) {
-		super(settings);
-		this.setDefaultState((BlockState)((BlockState)this.stateManager.getDefaultState()).with(FACING, Direction.NORTH));
+		super(settings, Direction.WEST);
 	}
 
-	public BlockState getPlacementState(ItemPlacementContext ctx) {
-		return (BlockState)this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
-	}
-
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		builder.add(new Property[]{FACING});
-	}
-
-	//TODO add proper hitbox
-
-	static {
-		FACING = HorizontalFacingBlock.FACING;
+	@Override
+	protected VoxelShape createShape() {//1-maxZ, minY, minX, 1-minZ, maxY, maxX
+		return VoxelShapes.union(
+			createDiagonals(7, 8, true),
+			createCuboidShape(1, 0, 7.5, 2, 8, 8.5)
+		);
 	}
 }
