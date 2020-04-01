@@ -25,10 +25,10 @@ public class CampanionBlocks {
 	public static final Block ROPE_BRIDGE_PLANKS = add("rope_bridge_planks", new RopeBridgePlanks(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).dynamicBounds().build()));
 	public static final Block ROPE_LADDER = add("rope_ladder", new RopeLadderBlock(FabricBlockSettings.of(Material.WOOD).nonOpaque().hardness(0.2F).sounds(BlockSoundGroup.LADDER).build()), ItemGroup.DECORATIONS);
 
-	public static final Block TENT_SIDE = add("tent_side", new TentSideBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(0.2F).sounds(BlockSoundGroup.WOOL).build()), ItemGroup.DECORATIONS);
-	public static final Block TENT_TOP = add("tent_top", new TentTopBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(0.2F).sounds(BlockSoundGroup.WOOL).build()), ItemGroup.DECORATIONS);
-	public static final Block TENT_TOP_POLE = add("tent_top_pole", new TentTopPoleBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(0.2F).sounds(BlockSoundGroup.WOOL).build()), ItemGroup.DECORATIONS);
-	public static final Block TENT_POLE = add("tent_pole", new TentPoleBlock(FabricBlockSettings.of(Material.WOOD).nonOpaque().hardness(0.2F).sounds(BlockSoundGroup.WOOD).build()), ItemGroup.DECORATIONS);
+	public static final Block TENT_SIDE = add("tent_side", new TentSideBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(-1).sounds(BlockSoundGroup.WOOL).nonOpaque().build()), ItemGroup.DECORATIONS);
+	public static final Block TENT_TOP = add("tent_top", new TentTopBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(-1).sounds(BlockSoundGroup.WOOL).nonOpaque().build()), ItemGroup.DECORATIONS);
+	public static final Block TENT_TOP_POLE = add("tent_top_pole", new TentTopPoleBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(-1).sounds(BlockSoundGroup.WOOL).nonOpaque().build()), ItemGroup.DECORATIONS);
+	public static final Block TENT_POLE = add("tent_pole", new TentPoleBlock(FabricBlockSettings.of(Material.WOOD).nonOpaque().hardness(-1).sounds(BlockSoundGroup.WOOD).nonOpaque().build()), ItemGroup.DECORATIONS);
 
 	private static <B extends Block> B add(String name, B block, ItemGroup tab) {
 		return add(name, block, new BlockItem(block, new Item.Settings().group(tab)));

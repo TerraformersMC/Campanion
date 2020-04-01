@@ -6,14 +6,12 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.Tag;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -50,14 +48,37 @@ public abstract class BaseTentBlock extends HorizontalFacingBlock implements Blo
 	}
 
 	@Override
+	public boolean isTranslucent(BlockState state, BlockView view, BlockPos pos) {
+		return true;
+	}
+
+	@Override
+	public boolean canSuffocate(BlockState state, BlockView view, BlockPos pos) {
+		return false;
+	}
+
+	@Override
+	public boolean isSimpleFullBlock(BlockState state, BlockView view, BlockPos pos) {
+		return false;
+	}
+
+
+	@Override
 	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+		int slotIndex = -1;
+		for (int i = 0; i < player.inventory.getInvSize(); i++) {
+			ItemStack stack = player.inventory.getInvStack(i);
+			if (stack.getItem() == CampanionItems.TENT_BAG) {
+				slotIndex = i;
+			}
+		}
 		BlockEntity be = world.getBlockEntity(pos);
-		if(be instanceof TentPartBlockEntity) {
+		if(be instanceof TentPartBlockEntity && slotIndex != -1) {
 			TentPartBlockEntity tentPart = (TentPartBlockEntity) be;
 
 			Vec3d changeSize = new Vec3d(tentPart.getSize()).add(-1, -1, -1).multiply(1/2F);
 
-			ItemStack out = new ItemStack(CampanionItems.BUILT_TENT);
+			ItemStack out = new ItemStack(CampanionItems.TENT_BAG);
 			ListTag list = new ListTag();
 			for (int x = MathHelper.floor(-changeSize.x); x <= MathHelper.floor(changeSize.x); x++) {
 				for (int y = 0; y <= 2*changeSize.getY(); y++) {
@@ -82,9 +103,7 @@ public abstract class BaseTentBlock extends HorizontalFacingBlock implements Blo
 			}
 			out.getOrCreateTag().put("Blocks", list);
 
-			ItemEntity entity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), out);
-			entity.setToDefaultPickupDelay();
-			world.spawnEntity(entity);
+			player.inventory.setInvStack(slotIndex, out);
 		}
 
 		super.onBreak(world, pos, state, player);
