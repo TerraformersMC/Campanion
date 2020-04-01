@@ -42,6 +42,8 @@ public class CampanionBlocks {
 	public static final Block RED_LAWN_CHAIR = createLawnChair("red");
 	public static final Block BLACK_LAWN_CHAIR = createLawnChair("black");
 
+	public static final Block LEATHER_TANNER = add("leather_tanner", new LeatherTanner(FabricBlockSettings.of(Material.WOOD).nonOpaque().sounds(BlockSoundGroup.WOOD).build()), ItemGroup.DECORATIONS);
+
 	private static <B extends Block> B add(String name, B block, ItemGroup tab) {
 		return add(name, block, new BlockItem(block, new Item.Settings().group(tab)));
 	}

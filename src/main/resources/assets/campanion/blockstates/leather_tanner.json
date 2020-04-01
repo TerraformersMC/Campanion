@@ -1,0 +1,18 @@
+{
+  "variants": {
+    "facing=north,age=0": { "model": "campanion:block/leather_tanner_empty" },
+    "facing=east,age=0":  { "model": "campanion:block/leather_tanner_empty", "y": 90 },
+    "facing=south,age=0": { "model": "campanion:block/leather_tanner_empty", "y": 180 },
+    "facing=west,age=0":  { "model": "campanion:block/leather_tanner_empty", "y": 270 },
+
+    "facing=north,age=1": { "model": "campanion:block/leather_tanner_raw" },
+    "facing=east,age=1":  { "model": "campanion:block/leather_tanner_raw", "y": 90 },
+    "facing=south,age=1": { "model": "campanion:block/leather_tanner_raw", "y": 180 },
+    "facing=west,age=1":  { "model": "campanion:block/leather_tanner_raw", "y": 270 },
+
+    "facing=north,age=2": { "model": "campanion:block/leather_tanner_tanned" },
+    "facing=east,age=2":  { "model": "campanion:block/leather_tanner_tanned", "y": 90 },
+    "facing=south,age=2": { "model": "campanion:block/leather_tanner_tanned", "y": 180 },
+    "facing=west,age=2":  { "model": "campanion:block/leather_tanner_tanned", "y": 270 }
+  }
+}

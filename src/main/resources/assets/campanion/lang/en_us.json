@@ -2,6 +2,7 @@
   "itemGroup.campanion.items": "Campanion Items",
 
   "item.campanion.rope": "Rope",
+  "item.campanion.tanned_leather": "Tanned Leather",
   "item.campanion.cracker": "Cracker",
   "item.campanion.marshmallow": "Marshmallow",
   "item.campanion.cooked_marshmallow": "Cooked Marshmallow",
@@ -33,6 +34,7 @@
   "block.campanion.rope_bridge_post": "Rope Bridge Post",
 
   "block.campanion.rope_bridge_anchor": "Rope Bridge Anchor",
+  "block.campanion.leather_tanner": "Leather Tanner",
   "block.campanion.white_lawn_chair": "White Lawn Chair",
   "block.campanion.orange_lawn_chair": "Orange Lawn Chair",
   "block.campanion.magenta_lawn_chair": "Magenta Lawn Chair",

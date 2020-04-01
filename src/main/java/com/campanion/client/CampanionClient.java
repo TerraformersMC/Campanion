@@ -52,6 +52,7 @@ public class CampanionClient implements ClientModInitializer {
 	}
 	private static void registerRenderLayers() {
 		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.ROPE_LADDER, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.LEATHER_TANNER, RenderLayer.getCutout());
 	}
 
 	private static void registerBlockEntityRenderers() {

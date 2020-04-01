@@ -13,8 +13,9 @@ public class CampanionItems {
 
 	private static final Map<Identifier, Item> ITEMS = new LinkedHashMap<>();
 
-	public static final Item ROPE = add("rope", new Item(new Item.Settings().group(ItemGroup.MATERIALS)));
 	public static final Item MRE = add("mre", new Item(new Item.Settings().group(ItemGroup.FOOD).food(new FoodComponent.Builder().hunger(8).saturationModifier(0.8F).build())));
+	public static final Item ROPE = add("rope", new Item(new Item.Settings().group(ItemGroup.MATERIALS)));
+	public static final Item TANNED_LEATHER = add("tanned_leather", new Item(new Item.Settings().group(ItemGroup.MATERIALS)));
 
 	public static final Item CRACKER = add("cracker", new Item(new Item.Settings().group(ItemGroup.FOOD).food(new FoodComponent.Builder().hunger(1).build())));
 	public static final Item MARSHMALLOW = add("marshmallow", new Item(new Item.Settings().group(ItemGroup.FOOD).food(new FoodComponent.Builder().hunger(1).build())));

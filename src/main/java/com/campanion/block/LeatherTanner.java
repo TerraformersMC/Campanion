@@ -1,17 +1,20 @@
 package com.campanion.block;
 
-import com.campanion.blockentity.LawnChairBlockEntity;
+import com.campanion.item.CampanionItems;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.IntProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -22,16 +25,20 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class LawnChairBlock extends HorizontalFacingBlock implements BlockEntityProvider {
+import java.util.Random;
+
+public class LeatherTanner extends HorizontalFacingBlock {
 
 	private static final VoxelShape EAST_SHAPE;
 	private static final VoxelShape WEST_SHAPE;
 	private static final VoxelShape SOUTH_SHAPE;
 	private static final VoxelShape NORTH_SHAPE;
 
-	public LawnChairBlock(Settings settings) {
+	private static final IntProperty AGE;
+
+	public LeatherTanner(Settings settings) {
 		super(settings);
-		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
+		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(AGE, 0));
 	}
 
 	@Override
@@ -42,24 +49,63 @@ public class LawnChairBlock extends HorizontalFacingBlock implements BlockEntity
 	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
 		builder.add(FACING);
+		builder.add(new Property[]{AGE});
 	}
 
 	@Override
-	public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-		BlockEntity entity = world.getBlockEntity(pos);
-		if(entity instanceof LawnChairBlockEntity && !world.isClient) {
-			((LawnChairBlockEntity) entity).findOrCreateEntity();
+	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+		if (getAge(state) == 1) {
+			world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.LEATHER)));
+		} else if (getAge(state) == 2) {
+			world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CampanionItems.TANNED_LEATHER)));
 		}
-		super.onPlaced(world, pos, state, placer, itemStack);
+		super.onBreak(world, pos, state, player);
 	}
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		BlockEntity entity = world.getBlockEntity(pos);
-		if(entity instanceof LawnChairBlockEntity && !world.isClient) {
-			player.startRiding(((LawnChairBlockEntity) entity).findOrCreateEntity());
+		if (getAge(state) == 0) {
+			ItemStack stack = player.getStackInHand(hand);
+			if (stack.getItem() == Items.LEATHER) {
+				setAge(world, pos, state, 1);
+				if (!player.isCreative()) {
+					stack.setCount(stack.getCount() - 1);
+				}
+				return ActionResult.CONSUME;
+			}
+		} else if (getAge(state) == 1) {
+			setAge(world, pos, state, 0);
+			world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.LEATHER)));
+			return ActionResult.SUCCESS;
+		} else if (getAge(state) == 2) {
+			setAge(world, pos, state, 0);
+			world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(CampanionItems.TANNED_LEATHER)));
+			return ActionResult.SUCCESS;
 		}
-		return ActionResult.CONSUME;
+		return ActionResult.FAIL;
+	}
+
+	public void setAge(World world, BlockPos pos, BlockState state, int age) {
+		world.setBlockState(pos, state.with(AGE, age), 2);
+	}
+
+	public int getAge(BlockState state) {
+		return (Integer)state.get(AGE);
+	}
+
+	@Override
+	public boolean hasRandomTicks(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+		super.scheduledTick(state, world, pos, random);
+		if (getAge(state) == 1) {
+			if (random.nextInt(8) == 0) {
+				world.setBlockState(pos, state.with(AGE,2), 2);
+			}
+		}
 	}
 
 	@Override
@@ -73,25 +119,15 @@ public class LawnChairBlock extends HorizontalFacingBlock implements BlockEntity
 		}
 	}
 
-	@Override
-	public BlockEntity createBlockEntity(BlockView view) {
-		return new LawnChairBlockEntity();
-	}
-
 	static {
-		VoxelShape baseShape = createCuboidShape(1, 6, 1, 15, 7, 15);
-		VoxelShape armLeft = createCuboidShape(2, 10, -0.5, 13, 12, 2.5);
-		VoxelShape armRight = createCuboidShape(2, 10, 13.5, 13, 12, 16.5);
-		VoxelShape legLeft = createCuboidShape(0, 0, 0, 2, 20.4, 2);
-		VoxelShape legRight = createCuboidShape(0, 0, 14, 2, 20.4, 16);
-		VoxelShape backBase = createCuboidShape(0.5, 10, 2, 1.5, 19, 14);
-
-		VoxelShape shape = VoxelShapes.union(baseShape, armLeft, armRight, legLeft, legRight, backBase);
+		VoxelShape shape = createCuboidShape(5, 0, 1, 10, 16, 15);
 
 		EAST_SHAPE = shape;
 		NORTH_SHAPE = rotate(Direction.EAST, Direction.NORTH, shape);
 		SOUTH_SHAPE = rotate(Direction.EAST, Direction.SOUTH, shape);
 		WEST_SHAPE = rotate(Direction.EAST, Direction.WEST, shape);
+
+		AGE = Properties.AGE_2;
 	}
 
 	private static VoxelShape rotate(Direction from, Direction to, VoxelShape shape) {
