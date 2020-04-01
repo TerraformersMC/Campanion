@@ -12,13 +12,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static com.campanion.block.CampanionBlocks.*;
-
 public class CampanionBlockEntities {
 
 	private static final Map<Identifier, BlockEntityType<? extends BlockEntity>> BLOCK_ENTITY_TYPES = new LinkedHashMap<>();
 
-	public static final BlockEntityType<RopeBridgePlanksBlockEntity> ROPE_BRIDGE_PLANK = add("rope_bridge_planks", RopeBridgePlanksBlockEntity::new, ROPE_BRIDGE_ANCHOR, CampanionBlocks.ROPE_BRIDGE_PLANKS);
+	public static final BlockEntityType<RopeBridgePlanksBlockEntity> ROPE_BRIDGE_PLANK = add("rope_bridge_planks", RopeBridgePlanksBlockEntity::new, CampanionBlocks.ROPE_BRIDGE_PLANKS);
+	public static final BlockEntityType<RopeBridgePostBlockEntity> ROPE_BRIDGE_POST = add("rope_bridge_post", RopeBridgePostBlockEntity::new, CampanionBlocks.ROPE_BRIDGE_ANCHOR);
 
 	public static final BlockEntityType<LawnChairBlockEntity> LAWN_CHAIR = add("lawn_chair", LawnChairBlockEntity::new, WHITE_LAWN_CHAIR,
 		ORANGE_LAWN_CHAIR, MAGENTA_LAWN_CHAIR, LIGHT_BLUE_LAWN_CHAIR, YELLOW_LAWN_CHAIR, LIME_LAWN_CHAIR, PINK_LAWN_CHAIR,GRAY_LAWN_CHAIR, LIGHT_GRAY_LAWN_CHAIR,

@@ -27,7 +27,11 @@
   "item.campanion.golden_spear": "Golden Spear",
   "item.campanion.diamond_spear": "Diamond Spear",
 
+  "item.campanion.grappling_hook": "Grappling Hook",
+
   "block.campanion.rope_ladder": "Rope Ladder",
+  "block.campanion.rope_bridge_post": "Rope Bridge Post",
+
   "block.campanion.rope_bridge_anchor": "Rope Bridge Anchor",
   "block.campanion.white_lawn_chair": "White Lawn Chair",
   "block.campanion.orange_lawn_chair": "Orange Lawn Chair",
@@ -54,5 +58,13 @@
   "advancements.campanion.husbandry.cook_marshmallow.title": "Roasted to Perfection",
   "advancements.campanion.husbandry.cook_marshmallow.description": "Roast a marshmallow over a campfire, but be careful not to burn it!",
   "advancements.campanion.husbandry.eat_smore.title": "S'more than a Good Treat",
-  "advancements.campanion.husbandry.eat_smore.description": "Eat a S'more"
+  "advancements.campanion.husbandry.eat_smore.description": "Eat a S'more",
+
+  "message.campanion.rope_bridge.same_position": "Cannot build a bridge to the same position",
+  "message.campanion.rope_bridge.obstructed": "Unable to build rope bridge: Obstructed at %s, %s, %s",
+  "message.campanion.rope_bridge.angle": "Angle too large! Current '%s', max '%s'",
+  "message.campanion.rope_bridge.length": "Length too long! Current '%s', max '%s'",
+  "message.campanion.rope_bridge.ropes": "Not enough ropes! %s more ropes needed.",
+  "message.campanion.rope_bridge.constructed": "%s planks left",
+  "message.campanion.rope_bridge.finished": "Bridge Built!"
 }

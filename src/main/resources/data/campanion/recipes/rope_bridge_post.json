@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "# #",
+    "# #"
+  ],
+  "key": {
+    "#": {
+      "tag": "minecraft:logs"
+    }
+  },
+  "result": {
+    "item": "campanion:rope_bridge_post",
+    "count": 2
+  }
+}
