@@ -25,8 +25,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
 public abstract class BaseTentBlock extends HorizontalFacingBlock implements BlockEntityProvider {
 
 	private final VoxelShape northShape;
@@ -98,7 +96,6 @@ public abstract class BaseTentBlock extends HorizontalFacingBlock implements Blo
 	}
 
 
-	@Nullable
 	@Override
 	public BlockEntity createBlockEntity(BlockView view) {
 		return new TentPartBlockEntity();

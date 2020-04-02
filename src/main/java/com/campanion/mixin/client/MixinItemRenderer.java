@@ -1,41 +1,15 @@
 package com.campanion.mixin.client;
 
-import com.campanion.client.items.BuiltTentItemRenderer;
-import com.campanion.client.model.entity.SpearEntityModel;
-import com.campanion.client.renderer.entity.SpearEntityRenderer;
-import com.campanion.item.CampanionItems;
-import com.campanion.item.SpearItem;
-<<<<<<< HEAD
-import net.minecraft.client.model.Model;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.item.ItemModels;
-=======
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumerProvider;
->>>>>>> Fixed loads of tent issues and added ghost rendering and rotation
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-<<<<<<< HEAD
-import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Final;
-=======
-import net.minecraft.util.math.BlockPos;
->>>>>>> Fixed loads of tent issues and added ghost rendering and rotation
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Objects;
 
 @Mixin(ItemRenderer.class)
 public class MixinItemRenderer {
