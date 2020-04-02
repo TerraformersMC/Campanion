@@ -1,108 +1,75 @@
 package com.campanion.client.items;
 
+import com.campanion.client.util.TentPreviewImmediate;
 import com.campanion.item.TentBagItem;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.RenderLayers;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.*;
+import net.minecraft.client.render.block.BlockRenderManager;
+import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
+import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.LightType;
-import net.minecraft.world.chunk.light.LightingProvider;
-import net.minecraft.world.level.ColorResolver;
+import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Random;
 
 public enum BuiltTentItemRenderer {
     INSTANCE;
 
-    public boolean render(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model) {
-        if(renderMode == ModelTransformation.Mode.GUI || !stack.hasTag() || !stack.getOrCreateTag().contains("Blocks")) {
+    public boolean render(ItemStack stack, MatrixStack matrices, BlockPos basePos, VertexConsumerProvider provider, int lightOverride) {
+        if(!stack.hasTag() || !stack.getOrCreateTag().contains("Blocks")) {
             return false;
         }
-        MinecraftClient client = MinecraftClient.getInstance();
-        FakeWorld fakeWorld = new FakeWorld(LightmapTextureManager.getBlockLightCoordinates(light), LightmapTextureManager.getSkyLightCoordinates(light));
+        FakeWorld fakeWorld = new FakeWorld(basePos, lightOverride);
         TentBagItem.traverseBlocks(stack, (pos, state, tag) -> {
             fakeWorld.blockStateMap.put(pos, state);
             if(!tag.isEmpty()) {
-                fakeWorld.blockEntityMap.put(pos, BlockEntity.createFromTag(tag));
+                fakeWorld.blockEntityTagMap.put(pos, tag);
             }
         });
-
-        matrices.push();
-        matrices.scale(1/4F, 1/4F, 1/4F);
-        client.getBlockRenderManager().getModel(Blocks.STONE.getDefaultState()).getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
         fakeWorld.blockStateMap.forEach((pos, state) -> {
-            VertexConsumer buffer = vertexConsumers.getBuffer(RenderLayers.getBlockLayer(state));
             matrices.push();
             matrices.translate(pos.getX(), pos.getY(), pos.getZ());
-            client.getBlockRenderManager().renderBlock(state, pos.up(500), fakeWorld, matrices, buffer, true, client.world.random);
+            renderFakeBlock(fakeWorld, pos, basePos, matrices, provider);
             matrices.pop();
         });
-
-        matrices.pop();
-
-
         return true;
     }
 
-    private class FakeWorld implements BlockRenderView {
+    public static void renderFakeBlock(World world, BlockPos pos, BlockPos basePos, MatrixStack matrices, VertexConsumerProvider provider) {
+        BlockState state = world.getBlockState(pos);
+        VertexConsumer buffer = provider.getBuffer(RenderLayers.getBlockLayer(state));
 
-        private Map<BlockPos, BlockState> blockStateMap = new HashMap<>();
-        private Map<BlockPos, BlockEntity> blockEntityMap = new HashMap<>();
-
-        private final int blocklight;
-        private final int skylight;
-
-        private FakeWorld(int blocklight, int skylight) {
-            this.blocklight = blocklight;
-            this.skylight = skylight;
+        BlockPos off = basePos.add(pos);
+        BlockRenderManager manager = MinecraftClient.getInstance().getBlockRenderManager();
+        if(state.getRenderType() == BlockRenderType.MODEL) {
+            manager.renderBlock(state, off, world, matrices, buffer, false, new Random());
         }
 
-        @Override
-        public LightingProvider getLightingProvider() {
-            return MinecraftClient.getInstance().world.getLightingProvider();
+        BlockEntity entity = world.getBlockEntity(pos);
+        if(entity != null) {
+            renderBlockEntity(entity, matrices, provider, WorldRenderer.getLightmapCoordinates(world, pos));
         }
+    }
 
-        @Override
-        public int getLightLevel(LightType type, BlockPos pos) {
-            if (type == LightType.BLOCK) {
-                return this.blocklight;
+    private static <E extends BlockEntity> void renderBlockEntity(E entity, MatrixStack matrices, VertexConsumerProvider provider, int light) {
+        BlockEntityRenderer<E> blockEntityRenderer = BlockEntityRenderDispatcher.INSTANCE.get(entity);
+        if (blockEntityRenderer != null) {
+            try {
+                blockEntityRenderer.render(entity, MinecraftClient.getInstance().getTickDelta(), matrices, provider, light, OverlayTexture.getUv(0, true));
+            } catch (Throwable var5) {
+                CrashReport crashReport = CrashReport.create(var5, "Tent Rendering Block Entity");
+                CrashReportSection crashReportSection = crashReport.addElement("Block Entity Details");
+                entity.populateCrashReport(crashReportSection);
+                throw new CrashException(crashReport);
             }
-            return this.skylight;
-        }
-
-        @Override
-        public BlockState getBlockState(BlockPos pos) {
-            return this.blockStateMap.getOrDefault(pos, Blocks.AIR.getDefaultState());
-        }
-
-        @Nullable
-        @Override
-        public BlockEntity getBlockEntity(BlockPos pos) {
-            return this.blockEntityMap.get(pos);
-        }
-
-        @Override
-        public int getColor(BlockPos pos, ColorResolver colorResolver) {
-            return MinecraftClient.getInstance().world.getColor(pos, colorResolver);
-        }
-
-        @Override
-        public FluidState getFluidState(BlockPos pos) {
-            return Fluids.EMPTY.getDefaultState();
         }
     }
 }

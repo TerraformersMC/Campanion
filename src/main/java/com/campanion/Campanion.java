@@ -7,6 +7,7 @@ import com.campanion.entity.CampanionEntities;
 import com.campanion.item.BackpackItem;
 import com.campanion.item.CampanionItems;
 import com.campanion.network.C2SEmptyBackpack;
+import com.campanion.network.C2SRotateHeldItem;
 import com.campanion.network.S2CClearBackpackHeldItem;
 import com.campanion.sound.CampanionSoundEvents;
 import com.google.gson.FieldNamingPolicy;
@@ -58,6 +59,7 @@ public class Campanion implements ModInitializer {
 
 	public static void registerServerboundPackets() {
 		ServerSidePacketRegistry.INSTANCE.register(C2SEmptyBackpack.ID, C2SEmptyBackpack::onPacket);
+		ServerSidePacketRegistry.INSTANCE.register(C2SRotateHeldItem.ID, C2SRotateHeldItem::onPacket);
 	}
 
 	//Maybe move to a mixin (PlayerInventory#setCursorStack)

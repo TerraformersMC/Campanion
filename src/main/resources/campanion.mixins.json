@@ -14,7 +14,9 @@
     "client.MixinPlayerEntityRenderer",
     "client.MixinWolfEntityModel",
     "client.MixinCamera",
-    "client.MixinItemRenderer"
+    "client.MixinItemRenderer",
+    "client.MixinWorldRenderer",
+    "client.MixinMinecraftClient"
   ],
   "injectors": {
     "defaultRequire": 1
