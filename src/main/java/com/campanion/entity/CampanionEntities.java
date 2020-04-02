@@ -27,6 +27,8 @@ public class CampanionEntities {
 
 	public static final EntityType<LawnChairEntity> LAWN_CHAIR = add("lawn_chair", FabricEntityTypeBuilder.<LawnChairEntity>create(EntityCategory.MISC, (type, world) -> new LawnChairEntity(world)).build());
 
+	public static final EntityType<ThrowingStoneEntity> THROWING_STONE = add("throwing_stone", FabricEntityTypeBuilder.<ThrowingStoneEntity>create(EntityCategory.MISC).disableSaving().disableSummon().size(EntityDimensions.fixed(0.25F,0.25F)).build());
+
 	public static void register() {
 		for (Identifier id : ENTITY_TYPES.keySet()) {
 			Registry.register(Registry.ENTITY_TYPE, id, ENTITY_TYPES.get(id));

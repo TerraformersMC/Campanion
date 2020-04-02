@@ -8,6 +8,7 @@ import com.campanion.client.renderer.entity.GrapplingHookEntityRenderer;
 import com.campanion.client.renderer.entity.SpearEntityRenderer;
 import com.campanion.client.renderer.model.BridgePlanksUnbakedModel;
 import com.campanion.entity.CampanionEntities;
+import com.campanion.entity.ThrowingStoneEntity;
 import com.campanion.item.CampanionItems;
 import com.campanion.network.S2CClearBackpackHeldItem;
 import com.campanion.network.S2CEntitySpawnPacket;
@@ -20,6 +21,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.BlockModels;
+import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 import net.minecraft.item.DyeableItem;
 
 public class CampanionClient implements ClientModInitializer {
@@ -49,6 +51,8 @@ public class CampanionClient implements ClientModInitializer {
 
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.GRAPPLING_HOOK, (dispatcher, context) -> new GrapplingHookEntityRenderer(dispatcher));
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.LAWN_CHAIR, (dispatcher, context) -> new EmptyRenderer<>(dispatcher));
+
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.THROWING_STONE, (dispatcher, context) -> new FlyingItemEntityRenderer<ThrowingStoneEntity>(dispatcher, context.getItemRenderer()));
 	}
 	private static void registerRenderLayers() {
 		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.ROPE_LADDER, RenderLayer.getCutout());
