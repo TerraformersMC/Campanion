@@ -2,6 +2,7 @@ package com.campanion.block;
 
 import com.campanion.blockentity.TentPartBlockEntity;
 import com.campanion.item.CampanionItems;
+import com.campanion.item.TentBagItem;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
@@ -51,6 +52,13 @@ public abstract class BaseTentBlock extends HorizontalFacingBlock implements Blo
 
 	@Override
 	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+//		int slotIndex = -1;
+//		for (int i = 0; i < player.inventory.getInvSize(); i++) {
+//			ItemStack stack = player.inventory.getInvStack(i);
+//			if (stack.getItem() == CampanionItems.TENT_BAG && !TentBagItem.hasBlocks(stack)) {
+//				slotIndex = i;
+//			}
+//		}
 		BlockEntity be = world.getBlockEntity(pos);
 		if(be instanceof TentPartBlockEntity) {
 			TentPartBlockEntity tentPart = (TentPartBlockEntity) be;
@@ -67,20 +75,19 @@ public abstract class BaseTentBlock extends HorizontalFacingBlock implements Blo
 							continue;
 						}
 						CompoundTag tag = new CompoundTag();
-						tag.putByte("PosX", (byte) x);
-						tag.putByte("PosY", (byte) y);
-						tag.putByte("PosZ", (byte) z);
+						tag.put("Pos", NbtHelper.fromBlockPos(new BlockPos(x, y, z)));
 						tag.put("BlockState", NbtHelper.fromBlockState(world.getBlockState(off)));
 						BlockEntity entity = world.getBlockEntity(off);
 						if(entity != null) {
 							tag.put("BlockEntityData", entity.toTag(new CompoundTag()));
 						}
 						list.add(tag);
-						world.setBlockState(off, Blocks.AIR.getDefaultState());
+						world.setBlockState(off, Blocks.AIR.getDefaultState(), 1 | 2 | 16);
 					}
 				}
 			}
 			out.getOrCreateTag().put("Blocks", list);
+			out.getOrCreateTag().put("TentSize", NbtHelper.fromBlockPos(tentPart.getSize()));
 
 			ItemEntity entity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), out);
 			entity.setToDefaultPickupDelay();
