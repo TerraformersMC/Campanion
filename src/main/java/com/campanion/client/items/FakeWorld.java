@@ -13,7 +13,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.level.LevelInfo;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,7 +51,6 @@ public class FakeWorld extends ClientWorld {
         return this.blockStateMap.getOrDefault(pos, Blocks.AIR.getDefaultState());
     }
 
-    @Nullable
     @Override
     public BlockEntity getBlockEntity(BlockPos pos) {
         return this.blockEntityMap.computeIfAbsent(pos, p -> {

@@ -19,8 +19,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 
-import javax.annotation.Nullable;
-
 public class UnbuiltTentItem extends Item {
 
     public UnbuiltTentItem(Settings settings) {
@@ -55,7 +53,6 @@ public class UnbuiltTentItem extends Item {
             this.size = size;
         }
 
-        @Nullable
         @Override
         public Structure.StructureBlockInfo process(WorldView worldView, BlockPos pos, Structure.StructureBlockInfo structureBlockInfo, Structure.StructureBlockInfo structureBlockInfo2, StructurePlacementData placementData) {
             if(structureBlockInfo2.state.getBlock() instanceof BaseTentBlock) {
