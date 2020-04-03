@@ -9,7 +9,8 @@
     "MixinLivingEntity",
     "MixinMobEntity",
     "MixinPlayerEntity",
-    "MixinWolfEntity"
+    "MixinWolfEntity",
+    "MixinEntity"
   ],
   "client": [
     "client.MixinCamera",

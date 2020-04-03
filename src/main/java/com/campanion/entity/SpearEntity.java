@@ -129,8 +129,8 @@ public class SpearEntity extends ProjectileEntity {
 
 	public void readCustomDataFromTag(CompoundTag tag) {
 		super.readCustomDataFromTag(tag);
-		if (tag.contains("Trident", 10)) {
-			this.spearStack = ItemStack.fromTag(tag.getCompound("Trident"));
+		if (tag.contains("Item", 10)) {
+			this.spearStack = ItemStack.fromTag(tag.getCompound("Item"));
 			this.dataTracker.set(ENCHANTMENT_GLINT, this.spearStack.hasEnchantmentGlint());
 		}
 
@@ -144,7 +144,7 @@ public class SpearEntity extends ProjectileEntity {
 
 	public void writeCustomDataToTag(CompoundTag tag) {
 		super.writeCustomDataToTag(tag);
-		tag.put("Trident", this.spearStack.toTag(new CompoundTag()));
+		tag.put("Item", this.spearStack.toTag(new CompoundTag()));
 
 		ListTag tags = new ListTag();
 		for (UUID uuid : this.piercedEntities) {
@@ -159,10 +159,6 @@ public class SpearEntity extends ProjectileEntity {
 		if (this.pickupType != ProjectileEntity.PickupPermission.ALLOWED) {
 			super.age();
 		}
-	}
-
-	protected float getDragInWater() {
-		return 0.99F;
 	}
 
 	@Environment(EnvType.CLIENT)

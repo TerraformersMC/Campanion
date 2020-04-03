@@ -1,6 +1,8 @@
 package com.campanion.network;
 
 import com.campanion.Campanion;
+import com.campanion.entity.AdditionalSpawnDataEntity;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -31,8 +33,9 @@ public class S2CEntitySpawnPacket {
         buf.writeDouble(entity.getZ());
         buf.writeByte(MathHelper.floor(entity.pitch * 256.0F / 360.0F));
         buf.writeByte(MathHelper.floor(entity.yaw * 256.0F / 360.0F));
-        buf.writeFloat(entity.pitch);
-        buf.writeFloat(entity.yaw);
+        if(entity instanceof AdditionalSpawnDataEntity) {
+            ((AdditionalSpawnDataEntity) entity).writeToBuffer(buf);
+        }
         return ServerSidePacketRegistry.INSTANCE.toPacket(ID, buf);
     }
 
@@ -46,9 +49,12 @@ public class S2CEntitySpawnPacket {
         double z = byteBuf.readDouble();
         float pitch = (byteBuf.readByte() * 360) / 256.0F;
         float yaw = (byteBuf.readByte() * 360) / 256.0F;
+        ClientWorld world = MinecraftClient.getInstance().world;
+        Entity entity = type.create(world);
+        if(entity instanceof AdditionalSpawnDataEntity) {
+            ((AdditionalSpawnDataEntity) entity).readFromBuffer(byteBuf);
+        }
         context.getTaskQueue().execute(() -> {
-            ClientWorld world = MinecraftClient.getInstance().world;
-            Entity entity = type.create(world);
             if (entity != null) {
                 entity.updatePosition(x, y, z);
                 entity.updateTrackedPosition(x, y, z);

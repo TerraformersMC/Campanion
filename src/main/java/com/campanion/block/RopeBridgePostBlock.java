@@ -20,6 +20,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -151,8 +152,9 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
                 BlockEntity be = world.getBlockEntity(planksPos);
                 for (int j = 0; j < Math.min(RopeBridge.PLANKS_PER_ITEM - i, planks.size()); j++) {
                     if(!(be instanceof RopeBridgePlanksBlockEntity)) {
-                        if (!world.getBlockState(planksPos).getMaterial().isReplaceable()) {
-                            player.addChatMessage(new TranslatableText("message.campanion.rope_bridge.obstructed", planksPos.getX(), planksPos.getY(), planksPos.getZ()), false);
+                        BlockState state = world.getBlockState(planksPos);
+                        if (!state.getMaterial().isReplaceable()) {
+                            player.addChatMessage(new TranslatableText("message.campanion.rope_bridge.obstructed", planksPos.getX(), planksPos.getY(), planksPos.getZ(), Registry.BLOCK.getId(state.getBlock())), false);
                             return false;
                         }
                         world.setBlockState(planksPos, CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState());
