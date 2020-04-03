@@ -63,7 +63,7 @@ public abstract class BaseTentBlock extends HorizontalFacingBlock implements Blo
 
 			Vec3d changeSize = new Vec3d(tentPart.getSize()).add(-1, -1, -1).multiply(1/2F);
 
-			ItemStack out = new ItemStack(CampanionItems.BUILT_TENT);
+			ItemStack out = new ItemStack(CampanionItems.TENT_BAG);
 			ListTag list = new ListTag();
 			for (int x = MathHelper.floor(-changeSize.x); x <= MathHelper.floor(changeSize.x); x++) {
 				for (int y = 0; y <= 2*changeSize.getY(); y++) {
