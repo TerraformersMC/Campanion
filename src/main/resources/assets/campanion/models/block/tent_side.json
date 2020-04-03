@@ -1,0 +1,20 @@
+{
+	"textures": {
+		"tent": "block/white_wool"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [1, 23, 16],
+			"rotation": {"angle": -45, "axis": "z", "origin": [0, 0, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 16], "texture": "#tent"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#tent"},
+				"south": {"uv": [0, 0, 1, 16], "texture": "#tent"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#tent"},
+				"up": {"uv": [0, 0, 1, 16], "texture": "#tent"},
+				"down": {"uv": [0, 0, 1, 16], "texture": "#tent"}
+			}
+		}
+	]
+}

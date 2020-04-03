@@ -1,0 +1,14 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "campanion:item/tent_bag_closed"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "campanion:open": 1
+            },
+            "model": "campanion:item/tent_bag_open"
+        }
+    ]
+}

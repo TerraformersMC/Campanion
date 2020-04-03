@@ -26,6 +26,8 @@ public class CampanionBlockEntities {
 		CYAN_LAWN_CHAIR, PURPLE_LAWN_CHAIR, BLUE_LAWN_CHAIR, BROWN_LAWN_CHAIR, GREEN_LAWN_CHAIR, RED_LAWN_CHAIR, BLACK_LAWN_CHAIR
 	);
 
+	public static final BlockEntityType<TentPartBlockEntity> TENT_PART = add("tent_part", TentPartBlockEntity::new, CampanionBlocks.TENT_POLE, TENT_SIDE, TENT_TOP, TENT_TOP_POLE);
+
 	private static <T extends BlockEntity> BlockEntityType<T> add(String name, Supplier<? extends T> supplier, Block... blocks) {
 		return add(name, BlockEntityType.Builder.create(supplier, blocks));
 	}
