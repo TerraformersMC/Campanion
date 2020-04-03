@@ -79,10 +79,10 @@ public class TentBagItem extends Item {
         if(hasBlocks(stack)) {
             Vec3d changeSize = new Vec3d(NbtHelper.toBlockPos(stack.getOrCreateTag().getCompound("TentSize"))).add(-1, -1, -1).multiply(1/2F);
             for (int x = MathHelper.floor(-changeSize.x); x <= MathHelper.floor(changeSize.x); x++) {
-                for (int y = 0; y <= 2 * changeSize.getY(); y++) {
+                for (int y = -1; y <= 2 * changeSize.getY(); y++) {
                     for (int z = MathHelper.floor(-changeSize.z); z <= MathHelper.floor(changeSize.z); z++) {
                         BlockPos blockPos = new BlockPos(pos.add(x, y, z));
-                        if(!world.getBlockState(blockPos).getMaterial().isReplaceable()) {
+                        if(y != -1 == !world.getBlockState(blockPos).getMaterial().isReplaceable()) {
                             list.add(blockPos);
                         }
                     }

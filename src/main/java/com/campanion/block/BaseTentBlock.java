@@ -96,6 +96,7 @@ public abstract class BaseTentBlock extends HorizontalFacingBlock implements Blo
 							tag.put("BlockEntityData", entity.toTag(new CompoundTag()));
 						}
 						list.add(tag);
+						world.removeBlockEntity(off);//If we wan't block entities to drop items, remove this line
 						world.setBlockState(off, Blocks.AIR.getDefaultState(), 1 | 2 | 16);
 					}
 				}
