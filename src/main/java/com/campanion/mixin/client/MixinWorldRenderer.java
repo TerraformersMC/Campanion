@@ -4,6 +4,8 @@ import com.campanion.client.items.BuiltTentItemRenderer;
 import com.campanion.client.util.TentPreviewImmediate;
 import com.campanion.item.TentBagItem;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.Material;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.Matrix4f;
@@ -23,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Mixin(WorldRenderer.class)
 public class MixinWorldRenderer {
@@ -58,10 +61,15 @@ public class MixinWorldRenderer {
                         for (BlockPos pos : list) {
                             matrices.push();
                             matrices.translate(pos.getX()-placePos.getX(), pos.getY()-placePos.getY(), pos.getZ()-placePos.getZ());
-                            float scale = 1.03F;
-                            matrices.scale(scale, scale, scale);
-                            matrices.translate(-0.5*scale+0.5, -0.5*scale+0.5, -0.5*scale+0.5);
-                            BuiltTentItemRenderer.renderFakeBlock(this.client.world, pos, BlockPos.ORIGIN, matrices, immediate);
+                            if(this.client.world.getBlockState(pos).getMaterial() == Material.AIR) {
+                                BlockState stone = Blocks.STONE.getDefaultState();
+                                MinecraftClient.getInstance().getBlockRenderManager().renderBlock(stone, pos, this.client.world, matrices, immediate.getBuffer(RenderLayers.getBlockLayer(stone)), false, new Random());
+                            } else {
+                                float scale = 1.03F;
+                                matrices.scale(scale, scale, scale);
+                                matrices.translate(-0.5*scale+0.5, -0.5*scale+0.5, -0.5*scale+0.5);
+                                BuiltTentItemRenderer.renderFakeBlock(this.client.world, pos, BlockPos.ORIGIN, matrices, immediate);
+                            }
                             matrices.pop();
                         }
 

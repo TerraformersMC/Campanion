@@ -63,7 +63,7 @@ public enum BuiltTentItemRenderer {
         BlockEntityRenderer<E> blockEntityRenderer = BlockEntityRenderDispatcher.INSTANCE.get(entity);
         if (blockEntityRenderer != null) {
             try {
-                blockEntityRenderer.render(entity, MinecraftClient.getInstance().getTickDelta(), matrices, provider, light, OverlayTexture.getUv(0, true));
+                blockEntityRenderer.render(entity, MinecraftClient.getInstance().getTickDelta(), matrices, provider, light, OverlayTexture.DEFAULT_UV);
             } catch (Throwable var5) {
                 CrashReport crashReport = CrashReport.create(var5, "Tent Rendering Block Entity");
                 CrashReportSection crashReportSection = crashReport.addElement("Block Entity Details");
