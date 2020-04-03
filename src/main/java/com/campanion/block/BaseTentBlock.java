@@ -50,13 +50,13 @@ public abstract class BaseTentBlock extends HorizontalFacingBlock implements Blo
 
 	@Override
 	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-//		int slotIndex = -1;
-//		for (int i = 0; i < player.inventory.getInvSize(); i++) {
-//			ItemStack stack = player.inventory.getInvStack(i);
-//			if (stack.getItem() == CampanionItems.TENT_BAG && !TentBagItem.hasBlocks(stack)) {
-//				slotIndex = i;
-//			}
-//		}
+		int slotIndex = -1;
+		for (int i = 0; i < player.inventory.getInvSize(); i++) {
+			ItemStack stack = player.inventory.getInvStack(i);
+			if (stack.getItem() == CampanionItems.TENT_BAG && !TentBagItem.hasBlocks(stack)) {
+				slotIndex = i;
+			}
+		}
 		BlockEntity be = world.getBlockEntity(pos);
 		if(be instanceof TentPartBlockEntity) {
 			TentPartBlockEntity tentPart = (TentPartBlockEntity) be;
@@ -88,9 +88,8 @@ public abstract class BaseTentBlock extends HorizontalFacingBlock implements Blo
 			out.getOrCreateTag().put("Blocks", list);
 			out.getOrCreateTag().put("TentSize", NbtHelper.fromBlockPos(tentPart.getSize()));
 
-			ItemEntity entity = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), out);
-			entity.setToDefaultPickupDelay();
-			world.spawnEntity(entity);
+
+			player.inventory.setInvStack(slotIndex, out);
 		}
 
 		super.onBreak(world, pos, state, player);

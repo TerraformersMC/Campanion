@@ -40,7 +40,7 @@ public class CampanionItems {
 
 	public static final GrapplingHookItem GRAPPLING_HOOK = add("grappling_hook", new GrapplingHookItem(new Item.Settings().maxDamage(250).group(ItemGroup.TOOLS)));
 	public static final SleepingBagItem SLEEPING_BAG = add("sleeping_bag", new SleepingBagItem(new Item.Settings().maxDamage(250).group(ItemGroup.MISC)));
-	public static final UnbuiltTentItem UNBUILT_TENT = add("unbuilt_tent", new UnbuiltTentItem(new Item.Settings().group(ItemGroup.MISC)));
+	public static final TentBag TENT_BAG = add("tent_bag", new TentBag(new Item.Settings().group(ItemGroup.MISC)));
 	public static final BuiltTentItem BUILT_TENT = add("built_tent", new BuiltTentItem(new Item.Settings().group(ItemGroup.MISC)));
 
 	private static <I extends Item> I add(String name, I item) {

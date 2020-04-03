@@ -19,9 +19,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 
-public class UnbuiltTentItem extends Item {
+public class TentBag extends Item {
 
-    public UnbuiltTentItem(Settings settings) {
+    public TentBag(Settings settings) {
         super(settings);
     }
 

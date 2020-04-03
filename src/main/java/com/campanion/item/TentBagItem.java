@@ -37,8 +37,7 @@ public class TentBagItem extends Item {
     }
 
     public static boolean hasBlocks(ItemStack stack) {
-        //stack.getItem() == CampanionItems.TENT_BAG
-        return stack.hasTag() && stack.getOrCreateTag().contains("Blocks", 9);
+        return stack.getItem() == CampanionItems.TENT_BAG && stack.hasTag() && stack.getOrCreateTag().contains("Blocks", 9);
     }
 
     @Override
