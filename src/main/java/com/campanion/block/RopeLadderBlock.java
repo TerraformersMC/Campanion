@@ -93,6 +93,7 @@ public class RopeLadderBlock extends LadderBlock {
 	@Override
 	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
 		if (!player.abilities.creativeMode) {
+			player.giveItemStack(new ItemStack(CampanionBlocks.ROPE_LADDER.asItem()));
 			BlockPos.Mutable progress = new BlockPos.Mutable(pos);
 			for (int i = pos.getY(); i > 0; i--) {
 				progress.setOffset(Direction.DOWN);
