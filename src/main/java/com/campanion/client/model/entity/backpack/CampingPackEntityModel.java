@@ -13,7 +13,7 @@ public class CampingPackEntityModel<T extends LivingEntity> extends TorsoParente
 		super(24, 24);
 
 		ModelPart bottomThing = new ModelPart(this, 0, 16);
-		bottomThing.setPivot(0.0F, 9.9F, 0.8F);
+		bottomThing.setPivot(0.5F, 9.9F, 0.8F);
 		bottomThing.addCuboid(-3.0F, -0.3F, -1.5F, 6, 3, 3, 0.0F);
 
 		ModelPart base = new ModelPart(this, 0, 0);

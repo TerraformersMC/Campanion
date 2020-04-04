@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " i ",
+    "rpr"
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:iron_ingot"
+    },
+    "r": {
+      "item": "campanion:rope"
+    },
+    "p": {
+      "item": "campanion:leather_pouch"
+    }
+  },
+  "result": {
+    "item": "campanion:day_pack",
+    "count": 1
+  }
+}

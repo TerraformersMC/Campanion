@@ -1,15 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "###"
+    "# #",
+    "s#s"
   ],
   "key": {
     "#": {
+      "item": "minecraft:leather"
+    },
+    "s": {
       "item": "minecraft:string"
     }
   },
   "result": {
-    "item": "campanion:rope",
+    "item": "campanion:leather_pouch",
     "count": 1
   }
 }

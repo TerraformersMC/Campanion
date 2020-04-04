@@ -3,6 +3,8 @@
 
   "item.campanion.rope": "Rope",
   "item.campanion.tanned_leather": "Tanned Leather",
+  "item.campanion.leather_pouch": "Leather Pouch",
+  "item.campanion.tanned_leather_pouch": "Tanned Leather Pouch",
   "item.campanion.cracker": "Cracker",
   "item.campanion.marshmallow": "Marshmallow",
   "item.campanion.cooked_marshmallow": "Cooked Marshmallow",
@@ -17,6 +19,7 @@
   "item.campanion.day_pack": "Day Pack",
   "item.campanion.camping_pack": "Camping Pack",
   "item.campanion.hiking_pack": "Hiking Pack",
+  "item.campanion.tent_bag": "Tent Bag",
   "item.campanion.sleeping_bag": "Sleeping Bag",
   "item.campanion.sleeping_bag.not_on_ground": "You cannot sleep in the air",
   "item.campanion.sleeping_bag.stop_sleeping": "Leave Sleeping Bag",
@@ -37,6 +40,7 @@
 
   "block.campanion.rope_bridge_anchor": "Rope Bridge Anchor",
   "block.campanion.leather_tanner": "Leather Tanner",
+
   "block.campanion.white_lawn_chair": "White Lawn Chair",
   "block.campanion.orange_lawn_chair": "Orange Lawn Chair",
   "block.campanion.magenta_lawn_chair": "Magenta Lawn Chair",
@@ -50,6 +54,9 @@
   "block.campanion.purple_lawn_chair": "Purple Lawn Chair",
   "block.campanion.blue_lawn_chair": "Blue Lawn Chair",
   "block.campanion.brown_lawn_chair": "Brown Lawn Chair",
+  "block.campanion.red_lawn_chair": "Red Lawn Chair",
+  "block.campanion.green_lawn_chair": "Green Lawn Chair",
+  "block.campanion.black_lawn_chair": "Black Lawn Chair",
 
   "container.campanion.day_pack": "Day Pack",
   "container.campanion.camping_pack": "Camping Pack",
