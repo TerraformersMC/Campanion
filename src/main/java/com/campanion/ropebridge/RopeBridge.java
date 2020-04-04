@@ -1,6 +1,5 @@
 package com.campanion.ropebridge;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +30,7 @@ public class RopeBridge {
     public static final int STOPPER_HEIGHT = 16;
 
     public static final double LIMITING_ANGLE = Math.PI/4D;
-    public static final double LIMITING_XZ_DIST = 75;
+    public static final double LIMITING_XZ_DIST = 250;
 
     public static final double WEIGHT_OF_PLANK = 0.5/16F; //Per block
 
