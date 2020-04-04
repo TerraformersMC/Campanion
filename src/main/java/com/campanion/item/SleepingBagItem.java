@@ -44,7 +44,7 @@ public class SleepingBagItem extends Item implements DyeableItem {
 	@Override
 	public int getColor(ItemStack stack) {
 		CompoundTag compoundTag = stack.getSubTag("display");
-		return compoundTag != null && compoundTag.contains("color", 99) ? compoundTag.getInt("color") : 0x3495eb;
+		return compoundTag != null && compoundTag.contains("color", 99) ? compoundTag.getInt("color") : 0xffffff;
 	}
 
 	@Override
