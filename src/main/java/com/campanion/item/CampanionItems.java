@@ -17,6 +17,8 @@ public class CampanionItems {
 	public static final Item ROPE = add("rope", new Item(new Item.Settings().group(ItemGroup.MATERIALS)));
 	public static final Item LEATHER_POUCH = add("leather_pouch", new Item(new Item.Settings().group(ItemGroup.MATERIALS)));
 	public static final Item TANNED_LEATHER_POUCH = add("tanned_leather_pouch", new Item(new Item.Settings().group(ItemGroup.MATERIALS)));
+	public static final Item WOODEN_ROD = add("wooden_rod", new Item(new Item.Settings().group(ItemGroup.MATERIALS)));
+	public static final Item WOOL_TARP = add("wool_tarp", new Item(new Item.Settings().group(ItemGroup.MATERIALS)));
 
 	public static final Item TANNED_LEATHER = add("tanned_leather", new Item(new Item.Settings().group(ItemGroup.MATERIALS)));
 

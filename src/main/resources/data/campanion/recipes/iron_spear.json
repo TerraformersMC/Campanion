@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "M",
+    "S"
+  ],
+  "key": {
+    "M": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "campanion:wooden_rod"
+    }
+  },
+  "result": {
+    "item": "campanion:iron_spear"
+  }
+}

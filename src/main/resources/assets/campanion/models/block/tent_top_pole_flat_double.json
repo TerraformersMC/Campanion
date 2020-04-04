@@ -1,0 +1,77 @@
+{
+	"parent": "campanion:/block/tent_base",
+	"textures": {
+		"pole": "block/oak_log",
+		"wool": "block/white_wool"
+	},
+	"elements": [
+		{
+			"name": "wool",
+			"from": [4, 0, 0],
+			"to": [5, 8, 16],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [4, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 10], "texture": "#wool"},
+				"east": {"uv": [0, 0, 16, 10], "texture": "#wool"},
+				"south": {"uv": [0, 0, 1, 10], "texture": "#wool"},
+				"west": {"uv": [0, 0, 16, 10], "texture": "#wool"},
+				"up": {"uv": [0, 0, 1, 16], "texture": "#wool"},
+				"down": {"uv": [0, 0, 1, 16], "texture": "#wool"}
+			}
+		},
+		{
+			"name": "wool",
+			"from": [11, 0, 0],
+			"to": [12, 8, 16],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [12, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 11], "texture": "#wool"},
+				"east": {"uv": [0, 0, 16, 11], "texture": "#wool"},
+				"south": {"uv": [0, 0, 1, 11], "texture": "#wool"},
+				"west": {"uv": [0, 0, 16, 11], "texture": "#wool"},
+				"up": {"uv": [0, 0, 1, 16], "texture": "#wool"},
+				"down": {"uv": [0, 0, 1, 16], "texture": "#wool"}
+			}
+		},
+		{
+			"name": "stick",
+			"from": [10.5, 0, 1],
+			"to": [11.5, 7, 2],
+			"faces": {
+				"north": {"uv": [0, 0, 1, 7], "texture": "#pole"},
+				"east": {"uv": [0, 0, 1, 7], "texture": "#pole"},
+				"south": {"uv": [0, 0, 1, 7], "texture": "#pole"},
+				"west": {"uv": [0, 0, 1, 7], "texture": "#pole"},
+				"up": {"uv": [0, 0, 1, 1], "texture": "#pole"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#pole"}
+			}
+		},
+		{
+			"name": "stick",
+			"from": [4.5, 0, 1],
+			"to": [5.5, 7, 2],
+			"faces": {
+				"north": {"uv": [0, 0, 1, 7], "texture": "#pole"},
+				"east": {"uv": [0, 0, 1, 7], "texture": "#pole"},
+				"south": {"uv": [0, 0, 1, 7], "texture": "#pole"},
+				"west": {"uv": [0, 0, 1, 7], "texture": "#pole"},
+				"up": {"uv": [0, 0, 1, 1], "texture": "#pole"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#pole"}
+			}
+		},
+		{
+			"name": "wool",
+			"from": [4, 7, 0],
+			"to": [12, 8, 16],
+			"color": 6,
+			"faces": {
+				"north": {"uv": [0, 0, 8, 1], "texture": "#wool"},
+				"east": {"uv": [0, 0, 16, 1], "texture": "#wool"},
+				"south": {"uv": [0, 0, 8, 1], "texture": "#wool"},
+				"west": {"uv": [0, 0, 16, 1], "texture": "#wool"},
+				"up": {"uv": [0, 0, 8, 16], "texture": "#wool"},
+				"down": {"uv": [0, 0, 8, 16], "texture": "#wool"}
+			}
+		}
+	]
+}
