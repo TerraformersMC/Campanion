@@ -68,11 +68,28 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
                         if(reason.isPresent()) {
                             player.addChatMessage(reason.get(), false);
                         } else {
-
-                            be.getGhostPlanks().put(clickedPos, bridge.generateBlocks(world));
-                            BlockEntity blockEntityTwo = world.getBlockEntity(clickedPos);
-                            if(blockEntityTwo instanceof RopeBridgePostBlockEntity) {
-                                ((RopeBridgePostBlockEntity) blockEntityTwo).getLinkedPositions().add(pos);
+                            if(player.isCreative()) {
+                                bridge.generateBlocks(world).forEach(pair -> {
+                                    BlockPos left = pair.getLeft();
+                                    BlockEntity blockEntityTwo = world.getBlockEntity(left);
+                                    if(!(blockEntityTwo instanceof RopeBridgePlanksBlockEntity)) {
+                                        world.setBlockState(left, CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState());
+                                        blockEntityTwo = world.getBlockEntity(left);
+                                    }
+                                    if(blockEntityTwo instanceof RopeBridgePlanksBlockEntity) {
+                                        for (RopeBridgePlank plank : pair.getRight()) {
+                                            ((RopeBridgePlanksBlockEntity) blockEntityTwo).addPlank(plank);
+                                        }
+                                        blockEntityTwo.markDirty();
+                                        ((RopeBridgePlanksBlockEntity) blockEntityTwo).sync();
+                                    }
+                                });
+                            } else {
+                                be.getGhostPlanks().put(clickedPos, bridge.generateBlocks(world));
+                                BlockEntity blockEntityTwo = world.getBlockEntity(clickedPos);
+                                if(blockEntityTwo instanceof RopeBridgePostBlockEntity) {
+                                    ((RopeBridgePostBlockEntity) blockEntityTwo).getLinkedPositions().add(pos);
+                                }
                             }
                             entity.markDirty();
                             be.sync();
@@ -197,7 +214,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
             player.addChatMessage(new TranslatableText("message.campanion.rope_bridge.finished"), false);
         } else {
             double counted = list.stream().flatMap(p -> p.getRight().stream()).filter(RopeBridgePlank::isMaster).count();
-            player.addChatMessage(new TranslatableText("message.campanion.rope_bridge.constructed", Math.round(counted  / RopeBridge.PLANKS_PER_ITEM) + 1), true);
+            player.addChatMessage(new TranslatableText("message.campanion.rope_bridge.constructed", Math.round(counted  / RopeBridge.PLANKS_PER_ITEM)), true);
         }
         return true;
     }
