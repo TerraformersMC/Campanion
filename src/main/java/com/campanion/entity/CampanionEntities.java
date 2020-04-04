@@ -23,7 +23,7 @@ public class CampanionEntities {
 	public static final EntityType<SpearEntity> GOLDEN_SPEAR = add("golden_spear", createSpear(CampanionItems.GOLDEN_SPEAR));
 	public static final EntityType<SpearEntity> DIAMOND_SPEAR = add("diamond_spear", createSpear(CampanionItems.DIAMOND_SPEAR));
 
-	public static final EntityType<GrapplingHookEntity> GRAPPLING_HOOK = add("grappling_hook", FabricEntityTypeBuilder.<GrapplingHookEntity>create(EntityCategory.MISC, (type, world) -> new GrapplingHookEntity(world)).disableSaving().disableSummon().size(EntityDimensions.fixed(0.25F, 0.25F)).build());
+	public static final EntityType<GrapplingHookEntity> GRAPPLING_HOOK = add("grappling_hook", FabricEntityTypeBuilder.<GrapplingHookEntity>create(EntityCategory.MISC, (type, world) -> new GrapplingHookEntity(world)).disableSaving().disableSummon().size(EntityDimensions.fixed(0.3F, 0.3F)).build());
 
 	public static final EntityType<LawnChairEntity> LAWN_CHAIR = add("lawn_chair", FabricEntityTypeBuilder.<LawnChairEntity>create(EntityCategory.MISC, (type, world) -> new LawnChairEntity(world)).build());
 
