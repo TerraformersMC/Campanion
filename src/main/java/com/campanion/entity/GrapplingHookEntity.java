@@ -179,7 +179,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	protected void ensureEntityVelocity() {
 		if (this.player != null) {
 			double dx = this.getX() - this.player.getX();
-			double dy = this.getY() - this.player.getY();
+			double dy = this.getY() - this.player.getY() + 1;
 			double dz = this.getZ() - this.player.getZ();
 			double xzDist = (double)MathHelper.sqrt(dx * dx + dz * dz);
 
@@ -187,29 +187,31 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 			double xzTheta = Math.atan2(dz, dx);
 
 			double xzAmount = Math.cos(theta);
-			Vec3d movement = new Vec3d(xzAmount*Math.cos(xzTheta), Math.signum(dy), xzAmount*Math.sin(xzTheta));
+			Vec3d movement = new Vec3d(xzAmount*Math.cos(xzTheta), Math.sin(theta) , xzAmount*Math.sin(xzTheta));
 
-//			boolean xCollide = false;
-//			boolean zCollide = false;
+			boolean xCollide = false;
+			boolean zCollide = false;
 
-//			Box box = this.player.getBoundingBox().expand(0.1, this.player.onGround ? 0 : 0.2, 0.1);
-//			for (VoxelShape shape : this.world.getBlockCollisions(this.player, box).collect(Collectors.toList())) {
-//				xCollide |= box.contains(shape.getMinimum(Direction.Axis.X), box.y1, box.z1) || box.contains(shape.getMaximum(Direction.Axis.X), box.y1, box.z1);
-//				zCollide |= box.contains(box.x1, box.y1, shape.getMinimum(Direction.Axis.Z)) || box.contains(box.x1, box.y1, shape.getMaximum(Direction.Axis.Z));
-//			}
-//
-//			if(xCollide && zCollide) {
-//				movement = new Vec3d(0, movement.y, 0);
-//			} else if(xCollide) {
-//				movement = new Vec3d(0, movement.y, xzAmount*Math.signum(movement.z));
-//			} else if(zCollide) {
-//				movement = new Vec3d(xzAmount*Math.signum(movement.x), movement.y, 0);
-//			}
+			Box box = this.player.getBoundingBox().stretch(movement.normalize());
+			for (VoxelShape shape : this.world.getBlockCollisions(this.player, box).collect(Collectors.toList())) {
+				xCollide |= box.contains(shape.getMinimum(Direction.Axis.X), box.y1, box.z1) || box.contains(shape.getMaximum(Direction.Axis.X), box.y1, box.z1);
+				zCollide |= box.contains(box.x1, box.y1, shape.getMinimum(Direction.Axis.Z)) || box.contains(box.x1, box.y1, shape.getMaximum(Direction.Axis.Z));
+			}
 
-			movement = movement.normalize().add(0, -0.5, 0);
+			if(xCollide && zCollide) {
+				movement = new Vec3d(0, movement.y, 0);
+			} else if(xCollide) {
+				movement = new Vec3d(0, movement.y, xzAmount*Math.signum(movement.z));
+			} else if(zCollide) {
+				movement = new Vec3d(xzAmount*Math.signum(movement.x), movement.y, 0);
+			}
+
+//			movement = movement.normalize().add(0, -0.25, 0);
+
+            movement = movement.normalize();
 
 			Vec3d playerVelocity = this.player.getVelocity();
-			Vec3d velocity = movement.subtract(movement.subtract(playerVelocity).multiply(0.3));
+			Vec3d velocity = movement.subtract(movement.subtract(playerVelocity).multiply(0.5));
 			this.player.setVelocity(velocity);
             this.player.velocityModified = true;
 		}
