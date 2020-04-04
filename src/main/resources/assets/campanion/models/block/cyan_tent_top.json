@@ -1,6 +1,7 @@
 {
   "parent": "campanion:block/tent_top",
   "textures": {
-    "wool": "block/cyan_wool"
+    "wool": "block/cyan_wool",
+    "particle": "block/cyan_wool"
   }
 }

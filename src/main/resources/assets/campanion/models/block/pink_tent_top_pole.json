@@ -1,6 +1,7 @@
 {
   "parent": "campanion:block/tent_top_pole",
   "textures": {
-    "wool": "block/pink_wool"
+    "wool": "block/pink_wool",
+    "particle": "block/pink_wool"
   }
 }
