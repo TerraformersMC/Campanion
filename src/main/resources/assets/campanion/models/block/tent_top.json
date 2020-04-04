@@ -1,19 +1,17 @@
 {
-	"textures": {
-		"tent": "block/white_wool"
-	},
+	"parent": "campanion:/block/tent_base",
 	"elements": [
 		{
 			"from": [8, -3, 0],
 			"to": [9, 7, 16],
 			"rotation": {"angle": -45, "axis": "z", "origin": [8, 8, 8]},
 			"faces": {
-				"north": {"uv": [0, 0, 1, 10], "texture": "#tent"},
-				"east": {"uv": [0, 0, 16, 10], "texture": "#tent"},
-				"south": {"uv": [0, 0, 1, 10], "texture": "#tent"},
-				"west": {"uv": [0, 0, 16, 10], "texture": "#tent"},
-				"up": {"uv": [0, 0, 1, 16], "texture": "#tent"},
-				"down": {"uv": [0, 0, 1, 16], "texture": "#tent"}
+				"north": {"uv": [0, 0, 1, 10], "texture": "#wool"},
+				"east": {"uv": [0, 0, 16, 10], "texture": "#wool"},
+				"south": {"uv": [0, 0, 1, 10], "texture": "#wool"},
+				"west": {"uv": [0, 0, 16, 10], "texture": "#wool"},
+				"up": {"uv": [0, 0, 1, 16], "texture": "#wool"},
+				"down": {"uv": [0, 0, 1, 16], "texture": "#wool"}
 			}
 		},
 		{
@@ -21,12 +19,12 @@
 			"to": [8, 8, 16],
 			"rotation": {"angle": 45, "axis": "z", "origin": [8, 8, 8]},
 			"faces": {
-				"north": {"uv": [0, 0, 1, 11], "texture": "#tent"},
-				"east": {"uv": [0, 0, 16, 11], "texture": "#tent"},
-				"south": {"uv": [0, 0, 1, 11], "texture": "#tent"},
-				"west": {"uv": [0, 0, 16, 11], "texture": "#tent"},
-				"up": {"uv": [0, 0, 1, 16], "texture": "#tent"},
-				"down": {"uv": [0, 0, 1, 16], "texture": "#tent"}
+				"north": {"uv": [0, 0, 1, 11], "texture": "#wool"},
+				"east": {"uv": [0, 0, 16, 11], "texture": "#wool"},
+				"south": {"uv": [0, 0, 1, 11], "texture": "#wool"},
+				"west": {"uv": [0, 0, 16, 11], "texture": "#wool"},
+				"up": {"uv": [0, 0, 1, 16], "texture": "#wool"},
+				"down": {"uv": [0, 0, 1, 16], "texture": "#wool"}
 			}
 		}
 	]

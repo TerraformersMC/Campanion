@@ -1,0 +1,6 @@
+{
+  "parent": "campanion:block/tent_top_flat",
+  "textures": {
+    "wool": "block/light_blue_wool"
+  }
+}

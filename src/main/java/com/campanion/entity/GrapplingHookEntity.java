@@ -141,7 +141,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 		if (
 			this.player.removed || !this.player.isAlive() || !isHookedEntity
 				|| (!inMainHand && !inOffHand) || dist > 16384 ||
-				(this.dataTracker.get(IS_IN_BLOCK) && dist < 1.4)) {
+				(this.dataTracker.get(IS_IN_BLOCK) && dist < 2)) {
 			this.remove();
 			((GrapplingHookUser)this.player).setGrapplingHook(null);
 			return false;
@@ -192,7 +192,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 			boolean xCollide = false;
 			boolean zCollide = false;
 
-			Box box = this.player.getBoundingBox().stretch(movement.normalize());
+			Box box = this.player.getBoundingBox().stretch(movement.normalize().x, 0, movement.normalize().z);
 			for (VoxelShape shape : this.world.getBlockCollisions(this.player, box).collect(Collectors.toList())) {
 				xCollide |= box.contains(shape.getMinimum(Direction.Axis.X), box.y1, box.z1) || box.contains(shape.getMaximum(Direction.Axis.X), box.y1, box.z1);
 				zCollide |= box.contains(box.x1, box.y1, shape.getMinimum(Direction.Axis.Z)) || box.contains(box.x1, box.y1, shape.getMaximum(Direction.Axis.Z));

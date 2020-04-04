@@ -21,26 +21,32 @@ import net.minecraft.world.WorldView;
 
 public class UnbuiltTent extends Item {
 
-    public UnbuiltTent(Settings settings) {
+    private final Identifier structure;
+
+    public UnbuiltTent(Settings settings, String structureName) {
         super(settings);
+        this.structure = new Identifier(Campanion.MOD_ID, "tents/" + structureName + "_tent");
     }
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         if (!context.getWorld().isClient) {
-            Structure structure = ((ServerWorld) context.getWorld()).getStructureManager().getStructure(new Identifier(Campanion.MOD_ID, "tents/small_tent"));
-            BlockPos size = structure.getSize();
-            structure.place(
-                context.getWorld(),
-                context.getBlockPos().add(-size.getX()/2, 1, -size.getZ()/2),
-                new StructurePlacementData()
-                    .setRotation(BlockRotation.values()[context.getPlayer().getHorizontalFacing().getHorizontal()])
-                    .setPosition(new BlockPos(size.getX()/2, 0, size.getZ()/2))
-                    .setIgnoreEntities(true)
-                    .addProcessor(new TentProcessor(context.getBlockPos().up(), size))
-            );
+            Structure structure = ((ServerWorld) context.getWorld()).getStructureManager().getStructure(this.structure);
+            if(structure != null) {
+                BlockPos size = structure.getSize();
+                structure.place(
+                    context.getWorld(),
+                    context.getBlockPos().add(-size.getX()/2, 1, -size.getZ()/2),
+                    new StructurePlacementData()
+                        .setRotation(BlockRotation.values()[context.getPlayer().getHorizontalFacing().getHorizontal()])
+                        .setPosition(new BlockPos(size.getX()/2, 0, size.getZ()/2))
+                        .setIgnoreEntities(true)
+                        .addProcessor(new TentProcessor(context.getBlockPos().up(), size))
+                );
+                return ActionResult.CONSUME;
+            }
         }
-        return ActionResult.CONSUME;
+        return super.useOnBlock(context);
     }
 
     private class TentProcessor extends StructureProcessor {

@@ -5,17 +5,17 @@ import com.campanion.item.CampanionItems;
 import com.campanion.item.TentBagItem;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.EntityContext;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.Tag;
-import net.minecraft.state.StateManager;
+import net.minecraft.state.property.Property;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.DyeColor;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -25,27 +25,68 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public abstract class BaseTentBlock extends HorizontalFacingBlock implements BlockEntityProvider {
+import java.util.HashMap;
+import java.util.Map;
 
-	private final VoxelShape northShape;
-	private final VoxelShape eastShape;
-	private final VoxelShape southShape;
-	private final VoxelShape westShape;
+public class BaseTentBlock extends Block implements BlockEntityProvider {
 
-	public BaseTentBlock(Settings settings, Direction baseDir) {
+	private static final Map<Class<?>, Map<DyeColor, BlockState>> TENT_PART_COLOR_MAP = new HashMap<>();
+
+	private final DyeColor color;
+
+	public BaseTentBlock(Settings settings, DyeColor color) {
 		super(settings);
-		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
-
-		VoxelShape shape = this.createShape();
-
-		this.northShape = rotateShape(baseDir, Direction.NORTH, shape);
-		this.eastShape = rotateShape(baseDir, Direction.EAST, shape);
-		this.southShape = rotateShape(baseDir, Direction.SOUTH, shape);
-		this.westShape = rotateShape(baseDir, Direction.WEST, shape);
+		this.color = color;
+		if(this.color != null) {
+			TENT_PART_COLOR_MAP.computeIfAbsent(this.getClass(), aClass -> new HashMap<>()).put(this.color, this.getDefaultState());
+		}
 	}
 
-	public BlockState getPlacementState(ItemPlacementContext ctx) {
-		return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+	@Override
+	public boolean isTranslucent(BlockState state, BlockView view, BlockPos pos) {
+		return true;
+	}
+
+	@Override
+	public boolean isSimpleFullBlock(BlockState state, BlockView view, BlockPos pos) {
+		return false;
+	}
+
+	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		ItemStack stack = player.getStackInHand(hand);
+		if(!world.isClient && stack.getItem() instanceof DyeItem && blockEntity instanceof TentPartBlockEntity && this.color != null) {
+			DyeColor stackColor = ((DyeItem) stack.getItem()).getColor();
+			TentPartBlockEntity tentPart = (TentPartBlockEntity) blockEntity;
+
+			Vec3d changeSize = new Vec3d(tentPart.getSize()).add(-1, -1, -1).multiply(1/2F);
+
+			for (int x = MathHelper.floor(-changeSize.x); x <= MathHelper.floor(changeSize.x); x++) {
+				for (int y = 0; y <= 2 * changeSize.getY(); y++) {
+					for (int z = MathHelper.floor(-changeSize.z); z <= MathHelper.floor(changeSize.z); z++) {
+						BlockPos off = tentPart.getLinkedPos().add(x, y, z);
+						BlockState offState = world.getBlockState(off);
+						if(offState.getBlock() instanceof BaseTentBlock && TENT_PART_COLOR_MAP.containsKey(offState.getBlock().getClass())) {
+							BlockState newState = TENT_PART_COLOR_MAP.get(offState.getBlock().getClass()).get(stackColor);
+							for (Property property : newState.getProperties()) {
+								newState = newState.with(property, offState.get(property));
+							}
+							world.setBlockState(off, newState);
+						}
+					}
+				}
+			}
+		}
+		return super.onUse(state, world, pos, player, hand, hit);
+	}
+
+	@Override
+	public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+		if(state.getBlock().getClass() == newState.getBlock().getClass()) {
+			return;
+		}
+		super.onBlockRemoved(state, world, pos, newState, moved);
 	}
 
 	@Override
@@ -101,23 +142,6 @@ public abstract class BaseTentBlock extends HorizontalFacingBlock implements Blo
 		return new TentPartBlockEntity();
 	}
 
-	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
-		switch (state.get(FACING)) {
-			case NORTH: return this.northShape;
-			case EAST: return this.eastShape;
-			case SOUTH: return this.southShape;
-			case WEST: return this.westShape;
-			default: return super.getOutlineShape(state, view, pos, context);
-		}
-	}
-
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-		builder.add(FACING);
-	}
-
-	protected abstract VoxelShape createShape();
-
 	public static VoxelShape createDiagonals(int heightStart, int lengthStart, boolean bothSides) {
 		double size = 2D;
 		VoxelShape shape = VoxelShapes.empty();
@@ -130,7 +154,7 @@ public abstract class BaseTentBlock extends HorizontalFacingBlock implements Blo
 		return shape;
 	}
 
-	private static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
+	public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
 		VoxelShape[] buffer = new VoxelShape[]{ shape, VoxelShapes.empty() };
 
 		int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;

@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "axis=x":  { "model": "campanion:block/magenta_tent_top", "y": 90 },
+    "axis=z": { "model": "campanion:block/magenta_tent_top" }
+  }
+}

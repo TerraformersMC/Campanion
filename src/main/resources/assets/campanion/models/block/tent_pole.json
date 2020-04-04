@@ -1,4 +1,5 @@
 {
+	"parent": "campanion:/block/tent_base",
 	"textures": {
 		"pole": "block/oak_log"
 	},

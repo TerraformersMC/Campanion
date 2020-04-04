@@ -70,7 +70,7 @@ public class Campanion implements ModInitializer {
 			for (ServerWorld world : e.getWorlds()) {
 				for (ServerPlayerEntity player : world.getPlayers()) {
 					ItemStack cursorItem = player.inventory.getCursorStack();
-					if (cursorItem.getItem() instanceof BackpackItem && cursorItem.hasTag() && Objects.requireNonNull(cursorItem.getTag()).contains("Inventory", 10)) {
+					if (cursorItem.getItem() instanceof BackpackItem && cursorItem.hasTag() && cursorItem.getOrCreateTag().contains("Inventory", 10)) {
 						ItemScatterer.spawn(player.world, player.getBlockPos().add(0, player.getEyeHeight(player.getPose()), 0), BackpackItem.getItems(cursorItem));
 						cursorItem.getTag().remove("Inventory");
 						player.networkHandler.sendPacket(S2CClearBackpackHeldItem.createPacket());

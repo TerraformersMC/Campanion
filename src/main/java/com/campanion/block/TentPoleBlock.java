@@ -1,12 +1,13 @@
 package com.campanion.block;
 
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 
-public class TentPoleBlock extends BaseTentBlock {
+public class TentPoleBlock extends BaseTent4WayBlock {
 
 	public TentPoleBlock(Settings settings) {
-		super(settings, Direction.SOUTH);
+		super(settings, null, Direction.SOUTH);
 	}
 
 	@Override
