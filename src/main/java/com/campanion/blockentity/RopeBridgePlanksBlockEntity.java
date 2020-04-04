@@ -22,6 +22,7 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
 
     private VoxelShape fullPlankShape;
     private VoxelShape cutPlankShape;
+    private VoxelShape slimPlankShape;
 
     public RopeBridgePlanksBlockEntity(BlockEntityType<?> type) {
         super(type);
@@ -39,6 +40,7 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
         this.planks.add(plank);
         this.fullPlankShape = null;
         this.cutPlankShape = null;
+        this.slimPlankShape = null;
     }
 
     public boolean removeBroken() {
@@ -53,15 +55,37 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
         return ret;
     }
 
-    public VoxelShape getFullPlankShape() {
+    public VoxelShape getOutlineShape() {
         if(this.fullPlankShape != null) {
             return this.fullPlankShape;
         }
+        return this.fullPlankShape = this.generateShape(true);
+    }
 
+    public VoxelShape getCollisionShape() {
+        if(this.slimPlankShape != null) {
+            return this.slimPlankShape;
+        }
+        return this.slimPlankShape = VoxelShapes.combine(this.generateShape(false), VoxelShapes.fullCube(), BooleanBiFunction.AND);
+    }
+
+    public VoxelShape getRaytraceShape() {
+        if(this.cutPlankShape != null) {
+            return this.cutPlankShape;
+        }
+        return this.cutPlankShape = VoxelShapes.combine(this.generateShape(true), VoxelShapes.fullCube(), BooleanBiFunction.AND);
+    }
+
+    private VoxelShape generateStopperShape(boolean full, float x, float y, float z, double sin, double cos) {
+        float size = (RopeBridge.STOPPER_WIDTH+1) / 32F * (full ? 1F : 0.25F);
+        return VoxelShapes.cuboid(-size, 0, -size, size, (RopeBridge.STOPPER_HEIGHT + 0.5) / 16F, size).offset(x+sin, y, z-cos);
+    }
+
+    public VoxelShape generateShape(boolean full) {
         VoxelShape shape = VoxelShapes.empty();
         if(this.planks.isEmpty() || this.forceRenderStopper()) {
-            shape = VoxelShapes.union(shape, this.generateStopperShape(0.5F, 0, 0.5F,0, -RopeBridge.PLANK_LENGTH/2));
-            shape = VoxelShapes.union(shape, this.generateStopperShape(0.5F, 0, 0.5F,0, RopeBridge.PLANK_LENGTH/2));
+            shape = VoxelShapes.union(shape, this.generateStopperShape(full,0.5F, 0, 0.5F,0, -RopeBridge.PLANK_LENGTH/2));
+            shape = VoxelShapes.union(shape, this.generateStopperShape(full,0.5F, 0, 0.5F,0, RopeBridge.PLANK_LENGTH/2));
         }
         for (RopeBridgePlank plank : this.planks) {
             double sin = RopeBridge.PLANK_LENGTH/2*Math.sin(plank.getyAngle());
@@ -83,24 +107,11 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
             shape = VoxelShapes.union(shape, VoxelShapes.cuboid(minX, minY, minZ, maxX, maxY, maxZ));
 
             if(plank.isStopper()) {
-                shape = VoxelShapes.union(shape, this.generateStopperShape((float) plank.getDeltaPosition().x, (float) plank.getDeltaPosition().y, (float) plank.getDeltaPosition().z, -sin, -cos));
-                shape = VoxelShapes.union(shape, this.generateStopperShape((float) plank.getDeltaPosition().x, (float) plank.getDeltaPosition().y, (float) plank.getDeltaPosition().z, sin, cos));
+                shape = VoxelShapes.union(shape, this.generateStopperShape(full, (float) plank.getDeltaPosition().x, (float) plank.getDeltaPosition().y, (float) plank.getDeltaPosition().z, -sin, -cos));
+                shape = VoxelShapes.union(shape, this.generateStopperShape(full, (float) plank.getDeltaPosition().x, (float) plank.getDeltaPosition().y, (float) plank.getDeltaPosition().z, sin, cos));
             }
         }
-
-        return this.fullPlankShape = shape;
-    }
-
-    private VoxelShape generateStopperShape(float x, float y, float z, double sin, double cos) {
-        float size = (RopeBridge.STOPPER_WIDTH+1) / 32F;
-        return VoxelShapes.cuboid(-size, 0, -size, size, (RopeBridge.STOPPER_HEIGHT + 0.5) / 16F, size).offset(x+sin, y, z-cos);
-    }
-
-    public VoxelShape getCutPlankShape() {
-        if(this.cutPlankShape != null) {
-            return this.cutPlankShape;
-        }
-        return this.cutPlankShape = VoxelShapes.combine(this.getFullPlankShape(), VoxelShapes.fullCube(), BooleanBiFunction.AND);
+        return shape;
     }
 
     public boolean forceRenderStopper() {
@@ -124,6 +135,7 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
         this.planks.addAll(this.getFrom(tag.getList("Planks", 10)));
         this.fullPlankShape = null;
         this.cutPlankShape = null;
+        this.slimPlankShape = null;
 
         if(this.world != null && this.world.isClient) {
             this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState(), 11);

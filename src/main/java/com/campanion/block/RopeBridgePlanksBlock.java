@@ -1,26 +1,16 @@
 package com.campanion.block;
 
 import com.campanion.blockentity.RopeBridgePlanksBlockEntity;
-import com.campanion.ropebridge.RopeBridge;
 import com.campanion.ropebridge.RopeBridgePlank;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.util.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashSet;
@@ -139,21 +129,25 @@ public class RopeBridgePlanksBlock extends Block implements BlockEntityProvider 
 	public VoxelShape getRayTraceShape(BlockState state, BlockView view, BlockPos pos) {
 		BlockEntity entity = view.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
-			return ((RopeBridgePlanksBlockEntity) entity).getCutPlankShape();
+			return ((RopeBridgePlanksBlockEntity) entity).getRaytraceShape();
 		}
 		return super.getRayTraceShape(state, view, pos);
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
-		return this.getRayTraceShape(state, view, pos);
+		BlockEntity entity = view.getBlockEntity(pos);
+		if (entity instanceof RopeBridgePlanksBlockEntity) {
+			return ((RopeBridgePlanksBlockEntity) entity).getCollisionShape();
+		}
+		return super.getCollisionShape(state, view, pos, context);
 	}
 
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
 		BlockEntity entity = view.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
-			return ((RopeBridgePlanksBlockEntity) entity).getFullPlankShape();
+			return ((RopeBridgePlanksBlockEntity) entity).getOutlineShape();
 		}
 		return super.getOutlineShape(state, view, pos, context);
 	}
