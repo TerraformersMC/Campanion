@@ -49,8 +49,8 @@ public class CampanionItems {
 	public static final GrapplingHookItem GRAPPLING_HOOK = add("grappling_hook", new GrapplingHookItem(new Item.Settings().maxDamage(250).group(ItemGroup.TOOLS)));
 	public static final SleepingBagItem SLEEPING_BAG = add("sleeping_bag", new SleepingBagItem(new Item.Settings().maxDamage(250).group(ItemGroup.TOOLS)));
 	public static final TentBagItem TENT_BAG = add("tent_bag", new TentBagItem(new Item.Settings().group(ItemGroup.TOOLS)));
-	public static final UnbuiltTent SMALL_UNBUILT_TENT = add("small_unbuilt_tent", new UnbuiltTent(new Item.Settings().group(ItemGroup.TOOLS), "small"));
-	public static final UnbuiltTent LARGE_UNBUILT_TENT = add("large_unbuilt_tent", new UnbuiltTent(new Item.Settings().group(ItemGroup.TOOLS), "large"));
+	public static final UnbuiltTent SMALL_UNBUILT_TENT = add("small_unbuilt_tent", new UnbuiltTent(new Item.Settings().group(ItemGroup.TOOLS).maxCount(1), "small"));
+	public static final UnbuiltTent LARGE_UNBUILT_TENT = add("large_unbuilt_tent", new UnbuiltTent(new Item.Settings().group(ItemGroup.TOOLS).maxCount(1), "large"));
 
 	private static <I extends Item> I add(String name, I item) {
 		ITEMS.put(new Identifier(Campanion.MOD_ID, name), item);

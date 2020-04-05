@@ -4,7 +4,9 @@
     {
       "item": "campanion:cracker"
     },
-    [],
+    {
+      "tag": "campanion:melted_marshmallows"
+    },
     {
       "item": "minecraft:cocoa_beans"
     },
