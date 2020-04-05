@@ -2,6 +2,7 @@ package com.campanion.data;
 
 import com.campanion.block.CampanionBlocks;
 import com.campanion.item.CampanionItems;
+import com.campanion.recipe.CampanionRecipeSerializers;
 import com.campanion.tag.CampanionItemTags;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
@@ -14,6 +15,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.DataCache;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.server.recipe.ComplexRecipeJsonFactory;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonFactory;
@@ -22,6 +24,7 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.predicate.NumberRange;
 import net.minecraft.predicate.item.ItemPredicate;
+import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
@@ -53,7 +56,20 @@ public class CampanionRecipesProvider implements DataProvider {
 			if (!set.add(provider.getRecipeId())) {
 				throw new IllegalStateException("Duplicate recipe " + provider.getRecipeId());
 			} else {
-				this.saveRecipe(dataCache, provider.toJson(), path.resolve("data/" + provider.getRecipeId().getNamespace() + "/recipes/" + provider.getRecipeId().getPath() + ".json"));
+				System.out.println(this);
+				System.out.println(provider);
+				System.out.println(provider.toJson());
+				System.out.println(path);
+				System.out.println(provider.getRecipeId());
+
+				this.saveRecipe(
+					dataCache,
+					provider.toJson(),
+					path.resolve("data/" +
+						provider.getRecipeId().getNamespace() + "/recipes/" +
+						provider.getRecipeId().getPath() + ".json"
+					)
+				);
 				JsonObject advancementJson = provider.toAdvancementJson();
 				if (advancementJson != null) {
 					this.saveRecipeAdvancement(dataCache, advancementJson, path.resolve("data/" + provider.getRecipeId().getNamespace() + "/advancements/" + provider.getAdvancementId().getPath() + ".json"));
@@ -200,6 +216,7 @@ public class CampanionRecipesProvider implements DataProvider {
 		ShapedRecipeJsonFactory.create(CampanionBlocks.BLACK_LAWN_CHAIR).input('P', ItemTags.PLANKS).input('C', Blocks.BLACK_CARPET).input('S', Items.STICK).pattern("P  ").pattern("PCP").pattern("S S").group("lawn_chair").criterion("has_black_carpet", this.conditionsFrom(Blocks.BLACK_CARPET)).offerTo(consumer);
 		ShapelessRecipeJsonFactory.create(CampanionBlocks.BLACK_LAWN_CHAIR).input(CampanionBlocks.WHITE_LAWN_CHAIR).input(Items.BLACK_DYE).group("dyed_lawn_chair").criterion("has_lawn_chair", this.conditionsFrom(CampanionBlocks.WHITE_LAWN_CHAIR)).offerTo(consumer, "black_lawn_chair_from_white_lawn_chair");
 
+		ComplexRecipeJsonFactory.create(CampanionRecipeSerializers.TENT_BUILDING_RECIPE).offerTo(consumer, "campanion:tent_building");
 	}
 
 	private InventoryChangedCriterion.Conditions conditionsFrom(ItemConvertible item) {

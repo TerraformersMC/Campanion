@@ -1,5 +1,6 @@
 package com.campanion.item;
 
+import com.campanion.Campanion;
 import com.campanion.entity.GrapplingHookEntity;
 import com.campanion.entity.GrapplingHookUser;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,12 +10,24 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 public class GrapplingHookItem extends Item {
 	public GrapplingHookItem(Item.Settings settings) {
 		super(settings);
+		this.addPropertyGetter(new Identifier(Campanion.MOD_ID, "deployed"), (stack, world, entity) -> {
+			if(entity instanceof PlayerEntity) {
+				for (Hand value : Hand.values()) {
+					ItemStack heldStack = entity.getStackInHand(value);
+					if(heldStack == stack && ((GrapplingHookUser)entity).getGrapplingHook() != null) {
+						return 1;
+					}
+				}
+			}
+			return 0;
+		});
 	}
 
 	@Override

@@ -143,7 +143,6 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 				|| (!inMainHand && !inOffHand) || dist > 16384 ||
 				(this.dataTracker.get(IS_IN_BLOCK) && dist < 2)) {
 			this.remove();
-			((GrapplingHookUser)this.player).setGrapplingHook(null);
 			return false;
 		} else {
 			return true;
@@ -165,6 +164,12 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 
 	public PlayerEntity getPlayer() {
 		return player;
+	}
+
+	@Override
+	public void remove() {
+		super.remove();
+		((GrapplingHookUser)this.player).setGrapplingHook(null);
 	}
 
 	@Override
@@ -249,6 +254,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 			Entity entity = this.world.getEntityById(i);
 			if(entity instanceof PlayerEntity) {
 				this.player = (PlayerEntity) entity;
+				((GrapplingHookUser)this.player).setGrapplingHook(this);
 			}
 		}
 	}

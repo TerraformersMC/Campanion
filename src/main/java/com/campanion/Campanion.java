@@ -11,6 +11,7 @@ import com.campanion.item.CampanionItems;
 import com.campanion.network.C2SEmptyBackpack;
 import com.campanion.network.C2SRotateHeldItem;
 import com.campanion.network.S2CClearBackpackHeldItem;
+import com.campanion.recipe.CampanionRecipeSerializers;
 import com.campanion.sound.CampanionSoundEvents;
 import com.campanion.stat.CampanionStats;
 import com.google.gson.FieldNamingPolicy;
@@ -29,6 +30,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.registry.Registry;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 
 public class Campanion implements ModInitializer {
@@ -51,6 +53,7 @@ public class Campanion implements ModInitializer {
 		CampanionBlocks.register();
 		CampanionBlockEntities.register();
 		CampanionEntities.register();
+		CampanionRecipeSerializers.register();
 
 		CampanionCriteria.loadClass();
 		CampanionStats.loadClass();
@@ -65,7 +68,11 @@ public class Campanion implements ModInitializer {
 		registerBackpackHandler();
 
 		if (RUN_GENERATORS && FabricLoader.getInstance().isDevelopmentEnvironment()) {
-			CampanionData.create(Paths.get("generated"));
+			try {
+				CampanionData.create(Paths.get("generated")).run();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
