@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "campanion:marshmallow",
-    "campanion:cooked_marshmallow",
-    "campanion:blackened_marshmallow"
+    "#campanion:melted_marshmallows"
   ]
 }

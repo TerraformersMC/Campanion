@@ -20,6 +20,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.server.ServerTickCallback;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -63,7 +64,7 @@ public class Campanion implements ModInitializer {
 		registerServerboundPackets();
 		registerBackpackHandler();
 
-		if (RUN_GENERATORS) {
+		if (RUN_GENERATORS && FabricLoader.getInstance().isDevelopmentEnvironment()) {
 			CampanionData.create(Paths.get("generated"));
 		}
 	}

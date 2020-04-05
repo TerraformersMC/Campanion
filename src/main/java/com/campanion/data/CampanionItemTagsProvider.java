@@ -22,7 +22,8 @@ public class CampanionItemTagsProvider extends ItemTagsProvider {
 		this.copy(CampanionBlockTags.TOPPED_TENT_POLES, CampanionItemTags.TOPPED_TENT_POLES);
 		this.copy(CampanionBlockTags.FLAT_TENT_TOPS, CampanionItemTags.FLAT_TENT_TOPS);
 		this.copy(CampanionBlockTags.TENT_POLES, CampanionItemTags.TENT_POLES);
-		this.getOrCreateTagBuilder(CampanionItemTags.MARSHMALLOWS).add(CampanionItems.MARSHMALLOW, CampanionItems.COOKED_MARSHMALLOW, CampanionItems.BLACKENED_MARSHMALLOW);
+		this.getOrCreateTagBuilder(CampanionItemTags.MELTED_MARSHMALLOWS).add(CampanionItems.COOKED_MARSHMALLOW, CampanionItems.BLACKENED_MARSHMALLOW);
+		this.getOrCreateTagBuilder(CampanionItemTags.MARSHMALLOWS).add(CampanionItems.MARSHMALLOW).add(CampanionItemTags.MELTED_MARSHMALLOWS);
 		this.getOrCreateTagBuilder(CampanionItemTags.MARSHMALLOWS_ON_STICKS).add(CampanionItems.MARSHMALLOW_ON_A_STICK, CampanionItems.COOKED_MARSHMALLOW_ON_A_STICK, CampanionItems.BLACKENED_MARSHMALLOW_ON_A_STICK);
 		this.getOrCreateTagBuilder(CampanionItemTags.SPEARS).add(CampanionItems.WOODEN_SPEAR, CampanionItems.STONE_SPEAR, CampanionItems.IRON_SPEAR, CampanionItems.GOLDEN_SPEAR, CampanionItems.DIAMOND_SPEAR);
 		this.getOrCreateTagBuilder(CampanionItemTags.BACKPACKS).add(CampanionItems.DAY_PACK, CampanionItems.CAMPING_PACK, CampanionItems.HIKING_PACK);
