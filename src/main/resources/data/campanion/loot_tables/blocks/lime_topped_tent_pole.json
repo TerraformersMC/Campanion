@@ -15,5 +15,11 @@
         }
       ]
     }
+  ],
+  "functions": [
+    {
+      "function": "minecraft:set_count",
+      "count": 5.0
+    }
   ]
 }
