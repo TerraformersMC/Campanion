@@ -5,7 +5,9 @@
     "L L"
   ],
   "key": {
-    "L": []
+    "L": {
+      "tag": "minecraft:logs"
+    }
   },
   "result": {
     "item": "campanion:rope_bridge_post",

@@ -7,7 +7,9 @@
     "S S"
   ],
   "key": {
-    "P": [],
+    "P": {
+      "tag": "minecraft:planks"
+    },
     "C": {
       "item": "minecraft:light_gray_carpet"
     },

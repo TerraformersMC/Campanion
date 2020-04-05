@@ -8,7 +8,9 @@
     "#": {
       "item": "campanion:wooden_rod"
     },
-    "X": []
+    "X": {
+      "tag": "minecraft:planks"
+    }
   },
   "result": {
     "item": "campanion:wooden_spear"

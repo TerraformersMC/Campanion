@@ -5,7 +5,9 @@
     "WW"
   ],
   "key": {
-    "W": []
+    "W": {
+      "tag": "minecraft:wool"
+    }
   },
   "result": {
     "item": "campanion:wool_tarp"
