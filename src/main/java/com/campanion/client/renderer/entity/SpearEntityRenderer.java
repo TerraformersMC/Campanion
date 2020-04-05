@@ -34,6 +34,7 @@ public class SpearEntityRenderer extends EntityRenderer<SpearEntity> {
 		matrixStack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(MathHelper.lerp(g, spear.prevPitch, spear.pitch) + 90.0F));
 		VertexConsumer vertexConsumer = ItemRenderer.getArmorVertexConsumer(vertexConsumerProvider, model.getLayer(this.getTexture(spear)), false, spear.method_23751());
 		model.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+		matrixStack.scale(2.0F, -2.0F, -2.0F);
 		matrixStack.pop();
 		super.render(spear, f, g, matrixStack, vertexConsumerProvider, i);
 	}

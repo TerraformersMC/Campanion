@@ -62,7 +62,7 @@
 
   "item.campanion.small_unbuilt_tent": "Small Tent",
   "item.campanion.large_unbuilt_tent": "Large Tent",
-  
+
   "item.campanion.tent_pole": "Tent Pole",
   "item.campanion.white_tent_side": "White Tent Side",
   "item.campanion.orange_tent_side": "Orange Tent Side",
@@ -234,7 +234,7 @@
   "advancements.campanion.adventure.kill_with_stone_after_skips.description": "Deal the final blow to a mob with a stone that has skipped 6 or more times",
 
   "message.campanion.rope_bridge.same_position": "Cannot build a bridge to the same position",
-  "message.campanion.rope_bridge.obstructed": "Unable to build rope bridge: Obstructed at %s, %s, %s. Block: '%s",
+  "message.campanion.rope_bridge.obstructed": "Unable to build rope bridge: Obstructed at %s, %s, %s. Block: '%s'",
   "message.campanion.rope_bridge.angle": "Angle too large! Current '%s', max '%s'",
   "message.campanion.rope_bridge.length": "Length too long! Current '%s', max '%s'",
   "message.campanion.rope_bridge.ropes": "Not enough ropes! %s more ropes needed.",

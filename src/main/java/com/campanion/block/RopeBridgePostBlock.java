@@ -171,7 +171,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
                     if(!(be instanceof RopeBridgePlanksBlockEntity)) {
                         BlockState state = world.getBlockState(planksPos);
                         if (!state.getMaterial().isReplaceable()) {
-                            player.addChatMessage(new TranslatableText("message.campanion.rope_bridge.obstructed", planksPos.getX(), planksPos.getY(), planksPos.getZ(), Registry.BLOCK.getId(state.getBlock())), false);
+                            player.addChatMessage(new TranslatableText("message.campanion.rope_bridge.obstructed", planksPos.getX(), planksPos.getY(), planksPos.getZ(), new TranslatableText(world.getBlockState(planksPos).getBlock().getTranslationKey())), false);
                             return false;
                         }
                         world.setBlockState(planksPos, CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState());
