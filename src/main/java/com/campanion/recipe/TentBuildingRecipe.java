@@ -36,7 +36,9 @@ public class TentBuildingRecipe extends SpecialCraftingRecipe {
             if(isBag(stack) && !foundBag) {
                 foundBag = true;
             } else if(isTent(stack) && !foundTent) {
-                STRUCTURE_CACHE.set(((ServerWorld) world).getStructureManager().getStructure(((UnbuiltTent)stack.getItem()).getStructure()));
+                if(world instanceof ServerWorld) {
+                    STRUCTURE_CACHE.set(((ServerWorld) world).getStructureManager().getStructure(((UnbuiltTent)stack.getItem()).getStructure()));
+                }
                 foundTent = true;
             } else if(!stack.isEmpty()) {
                 STRUCTURE_CACHE.set(null);
