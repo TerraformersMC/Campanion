@@ -170,8 +170,8 @@ public class SpearEntity extends ProjectileEntity {
 		ENCHANTMENT_GLINT = DataTracker.registerData(net.minecraft.entity.projectile.TridentEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	}
 
-	public static DamageSource createSpearDamageSource(Entity trident, Entity owner) {
-		return new ProjectileDamageSource("spear", trident, owner).setProjectile();
+	public static DamageSource createSpearDamageSource(Entity spear, Entity owner) {
+		return new ProjectileDamageSource("spear", spear, owner).setProjectile();
 	}
 
 
