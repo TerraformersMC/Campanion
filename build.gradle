@@ -1,6 +1,7 @@
 plugins {
 	id 'fabric-loom' version '0.2.6-SNAPSHOT'
 	id 'maven-publish'
+	id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -9,6 +10,8 @@ targetCompatibility = JavaVersion.VERSION_1_8
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
+
+
 
 dependencies {
 	//to change the versions see the gradle.properties file
@@ -43,12 +46,13 @@ tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
 task sourcesJar(type: Jar, dependsOn: classes) {
 	classifier = "sources"
 	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives sourcesJar
 }
 
 jar {
@@ -73,5 +77,26 @@ publishing {
 	repositories {
 		// uncomment to publish to the local maven
 		// mavenLocal()
+	}
+}
+
+curseforge {
+	apiKey = project.hasProperty("curseforge_api_key") ? curseforge_api_key : "###"//In the GRADLE_USER_HOME /.gradle/gradle.properties file
+	project {
+		id = '373138'
+		releaseType = 'beta'
+		addGameVersion "Java 8"
+		addGameVersion "Fabric"
+		mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+		addArtifact sourcesJar
+		relations {
+			requiredDependency 'fabric-api'
+		}
+		afterEvaluate {
+			uploadTask.dependsOn(remapJar)
+		}
+	}
+	options {
+		forgeGradleIntegration = false
 	}
 }
