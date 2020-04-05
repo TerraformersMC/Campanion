@@ -4,7 +4,6 @@
   "package": "com.campanion.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "data.MixinMain",
     "AccessorCriterions",
     "MixinEnchantment",
     "MixinLivingEntity",
