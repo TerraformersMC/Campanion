@@ -55,15 +55,16 @@ public class RopeLadderBlock extends LadderBlock {
 	@Override
 	public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
 		BlockPos.Mutable progrees = new BlockPos.Mutable(pos);
-		for (int i = pos.getY(); i > 0 ; i--) {
+		int count;
+		for (count = 0; count < pos.getY() ; count++) {
 			progrees.setOffset(Direction.DOWN);
 			if (!canPlaceAt(state, world, progrees) || !world.getBlockState(progrees).isAir() || itemStack.getCount() < 1) {
-				return;
-			}
-			if (!((PlayerEntity)placer).abilities.creativeMode) {
-				itemStack.setCount(itemStack.getCount() - 1);
+				break;
 			}
 			world.setBlockState(progrees, state);
+		}
+		if (!((PlayerEntity)placer).abilities.creativeMode) {
+			itemStack.decrement(count - 1);
 		}
 	}
 
@@ -92,17 +93,17 @@ public class RopeLadderBlock extends LadderBlock {
 
 	@Override
 	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-		if (!player.abilities.creativeMode) {
-			player.giveItemStack(new ItemStack(CampanionBlocks.ROPE_LADDER.asItem()));
-			BlockPos.Mutable progress = new BlockPos.Mutable(pos);
-			for (int i = pos.getY(); i > 0; i--) {
-				progress.setOffset(Direction.DOWN);
-				if (!world.getBlockState(progress).getBlock().equals(CampanionBlocks.ROPE_LADDER)) {
-					break;
-				}
-				world.setBlockState(progress, Blocks.AIR.getDefaultState());
-				player.giveItemStack(new ItemStack(CampanionBlocks.ROPE_LADDER.asItem()));
+		BlockPos.Mutable progress = new BlockPos.Mutable(pos);
+		int count;
+		for (count = 0; count < pos.getY(); count++) {
+			progress.setOffset(Direction.DOWN);
+			if (!world.getBlockState(progress).getBlock().equals(CampanionBlocks.ROPE_LADDER)) {
+				break;
 			}
+			world.setBlockState(progress, Blocks.AIR.getDefaultState());
 		}
+
+		player.giveItemStack(new ItemStack(CampanionBlocks.ROPE_LADDER, count));
+
 	}
 }
