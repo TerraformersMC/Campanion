@@ -12,21 +12,17 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.registry.Registry;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class CampanionBlocks {
 
 	private static final Map<Identifier, BlockItem> ITEMS = new LinkedHashMap<>();
 	private static final Map<Identifier, Block> BLOCKS = new LinkedHashMap<>();
 
-	public static final Block ROPE_BRIDGE_ANCHOR = add("rope_bridge_post", new RopeBridgePostBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(1.0F, 1.0F).dynamicBounds().nonOpaque().build()), ItemGroup.TOOLS);
+	public static final Block ROPE_BRIDGE_POST = add("rope_bridge_post", new RopeBridgePostBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(1.0F, 1.0F).dynamicBounds().nonOpaque().build()), ItemGroup.TOOLS);
 	public static final Block ROPE_BRIDGE_PLANKS = add("rope_bridge_planks", new RopeBridgePlanksBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(0.5F, 1.0F).dynamicBounds().nonOpaque().build()));
 	public static final Block ROPE_LADDER = add("rope_ladder", new RopeLadderBlock(FabricBlockSettings.of(Material.WOOD).nonOpaque().hardness(0.2F).sounds(BlockSoundGroup.LADDER).build()), ItemGroup.DECORATIONS);
 
@@ -83,39 +79,39 @@ public class CampanionBlocks {
 	public static final TentTopBlock RED_TENT_TOP = tentTop(DyeColor.RED);
 	public static final TentTopBlock BLACK_TENT_TOP = tentTop(DyeColor.BLACK);
 
-	public static final TentTopPoleBlock WHITE_TENT_TOP_POLE = tentTopPole(DyeColor.WHITE);
-	public static final TentTopPoleBlock ORANGE_TENT_TOP_POLE = tentTopPole(DyeColor.ORANGE);
-	public static final TentTopPoleBlock MAGENTA_TENT_TOP_POLE = tentTopPole(DyeColor.MAGENTA);
-	public static final TentTopPoleBlock LIGHT_BLUE_TENT_TOP_POLE = tentTopPole(DyeColor.LIGHT_BLUE);
-	public static final TentTopPoleBlock YELLOW_TENT_TOP_POLE = tentTopPole(DyeColor.YELLOW);
-	public static final TentTopPoleBlock LIME_TENT_TOP_POLE = tentTopPole(DyeColor.LIME);
-	public static final TentTopPoleBlock PINK_TENT_TOP_POLE = tentTopPole(DyeColor.PINK);
-	public static final TentTopPoleBlock GRAY_TENT_TOP_POLE = tentTopPole(DyeColor.GRAY);
-	public static final TentTopPoleBlock LIGHT_GRAY_TENT_TOP_POLE = tentTopPole(DyeColor.LIGHT_GRAY);
-	public static final TentTopPoleBlock CYAN_TENT_TOP_POLE = tentTopPole(DyeColor.CYAN);
-	public static final TentTopPoleBlock PURPLE_TENT_TOP_POLE = tentTopPole(DyeColor.PURPLE);
-	public static final TentTopPoleBlock BLUE_TENT_TOP_POLE = tentTopPole(DyeColor.BLUE);
-	public static final TentTopPoleBlock BROWN_TENT_TOP_POLE = tentTopPole(DyeColor.BROWN);
-	public static final TentTopPoleBlock GREEN_TENT_TOP_POLE = tentTopPole(DyeColor.GREEN);
-	public static final TentTopPoleBlock RED_TENT_TOP_POLE = tentTopPole(DyeColor.RED);
-	public static final TentTopPoleBlock BLACK_TENT_TOP_POLE = tentTopPole(DyeColor.BLACK);
+	public static final TentTopPoleBlock WHITE_TOPPED_TENT_POLE = toppedTentPole(DyeColor.WHITE);
+	public static final TentTopPoleBlock ORANGE_TOPPED_TENT_POLE = toppedTentPole(DyeColor.ORANGE);
+	public static final TentTopPoleBlock MAGENTA_TOPPED_TENT_POLE = toppedTentPole(DyeColor.MAGENTA);
+	public static final TentTopPoleBlock LIGHT_BLUE_TOPPED_TENT_POLE = toppedTentPole(DyeColor.LIGHT_BLUE);
+	public static final TentTopPoleBlock YELLOW_TOPPED_TENT_POLE = toppedTentPole(DyeColor.YELLOW);
+	public static final TentTopPoleBlock LIME_TOPPED_TENT_POLE = toppedTentPole(DyeColor.LIME);
+	public static final TentTopPoleBlock PINK_TOPPED_TENT_POLE = toppedTentPole(DyeColor.PINK);
+	public static final TentTopPoleBlock GRAY_TOPPED_TENT_POLE = toppedTentPole(DyeColor.GRAY);
+	public static final TentTopPoleBlock LIGHT_GRAY_TOPPED_TENT_POLE = toppedTentPole(DyeColor.LIGHT_GRAY);
+	public static final TentTopPoleBlock CYAN_TOPPED_TENT_POLE = toppedTentPole(DyeColor.CYAN);
+	public static final TentTopPoleBlock PURPLE_TOPPED_TENT_POLE = toppedTentPole(DyeColor.PURPLE);
+	public static final TentTopPoleBlock BLUE_TOPPED_TENT_POLE = toppedTentPole(DyeColor.BLUE);
+	public static final TentTopPoleBlock BROWN_TOPPED_TENT_POLE = toppedTentPole(DyeColor.BROWN);
+	public static final TentTopPoleBlock GREEN_TOPPED_TENT_POLE = toppedTentPole(DyeColor.GREEN);
+	public static final TentTopPoleBlock RED_TOPPED_TENT_POLE = toppedTentPole(DyeColor.RED);
+	public static final TentTopPoleBlock BLACK_TOPPED_TENT_POLE = toppedTentPole(DyeColor.BLACK);
 
-	public static final TentTopFlatBlock WHITE_TENT_TOP_FLAT = tentTopFlat(DyeColor.WHITE);
-	public static final TentTopFlatBlock ORANGE_TENT_TOP_FLAT = tentTopFlat(DyeColor.ORANGE);
-	public static final TentTopFlatBlock MAGENTA_TENT_TOP_FLAT = tentTopFlat(DyeColor.MAGENTA);
-	public static final TentTopFlatBlock LIGHT_BLUE_TENT_TOP_FLAT = tentTopFlat(DyeColor.LIGHT_BLUE);
-	public static final TentTopFlatBlock YELLOW_TENT_TOP_FLAT = tentTopFlat(DyeColor.YELLOW);
-	public static final TentTopFlatBlock LIME_TENT_TOP_FLAT = tentTopFlat(DyeColor.LIME);
-	public static final TentTopFlatBlock PINK_TENT_TOP_FLAT = tentTopFlat(DyeColor.PINK);
-	public static final TentTopFlatBlock GRAY_TENT_TOP_FLAT = tentTopFlat(DyeColor.GRAY);
-	public static final TentTopFlatBlock LIGHT_GRAY_TENT_TOP_FLAT = tentTopFlat(DyeColor.LIGHT_GRAY);
-	public static final TentTopFlatBlock CYAN_TENT_TOP_FLAT = tentTopFlat(DyeColor.CYAN);
-	public static final TentTopFlatBlock PURPLE_TENT_TOP_FLAT = tentTopFlat(DyeColor.PURPLE);
-	public static final TentTopFlatBlock BLUE_TENT_TOP_FLAT = tentTopFlat(DyeColor.BLUE);
-	public static final TentTopFlatBlock BROWN_TENT_TOP_FLAT = tentTopFlat(DyeColor.BROWN);
-	public static final TentTopFlatBlock GREEN_TENT_TOP_FLAT = tentTopFlat(DyeColor.GREEN);
-	public static final TentTopFlatBlock RED_TENT_TOP_FLAT = tentTopFlat(DyeColor.RED);
-	public static final TentTopFlatBlock BLACK_TENT_TOP_FLAT = tentTopFlat(DyeColor.BLACK);
+	public static final TentTopFlatBlock WHITE_FLAT_TENT_TOP = tentTopFlat(DyeColor.WHITE);
+	public static final TentTopFlatBlock ORANGE_FLAT_TENT_TOP = tentTopFlat(DyeColor.ORANGE);
+	public static final TentTopFlatBlock MAGENTA_FLAT_TENT_TOP = tentTopFlat(DyeColor.MAGENTA);
+	public static final TentTopFlatBlock LIGHT_BLUE_FLAT_TENT_TOP = tentTopFlat(DyeColor.LIGHT_BLUE);
+	public static final TentTopFlatBlock YELLOW_FLAT_TENT_TOP = tentTopFlat(DyeColor.YELLOW);
+	public static final TentTopFlatBlock LIME_FLAT_TENT_TOP = tentTopFlat(DyeColor.LIME);
+	public static final TentTopFlatBlock PINK_FLAT_TENT_TOP = tentTopFlat(DyeColor.PINK);
+	public static final TentTopFlatBlock GRAY_FLAT_TENT_TOP = tentTopFlat(DyeColor.GRAY);
+	public static final TentTopFlatBlock LIGHT_GRAY_FLAT_TENT_TOP = tentTopFlat(DyeColor.LIGHT_GRAY);
+	public static final TentTopFlatBlock CYAN_FLAT_TENT_TOP = tentTopFlat(DyeColor.CYAN);
+	public static final TentTopFlatBlock PURPLE_FLAT_TENT_TOP = tentTopFlat(DyeColor.PURPLE);
+	public static final TentTopFlatBlock BLUE_FLAT_TENT_TOP = tentTopFlat(DyeColor.BLUE);
+	public static final TentTopFlatBlock BROWN_FLAT_TENT_TOP = tentTopFlat(DyeColor.BROWN);
+	public static final TentTopFlatBlock GREEN_FLAT_TENT_TOP = tentTopFlat(DyeColor.GREEN);
+	public static final TentTopFlatBlock RED_FLAT_TENT_TOP = tentTopFlat(DyeColor.RED);
+	public static final TentTopFlatBlock BLACK_FLAT_TENT_TOP = tentTopFlat(DyeColor.BLACK);
 
 	public static final Block TENT_POLE = add("tent_pole", new TentPoleBlock(FabricBlockSettings.of(Material.WOOD).nonOpaque().hardness(-1F).sounds(BlockSoundGroup.WOOD).build()), (ItemGroup) null);
 
@@ -166,12 +162,12 @@ public class CampanionBlocks {
 		return add(color.getName() + "_tent_top", new TentTopBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(-1).sounds(BlockSoundGroup.WOOL).build(), color), (ItemGroup) null);
 	}
 
-	private static TentTopPoleBlock tentTopPole(DyeColor color) {
-		return add(color.getName() + "_tent_top_pole", new TentTopPoleBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(-1).sounds(BlockSoundGroup.WOOL).build(), color), (ItemGroup) null);
+	private static TentTopPoleBlock toppedTentPole(DyeColor color) {
+		return add(color.getName() + "_topped_tent_pole", new TentTopPoleBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(-1).sounds(BlockSoundGroup.WOOL).build(), color), (ItemGroup) null);
 	}
 
 	private static TentTopFlatBlock tentTopFlat(DyeColor color) {
-		return add(color.getName() + "_tent_top_flat", new TentTopFlatBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(-1).sounds(BlockSoundGroup.WOOL).build(), color), (ItemGroup) null);
+		return add(color.getName() + "_flat_tent_top", new TentTopFlatBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(-1).sounds(BlockSoundGroup.WOOL).build(), color), (ItemGroup) null);
 	}
 
 

@@ -8,6 +8,8 @@ import net.minecraft.util.Identifier;
 
 public class CampanionCriteria {
 	public static final LocationArrivalCriterion SLEPT_IN_SLEEPING_BAG = register(new LocationArrivalCriterion(new Identifier(Campanion.MOD_ID, "slept_in_sleeping_bag")));
+	public static final CountCriterion STONE_SKIPS = register(new CountCriterion(new Identifier(Campanion.MOD_ID, "stone_skips")));
+	public static final KilledWithStoneCriterion KILLED_WITH_STONE = register(new KilledWithStoneCriterion());
 
 	private static <T extends Criterion<?>> T register(T criterion) {
 		return AccessorCriterions.callRegister(criterion);

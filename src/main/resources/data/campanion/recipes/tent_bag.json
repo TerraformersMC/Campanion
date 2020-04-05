@@ -1,22 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "iri",
-    "ttt"
+    "IRI",
+    "TTT"
   ],
   "key": {
-    "i": {
+    "T": {
+      "item": "campanion:tanned_leather"
+    },
+    "I": {
       "item": "minecraft:iron_ingot"
     },
-    "r": {
+    "R": {
       "item": "campanion:rope"
-    },
-    "t": {
-      "item": "campanion:tanned_leather_pouch"
     }
   },
   "result": {
-    "item": "campanion:tent_bag",
-    "count": 1
+    "item": "campanion:tent_bag"
   }
 }

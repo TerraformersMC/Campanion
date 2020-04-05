@@ -1,20 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "# #",
-    "# #",
-    "s#s"
+    "T T",
+    "T T",
+    "STS"
   ],
   "key": {
-    "#": {
+    "T": {
       "item": "campanion:tanned_leather"
     },
-    "s": {
+    "S": {
       "item": "minecraft:string"
     }
   },
   "result": {
-    "item": "campanion:tanned_leather_pouch",
-    "count": 1
+    "item": "campanion:tanned_leather_pouch"
   }
 }

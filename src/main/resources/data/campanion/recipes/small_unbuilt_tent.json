@@ -6,11 +6,11 @@
     "R R"
   ],
   "key": {
-    "S": {
-      "item": "campanion:wooden_rod"
-    },
     "T": {
       "item": "campanion:wool_tarp"
+    },
+    "S": {
+      "item": "campanion:wooden_rod"
     },
     "R": {
       "item": "campanion:rope"

@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "facing=north": { "model": "campanion:block/cyan_tent_top_pole"},
-    "facing=south": { "model": "campanion:block/cyan_tent_top_pole", "y": 180 },
-    "facing=west":  { "model": "campanion:block/cyan_tent_top_pole", "y": 270  },
-    "facing=east":  { "model": "campanion:block/cyan_tent_top_pole", "y": 90 }
-  }
-}

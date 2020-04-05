@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "campanion:hiking_pack"
+    ]
+  },
+  "criteria": {
+    "has_tanned_leather": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "campanion:tanned_leather"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "campanion:hiking_pack"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_tanned_leather",
+      "has_the_recipe"
+    ]
+  ]
+}

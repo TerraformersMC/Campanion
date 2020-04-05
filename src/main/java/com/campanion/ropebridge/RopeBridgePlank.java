@@ -1,6 +1,6 @@
 package com.campanion.ropebridge;
 
-import com.campanion.client.renderer.model.BridgePlanksBakedModel;
+import com.campanion.client.model.block.BridgePlanksBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
@@ -15,7 +15,6 @@ import net.minecraft.client.util.math.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Arrays;

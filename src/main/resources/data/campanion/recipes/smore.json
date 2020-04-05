@@ -2,13 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "campanion:marshmallows"
+      "item": "campanion:cracker"
     },
+    [],
     {
       "item": "minecraft:cocoa_beans"
-    },
-    {
-      "item": "campanion:cracker"
     },
     {
       "item": "campanion:cracker"

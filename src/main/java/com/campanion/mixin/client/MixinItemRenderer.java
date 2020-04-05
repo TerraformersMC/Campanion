@@ -1,7 +1,7 @@
 package com.campanion.mixin.client;
 
-import com.campanion.client.items.BuiltTentItemRenderer;
-import com.campanion.client.items.SpearItemRenderer;
+import com.campanion.client.renderer.item.BuiltTentItemRenderer;
+import com.campanion.client.renderer.item.SpearItemRenderer;
 import com.campanion.item.CampanionItems;
 import com.campanion.item.SpearItem;
 import net.minecraft.block.Blocks;

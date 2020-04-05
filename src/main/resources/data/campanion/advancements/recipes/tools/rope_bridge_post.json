@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "campanion:rope_bridge_post"
+    ]
+  },
+  "criteria": {
+    "has_rope": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "campanion:rope"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "campanion:rope_bridge_post"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_rope",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,6 +1,6 @@
 package com.campanion.mixin.client;
 
-import com.campanion.client.items.BuiltTentItemRenderer;
+import com.campanion.client.renderer.item.BuiltTentItemRenderer;
 import com.campanion.client.util.TentPreviewImmediate;
 import com.campanion.item.TentBagItem;
 import net.minecraft.block.BlockState;
@@ -24,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Mixin(WorldRenderer.class)

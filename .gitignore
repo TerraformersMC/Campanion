@@ -27,3 +27,8 @@ bin/
 # fabric
 
 run/
+
+# minecraft
+
+generated/
+logs/

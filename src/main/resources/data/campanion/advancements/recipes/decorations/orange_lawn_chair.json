@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "campanion:orange_lawn_chair"
+    ]
+  },
+  "criteria": {
+    "has_orange_carpet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:orange_carpet"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "campanion:orange_lawn_chair"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_orange_carpet",
+      "has_the_recipe"
+    ]
+  ]
+}

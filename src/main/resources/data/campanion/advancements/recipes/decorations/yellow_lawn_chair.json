@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "campanion:yellow_lawn_chair"
+    ]
+  },
+  "criteria": {
+    "has_yellow_carpet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:yellow_carpet"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "campanion:yellow_lawn_chair"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_yellow_carpet",
+      "has_the_recipe"
+    ]
+  ]
+}

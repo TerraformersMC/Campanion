@@ -3,6 +3,7 @@ package com.campanion.item;
 import com.campanion.Campanion;
 import com.campanion.advancement.criterion.CampanionCriteria;
 import com.campanion.entity.SleepNoSetSpawnPlayer;
+import com.campanion.stat.CampanionStats;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -13,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -78,7 +80,9 @@ public class SleepingBagItem extends Item implements DyeableItem {
 				((SleepNoSetSpawnPlayer) user).sleepWithoutSpawnPoint(pos);
 				if (user instanceof ServerPlayerEntity) {
 					CampanionCriteria.SLEPT_IN_SLEEPING_BAG.trigger((ServerPlayerEntity) user);
+					user.incrementStat(CampanionStats.SLEEP_IN_SLEEPING_BAG);
 				}
+				user.incrementStat(Stats.USED.getOrCreateStat(this));
 				setInUse(stack, true);
 			}
 		}

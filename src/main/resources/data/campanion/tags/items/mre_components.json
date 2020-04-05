@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "#campanion:fruits",
+    "#campanion:grains",
+    "#campanion:proteins",
+    "#campanion:vegetables"
+  ]
+}

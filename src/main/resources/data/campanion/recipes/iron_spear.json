@@ -1,15 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "M",
-    "S"
+    "X",
+    "#"
   ],
   "key": {
-    "M": {
-      "item": "minecraft:iron_ingot"
-    },
-    "S": {
+    "#": {
       "item": "campanion:wooden_rod"
+    },
+    "X": {
+      "item": "minecraft:iron_ingot"
     }
   },
   "result": {

@@ -1,17 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "# #",
-    "# #",
-    "# #"
+    "S S",
+    "S S",
+    "S S"
   ],
   "key": {
-    "#": {
+    "S": {
       "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "campanion:leather_tanner",
-    "count": 1
+    "item": "campanion:leather_tanner"
   }
 }

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "campanion:tent_bag"
+    ]
+  },
+  "criteria": {
+    "has_rope": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "campanion:rope"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "campanion:tent_bag"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_rope",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "campanion:brown_lawn_chair"
+    ]
+  },
+  "criteria": {
+    "has_brown_carpet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:brown_carpet"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "campanion:brown_lawn_chair"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_brown_carpet",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -2,13 +2,13 @@ package com.campanion.client;
 
 import com.campanion.block.CampanionBlocks;
 import com.campanion.blockentity.CampanionBlockEntities;
-import com.campanion.client.blockentity.RopeBridgePostBlockEntityRenderer;
+import com.campanion.client.renderer.blockentity.RopeBridgePostBlockEntityRenderer;
 import com.campanion.client.renderer.entity.EmptyRenderer;
 import com.campanion.client.renderer.entity.GrapplingHookEntityRenderer;
 import com.campanion.client.renderer.entity.SpearEntityRenderer;
-import com.campanion.client.renderer.model.BridgePlanksUnbakedModel;
+import com.campanion.client.model.block.BridgePlanksUnbakedModel;
 import com.campanion.entity.CampanionEntities;
-import com.campanion.entity.ThrowingStoneEntity;
+import com.campanion.entity.SkippingStoneEntity;
 import com.campanion.item.CampanionItems;
 import com.campanion.network.S2CClearBackpackHeldItem;
 import com.campanion.network.S2CEntitySpawnPacket;
@@ -35,7 +35,7 @@ public class CampanionClient implements ClientModInitializer {
 		CampanionKeybinds.initialize();
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(rm -> (modelId, context) -> {
-			if(modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState())) || modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_ANCHOR.getDefaultState()))) {
+			if(modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState())) || modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_POST.getDefaultState()))) {
 				return new BridgePlanksUnbakedModel();
 			}
 			return null;
@@ -52,7 +52,7 @@ public class CampanionClient implements ClientModInitializer {
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.GRAPPLING_HOOK, (dispatcher, context) -> new GrapplingHookEntityRenderer(dispatcher));
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.LAWN_CHAIR, (dispatcher, context) -> new EmptyRenderer<>(dispatcher));
 
-		EntityRendererRegistry.INSTANCE.register(CampanionEntities.THROWING_STONE, (dispatcher, context) -> new FlyingItemEntityRenderer<ThrowingStoneEntity>(dispatcher, context.getItemRenderer()));
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.THROWING_STONE, (dispatcher, context) -> new FlyingItemEntityRenderer<SkippingStoneEntity>(dispatcher, context.getItemRenderer()));
 	}
 	private static void registerRenderLayers() {
 		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.ROPE_LADDER, RenderLayer.getCutout());

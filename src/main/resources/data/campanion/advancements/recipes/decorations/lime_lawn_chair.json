@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "campanion:lime_lawn_chair"
+    ]
+  },
+  "criteria": {
+    "has_lime_carpet": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:lime_carpet"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "campanion:lime_lawn_chair"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_lime_carpet",
+      "has_the_recipe"
+    ]
+  ]
+}

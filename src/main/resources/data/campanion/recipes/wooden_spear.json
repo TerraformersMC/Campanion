@@ -1,16 +1,14 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "M",
-    "S"
+    "X",
+    "#"
   ],
   "key": {
-    "M": {
-      "tag": "minecraft:planks"
-    },
-    "S": {
+    "#": {
       "item": "campanion:wooden_rod"
-    }
+    },
+    "X": []
   },
   "result": {
     "item": "campanion:wooden_spear"
