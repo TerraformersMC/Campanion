@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.server.AbstractTagProvider;
+import net.minecraft.data.server.ItemTagsProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.tag.ItemTags;
@@ -20,14 +21,15 @@ import org.apache.logging.log4j.Logger;
 import java.nio.file.Path;
 import java.util.List;
 
-public class CampanionItemTagsProvider extends AbstractTagProvider<Item> {
-	private static final Logger LOG = LogManager.getLogger();
+public class CampanionItemTagsProvider extends ItemTagsProvider {
 
 	public CampanionItemTagsProvider(DataGenerator dataGenerator) {
-		super(dataGenerator, Registry.ITEM);
+		super(dataGenerator);
 	}
 
+	@Override
 	protected void configure() {
+		super.configure();
 		this.copy(CampanionBlockTags.LAWN_CHAIRS, CampanionItemTags.LAWN_CHAIRS);
 		this.copy(CampanionBlockTags.TENT_SIDES, CampanionItemTags.TENT_SIDES);
 		this.copy(CampanionBlockTags.TENT_TOPS, CampanionItemTags.TENT_TOPS);
@@ -45,46 +47,9 @@ public class CampanionItemTagsProvider extends AbstractTagProvider<Item> {
 		this.getOrCreateTagBuilder(CampanionItemTags.MRE_COMPONENTS).add(CampanionItemTags.FRUITS).add(CampanionItemTags.GRAINS).add(CampanionItemTags.PROTEINS).add(CampanionItemTags.VEGETABLES);
 	}
 
-	protected void copy(Tag<Block> tag, Tag<Item> tag2) {
-		Tag.Builder<Item> builder = this.getOrCreateTagBuilder(tag2);
-
-		for (Tag.Entry<Block> entry : tag.entries()) {
-			Tag.Entry<Item> entry2 = this.convert(entry);
-			builder.add(entry2);
-		}
-
-	}
-
-	private Tag.Entry<Item> convert(Tag.Entry<Block> entry) {
-		if (entry instanceof Tag.TagEntry) {
-			return new Tag.TagEntry<>(((Tag.TagEntry<Block>) entry).getId());
-		} else if (entry instanceof Tag.CollectionEntry) {
-			List<Item> list = Lists.newArrayList();
-
-			for (Block block : ((Tag.CollectionEntry<Block>) entry).getValues()) {
-				Item item = block.asItem();
-				if (item == Items.AIR) {
-					LOG.warn("Itemless block copied to item tag: {}", Registry.BLOCK.getId(block));
-				} else {
-					list.add(item);
-				}
-			}
-
-			return new Tag.CollectionEntry<>(list);
-		} else {
-			throw new UnsupportedOperationException("Unknown tag entry " + entry);
-		}
-	}
-
-	protected Path getOutput(Identifier identifier) {
-		return this.root.getOutput().resolve("data/" + identifier.getNamespace() + "/tags/items/" + identifier.getPath() + ".json");
-	}
-
+	@Override
 	public String getName() {
 		return "Campanion Item Tags";
 	}
-
-	protected void setContainer(TagContainer<Item> tagContainer) {
-		ItemTags.setContainer(tagContainer);
-	}
 }
+
