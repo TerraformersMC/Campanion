@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "campanion:brown_flat_tent_top"
+          "name": "minecraft:string"
         }
       ],
       "conditions": [

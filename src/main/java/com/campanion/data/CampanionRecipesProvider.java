@@ -165,6 +165,8 @@ public class CampanionRecipesProvider implements DataProvider {
 		ShapedRecipeJsonFactory.create(CampanionItems.CAMPING_PACK).input('I', Items.IRON_INGOT).input('R', CampanionItems.ROPE).input('P', CampanionItems.LEATHER_POUCH).input('T', CampanionItems.TANNED_LEATHER_POUCH).pattern(" I ").pattern("RTR").pattern(" P ").criterion("has_tanned_leather", this.conditionsFrom(CampanionItems.TANNED_LEATHER)).offerTo(consumer);
 		ShapedRecipeJsonFactory.create(CampanionItems.HIKING_PACK).input('I', Items.IRON_INGOT).input('R', CampanionItems.ROPE).input('T', CampanionItems.TANNED_LEATHER_POUCH).pattern(" I ").pattern("RTR").pattern("ITI").criterion("has_tanned_leather", this.conditionsFrom(CampanionItems.TANNED_LEATHER)).offerTo(consumer);
 
+		ShapedRecipeJsonFactory.create(CampanionItems.GRAPPLING_HOOK).input('I', Items.IRON_INGOT).input('P', ItemTags.PLANKS).input('R', CampanionItems.ROPE).input('S', Items.STICK).pattern(" I ").pattern("PRI").pattern("SI ").criterion("has_grappling_hook", this.conditionsFrom(CampanionItems.GRAPPLING_HOOK)).offerTo(consumer);
+
 		ShapedRecipeJsonFactory.create(CampanionItems.WOODEN_SPEAR).input('#', CampanionItems.WOODEN_ROD).input('X', ItemTags.PLANKS).pattern("X").pattern("#").criterion("has_stick", this.conditionsFrom(Items.STICK)).offerTo(consumer);
 		ShapedRecipeJsonFactory.create(CampanionItems.STONE_SPEAR).input('#', CampanionItems.WOODEN_ROD).input('X', Blocks.COBBLESTONE).pattern("X").pattern("#").criterion("has_stone", this.conditionsFrom(Blocks.COBBLESTONE)).offerTo(consumer);
 		ShapedRecipeJsonFactory.create(CampanionItems.IRON_SPEAR).input('#', CampanionItems.WOODEN_ROD).input('X', Items.IRON_INGOT).pattern("X").pattern("#").criterion("has_iron", this.conditionsFrom(Items.IRON_INGOT)).offerTo(consumer);

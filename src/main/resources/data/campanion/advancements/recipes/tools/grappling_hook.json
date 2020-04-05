@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "campanion:grappling_hook"
+    ]
+  },
+  "criteria": {
+    "has_grappling_hook": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "campanion:grappling_hook"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "campanion:grappling_hook"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_grappling_hook",
+      "has_the_recipe"
+    ]
+  ]
+}

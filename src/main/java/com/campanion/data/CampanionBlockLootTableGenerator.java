@@ -2,27 +2,18 @@ package com.campanion.data;
 
 import com.campanion.Campanion;
 import com.campanion.block.CampanionBlocks;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.loot.ConstantLootTableRange;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
-import net.minecraft.loot.condition.LootCondition;
 import net.minecraft.loot.condition.LootConditionConsumingBuilder;
-import net.minecraft.loot.condition.MatchToolLootCondition;
 import net.minecraft.loot.condition.SurvivesExplosionLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.predicate.NumberRange;
-import net.minecraft.predicate.item.EnchantmentPredicate;
-import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -30,37 +21,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 public class CampanionBlockLootTableGenerator implements Consumer<BiConsumer<Identifier, LootTable.Builder>> {
-	private static final LootCondition.Builder NEEDS_SILK_TOUCH;
-	private static final LootCondition.Builder DOESNT_NEED_SILK_TOUCH;
-	private static final LootCondition.Builder NEEDS_SHEARS;
-	private static final LootCondition.Builder NEEDS_SILK_TOUCH_SHEARS;
-	private static final LootCondition.Builder DOESNT_NEED_SILK_TOUCH_SHEARS;
-	private static final Set<Item> ALWAYS_DROPPED_FROM_EXPLOSION;
-	private static final float[] SAPLING_DROP_CHANCES_FROM_LEAVES;
-	private static final float[] JUNGLE_SAPLING_DROP_CHANCES_FROM_LEAVES;
-
-	static {
-		NEEDS_SILK_TOUCH = MatchToolLootCondition.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, NumberRange.IntRange.atLeast(1))));
-		DOESNT_NEED_SILK_TOUCH = NEEDS_SILK_TOUCH.invert();
-		NEEDS_SHEARS = MatchToolLootCondition.builder(ItemPredicate.Builder.create().item(Items.SHEARS));
-		NEEDS_SILK_TOUCH_SHEARS = NEEDS_SHEARS.withCondition(NEEDS_SILK_TOUCH);
-		DOESNT_NEED_SILK_TOUCH_SHEARS = NEEDS_SILK_TOUCH_SHEARS.invert();
-		ALWAYS_DROPPED_FROM_EXPLOSION = Stream.of(Blocks.DRAGON_EGG, Blocks.BEACON, Blocks.CONDUIT, Blocks.SKELETON_SKULL, Blocks.WITHER_SKELETON_SKULL, Blocks.PLAYER_HEAD, Blocks.ZOMBIE_HEAD, Blocks.CREEPER_HEAD, Blocks.DRAGON_HEAD, Blocks.SHULKER_BOX, Blocks.BLACK_SHULKER_BOX, Blocks.BLUE_SHULKER_BOX, Blocks.BROWN_SHULKER_BOX, Blocks.CYAN_SHULKER_BOX, Blocks.GRAY_SHULKER_BOX, Blocks.GREEN_SHULKER_BOX, Blocks.LIGHT_BLUE_SHULKER_BOX, Blocks.LIGHT_GRAY_SHULKER_BOX, Blocks.LIME_SHULKER_BOX, Blocks.MAGENTA_SHULKER_BOX, Blocks.ORANGE_SHULKER_BOX, Blocks.PINK_SHULKER_BOX, Blocks.PURPLE_SHULKER_BOX, Blocks.RED_SHULKER_BOX, Blocks.WHITE_SHULKER_BOX, Blocks.YELLOW_SHULKER_BOX).map(ItemConvertible::asItem).collect(ImmutableSet.toImmutableSet());
-		SAPLING_DROP_CHANCES_FROM_LEAVES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
-		JUNGLE_SAPLING_DROP_CHANCES_FROM_LEAVES = new float[]{0.025F, 0.027777778F, 0.03125F, 0.041666668F, 0.1F};
-	}
 
 	private final Map<Identifier, LootTable.Builder> lootTables = Maps.newHashMap();
 
-	private static <T> T addSurvivesExplosionLootCondition(ItemConvertible itemConvertible, LootConditionConsumingBuilder<T> lootConditionConsumingBuilder) {
-		return !ALWAYS_DROPPED_FROM_EXPLOSION.contains(itemConvertible.asItem()) ? lootConditionConsumingBuilder.withCondition(SurvivesExplosionLootCondition.builder()) : lootConditionConsumingBuilder.getThis();
+	private static <T> T addSurvivesExplosionLootCondition(LootConditionConsumingBuilder<T> lootConditionConsumingBuilder) {
+		return lootConditionConsumingBuilder.withCondition(SurvivesExplosionLootCondition.builder());
 	}
 
 	private static LootTable.Builder create(ItemConvertible itemConvertible) {
-		return LootTable.builder().withPool(addSurvivesExplosionLootCondition(itemConvertible, LootPool.builder().withRolls(ConstantLootTableRange.create(1)).withEntry(ItemEntry.builder(itemConvertible))));
+		return LootTable.builder().withPool(addSurvivesExplosionLootCondition(LootPool.builder().withRolls(ConstantLootTableRange.create(1)).withEntry(ItemEntry.builder(itemConvertible))));
 	}
 
 	@Override
@@ -71,6 +42,57 @@ public class CampanionBlockLootTableGenerator implements Consumer<BiConsumer<Ide
 				registerForSelfDrop(block);
 			}
 		}
+
+		this.register(CampanionBlocks.WHITE_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.ORANGE_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.MAGENTA_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.LIGHT_BLUE_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.YELLOW_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.LIME_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.PINK_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.GRAY_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.LIGHT_GRAY_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.CYAN_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.PURPLE_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.BLUE_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.BROWN_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.GREEN_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.RED_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.BLACK_TENT_TOP, Items.STRING);
+
+		this.register(CampanionBlocks.WHITE_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.ORANGE_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.MAGENTA_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.LIGHT_BLUE_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.YELLOW_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.LIME_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.PINK_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.GRAY_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.LIGHT_GRAY_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.CYAN_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.PURPLE_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.BLUE_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.BROWN_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.GREEN_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.RED_TOPPED_TENT_POLE, Items.STRING);
+		this.register(CampanionBlocks.BLACK_TOPPED_TENT_POLE, Items.STRING);
+
+		this.register(CampanionBlocks.WHITE_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.ORANGE_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.MAGENTA_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.LIGHT_BLUE_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.YELLOW_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.LIME_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.PINK_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.GRAY_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.LIGHT_GRAY_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.CYAN_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.PURPLE_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.BLUE_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.BROWN_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.GREEN_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.RED_FLAT_TENT_TOP, Items.STRING);
+		this.register(CampanionBlocks.BLACK_FLAT_TENT_TOP, Items.STRING);
 
 		Set<Identifier> set = Sets.newHashSet();
 

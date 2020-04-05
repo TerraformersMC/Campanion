@@ -155,19 +155,19 @@ public class CampanionBlocks {
 	}
 
 	private static TentSideBlock tentSide(DyeColor color) {
-		return add(color.getName() + "_tent_side", new TentSideBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(-1).sounds(BlockSoundGroup.WOOL).build(), color), (ItemGroup) null);
+		return add(color.getName() + "_tent_side", new TentSideBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(1F).sounds(BlockSoundGroup.WOOL).build(), color), (ItemGroup) null);
 	}
 
 	private static TentTopBlock tentTop(DyeColor color) {
-		return add(color.getName() + "_tent_top", new TentTopBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(-1).sounds(BlockSoundGroup.WOOL).build(), color), (ItemGroup) null);
+		return add(color.getName() + "_tent_top", new TentTopBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(1F).sounds(BlockSoundGroup.WOOL).build(), color), (ItemGroup) null);
 	}
 
 	private static TentTopPoleBlock toppedTentPole(DyeColor color) {
-		return add(color.getName() + "_topped_tent_pole", new TentTopPoleBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(-1).sounds(BlockSoundGroup.WOOL).build(), color), (ItemGroup) null);
+		return add(color.getName() + "_topped_tent_pole", new TentTopPoleBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(1F).sounds(BlockSoundGroup.WOOL).build(), color), (ItemGroup) null);
 	}
 
 	private static TentTopFlatBlock tentTopFlat(DyeColor color) {
-		return add(color.getName() + "_flat_tent_top", new TentTopFlatBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(-1).sounds(BlockSoundGroup.WOOL).build(), color), (ItemGroup) null);
+		return add(color.getName() + "_flat_tent_top", new TentTopFlatBlock(FabricBlockSettings.of(Material.WOOL).nonOpaque().hardness(1F).sounds(BlockSoundGroup.WOOL).build(), color), (ItemGroup) null);
 	}
 
 
