@@ -1,16 +1,19 @@
 package com.campanion.sound;
 
+import net.minecraft.item.BlockItem;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.campanion.Campanion.MOD_ID;
 
 public class CampanionSoundEvents {
 
-	public static final ArrayList<SoundEvent> SOUNDS = new ArrayList<>();
+	private static final Map<Identifier, SoundEvent> SOUNDS = new LinkedHashMap<>();
 
 	public static final SoundEvent HOWL = add("howl");
 	public static final SoundEvent SPEAR_HIT_GROUND = add("spear_hit_ground");
@@ -18,14 +21,15 @@ public class CampanionSoundEvents {
 	public static final SoundEvent SPEAR_THROW = add("spear_throw");
 
 	private static SoundEvent add(String id) {
-		SoundEvent event = (new SoundEvent(new Identifier(MOD_ID, id)));
-		SOUNDS.add(event);
+		Identifier identifier = new Identifier(MOD_ID, id);
+		SoundEvent event = new SoundEvent(identifier);
+		SOUNDS.put(identifier, event);
 		return event;
 	}
 
 	public static void register() {
-		for (SoundEvent event : SOUNDS) {
-			Registry.register(Registry.SOUND_EVENT, event.getId(), event);
+		for (Identifier identifier : SOUNDS.keySet()) {
+			Registry.register(Registry.SOUND_EVENT, identifier, SOUNDS.get(identifier));
 		}
 	}
 }

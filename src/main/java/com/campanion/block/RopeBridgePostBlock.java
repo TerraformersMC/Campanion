@@ -214,7 +214,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
             player.addChatMessage(new TranslatableText("message.campanion.rope_bridge.finished"), false);
         } else {
             double counted = list.stream().flatMap(p -> p.getRight().stream()).filter(RopeBridgePlank::isMaster).count();
-            player.addChatMessage(new TranslatableText("message.campanion.rope_bridge.constructed", Math.round(counted  / RopeBridge.PLANKS_PER_ITEM)), true);
+            player.addChatMessage(new TranslatableText("message.campanion.rope_bridge.constructed", Math.round(counted  / RopeBridge.PLANKS_PER_ITEM) + 1), true);
         }
         return true;
     }

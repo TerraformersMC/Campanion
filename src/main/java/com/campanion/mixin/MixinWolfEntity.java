@@ -46,27 +46,21 @@ public abstract class MixinWolfEntity extends TameableEntity implements HowlingE
 		this.goalSelector.add(5, new HowlGoal(this));
 	}
 
-	@Inject(method = "handleStatus", at = @At("HEAD"), cancellable = true)
-	@Environment(EnvType.CLIENT)
-	public void handleStatus(byte status, CallbackInfo callbackInfo) {
-		if (status == 64) {
-			setHowling(true);
+	@Override
+	public void setHowling(boolean howling) {
+		if(howling) {
 			this.howlAnimationProgress = 0.0F;
 			this.lastHowlAnimationProgress = 0.0F;
-			callbackInfo.cancel();
-		} else {
-			setHowling(false);
 		}
-	}
-
-	public void setHowling(boolean howling) {
 		this.dataTracker.set(HOWLING, howling);
 	}
 
+	@Override
 	public boolean isHowling() {
 		return this.dataTracker.get(HOWLING);
 	}
 
+	@Override
 	public float getHowlAnimationProgress(float delta) {
 		return this.lastHowlAnimationProgress + (this.howlAnimationProgress - this.lastHowlAnimationProgress) * delta;
 	}

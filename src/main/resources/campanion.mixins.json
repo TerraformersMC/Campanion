@@ -11,7 +11,8 @@
     "MixinPlayerEntity",
     "MixinWolfEntity",
     "MixinEntity",
-    "MixinStructure"
+    "MixinStructure",
+    "MixinPlayerManager"
   ],
   "client": [
     "client.MixinCamera",
@@ -20,7 +21,8 @@
     "client.MixinScreen",
     "client.MixinWolfEntityModel",
     "client.MixinWorldRenderer",
-    "client.MixinMinecraftClient"
+    "client.MixinMinecraftClient",
+    "client.MixinWolfEntityClient"
   ],
   "injectors": {
     "defaultRequire": 1

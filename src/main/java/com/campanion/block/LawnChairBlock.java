@@ -1,6 +1,7 @@
 package com.campanion.block;
 
 import com.campanion.blockentity.LawnChairBlockEntity;
+import com.campanion.entity.LawnChairEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -57,7 +58,9 @@ public class LawnChairBlock extends HorizontalFacingBlock implements BlockEntity
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		BlockEntity entity = world.getBlockEntity(pos);
 		if(entity instanceof LawnChairBlockEntity && !world.isClient) {
-			player.startRiding(((LawnChairBlockEntity) entity).findOrCreateEntity());
+			LawnChairEntity chairEntity = ((LawnChairBlockEntity) entity).findOrCreateEntity();
+
+			player.startRiding(chairEntity);
 		}
 		return ActionResult.CONSUME;
 	}

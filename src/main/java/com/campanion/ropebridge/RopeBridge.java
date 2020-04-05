@@ -156,7 +156,7 @@ public class RopeBridge {
             Vec3d newPos = new Vec3d(xOff + this.from.getX() + deltaX * nextD, this.beizerCurve(nextD), zOff + this.from.getZ() + deltaZ * nextD);
 
             if((master || !positionOrder[index].equals(pos))) {
-                Vec3d vec3d = new Vec3d(MathHelper.floorMod(calculatedPosition.x, 1D)-xOff, MathHelper.floorMod(calculatedPosition.y + 0.001, 1), MathHelper.floorMod(calculatedPosition.z, 1)-zOff);
+                Vec3d vec3d = new Vec3d(floorMod(calculatedPosition.x, 1D)-xOff, floorMod(calculatedPosition.y + 0.001, 1), floorMod(calculatedPosition.z, 1)-zOff);
                 double tiltAngle = Math.atan(this.beizerCurveGradient(d) / Math.sqrt(deltaX*deltaX + deltaZ*deltaZ));
 
                 if(Double.isNaN(tiltAngle)) {
@@ -197,5 +197,9 @@ public class RopeBridge {
      */
     private double beizerCurveGradient(double t) {
         return 2*this.a*t + this.b;
+    }
+
+    public static double floorMod(double d, double e) {
+        return (d % e + e) % e;
     }
 }
