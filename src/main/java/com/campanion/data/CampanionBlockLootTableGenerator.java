@@ -43,6 +43,23 @@ public class CampanionBlockLootTableGenerator implements Consumer<BiConsumer<Ide
 			}
 		}
 
+		this.register(CampanionBlocks.WHITE_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.ORANGE_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.MAGENTA_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.LIGHT_BLUE_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.YELLOW_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.LIME_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.PINK_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.GRAY_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.LIGHT_GRAY_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.CYAN_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.PURPLE_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.BLUE_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.BROWN_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.GREEN_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.RED_TENT_SIDE, Items.STRING);
+		this.register(CampanionBlocks.BLACK_TENT_SIDE, Items.STRING);
+
 		this.register(CampanionBlocks.WHITE_TENT_TOP, Items.STRING);
 		this.register(CampanionBlocks.ORANGE_TENT_TOP, Items.STRING);
 		this.register(CampanionBlocks.MAGENTA_TENT_TOP, Items.STRING);

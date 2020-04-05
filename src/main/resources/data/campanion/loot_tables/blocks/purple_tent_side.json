@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "campanion:purple_tent_side"
+          "name": "minecraft:string"
         }
       ],
       "conditions": [
