@@ -47,7 +47,6 @@ public class CampanionItems {
 	public static final SleepingBagItem SLEEPING_BAG = add("sleeping_bag", new SleepingBagItem(new Item.Settings().maxDamage(250).group(ItemGroup.MISC)));
 	public static final TentBagItem TENT_BAG = add("tent_bag", new TentBagItem(new Item.Settings().group(ItemGroup.MISC)));
 	public static final UnbuiltTent SMALL_UNBUILT_TENT = add("small_unbuilt_tent", new UnbuiltTent(new Item.Settings().group(ItemGroup.MISC), "small"));
-	public static final UnbuiltTent MEDIUM_UNBUILT_TENT = add("medium_unbuilt_tent", new UnbuiltTent(new Item.Settings().group(ItemGroup.MISC), "medium"));
 	public static final UnbuiltTent LARGE_UNBUILT_TENT = add("large_unbuilt_tent", new UnbuiltTent(new Item.Settings().group(ItemGroup.MISC), "large"));
 
 	private static <I extends Item> I add(String name, I item) {
