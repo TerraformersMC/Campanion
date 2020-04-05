@@ -23,7 +23,7 @@ public class CampanionBlocks {
 	private static final Map<Identifier, Block> BLOCKS = new LinkedHashMap<>();
 
 	public static final Block ROPE_BRIDGE_POST = add("rope_bridge_post", new RopeBridgePostBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(1.0F, 1.0F).dynamicBounds().nonOpaque().build()), ItemGroup.TOOLS);
-	public static final Block ROPE_BRIDGE_PLANKS = add("rope_bridge_planks", new RopeBridgePlanksBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(0.5F, 1.0F).dynamicBounds().nonOpaque().build()));
+	public static final Block ROPE_BRIDGE_PLANKS = add("rope_bridge_planks", new RopeBridgePlanksBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(0.5F, 1.0F).dynamicBounds().nonOpaque().dropsNothing().build()));
 	public static final Block ROPE_LADDER = add("rope_ladder", new RopeLadderBlock(FabricBlockSettings.of(Material.WOOD).nonOpaque().hardness(0.2F).sounds(BlockSoundGroup.LADDER).build()), ItemGroup.DECORATIONS);
 
 	public static final Block WHITE_LAWN_CHAIR = createLawnChair("white");
@@ -117,7 +117,7 @@ public class CampanionBlocks {
 
 	private static <B extends Block> B add(String name, B block, ItemGroup tab) {
 		Item.Settings settings = new Item.Settings();
-		if(tab != null) {
+		if (tab != null) {
 			settings.group(tab);
 		}
 		return add(name, block, new BlockItem(block, settings));
@@ -185,4 +185,7 @@ public class CampanionBlocks {
 
 	}
 
+	public static Map<Identifier, Block> getBlocks() {
+		return BLOCKS;
+	}
 }

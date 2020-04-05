@@ -14,6 +14,7 @@ public class CampanionData {
 		generator.install(new CampanionBlockTagsProvider(generator));
 		generator.install(new CampanionItemTagsProvider(generator));
 		generator.install(new CampanionRecipesProvider(generator));
+		generator.install(new CampanionLootTablesProvider(generator));
 
 		return generator;
 	}

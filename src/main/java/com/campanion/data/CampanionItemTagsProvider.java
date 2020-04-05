@@ -3,23 +3,9 @@ package com.campanion.data;
 import com.campanion.item.CampanionItems;
 import com.campanion.tag.CampanionBlockTags;
 import com.campanion.tag.CampanionItemTags;
-import com.google.common.collect.Lists;
-import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.server.AbstractTagProvider;
 import net.minecraft.data.server.ItemTagsProvider;
-import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.tag.ItemTags;
-import net.minecraft.tag.Tag;
-import net.minecraft.tag.TagContainer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.nio.file.Path;
-import java.util.List;
 
 public class CampanionItemTagsProvider extends ItemTagsProvider {
 

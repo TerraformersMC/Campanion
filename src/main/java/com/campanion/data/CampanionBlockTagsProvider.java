@@ -2,16 +2,8 @@ package com.campanion.data;
 
 import com.campanion.block.CampanionBlocks;
 import com.campanion.tag.CampanionBlockTags;
-import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.server.AbstractTagProvider;
 import net.minecraft.data.server.BlockTagsProvider;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.TagContainer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-
-import java.nio.file.Path;
 
 public class CampanionBlockTagsProvider extends BlockTagsProvider {
 	public CampanionBlockTagsProvider(DataGenerator dataGenerator) {

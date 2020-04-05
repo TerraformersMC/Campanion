@@ -45,6 +45,7 @@ public class CampanionRecipesProvider implements DataProvider {
 		this.root = dataGenerator;
 	}
 
+	@Override
 	public void run(DataCache dataCache) {
 		Path path = this.root.getOutput();
 		Set<Identifier> set = Sets.newHashSet();
@@ -217,6 +218,7 @@ public class CampanionRecipesProvider implements DataProvider {
 		return new InventoryChangedCriterion.Conditions(NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, items);
 	}
 
+	@Override
 	public String getName() {
 		return "Campanion Recipes";
 	}
