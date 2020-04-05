@@ -22,6 +22,10 @@ public class TentPartBlockEntity extends BlockEntity {
         this.linkedPos = linkedPos;
     }
 
+    public void setTentSize(BlockPos size) {
+        this.size = size;
+    }
+
     public BlockPos getSize() {
         return size;
     }

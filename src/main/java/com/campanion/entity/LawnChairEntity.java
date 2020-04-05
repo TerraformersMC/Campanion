@@ -22,6 +22,7 @@ public class LawnChairEntity extends Entity {
 
     public LawnChairEntity(World world, BlockPos pos) {
         this(world);
+        this.setPos(pos.getX(), pos.getY(), pos.getZ());
         this.dataTracker.set(LINKED_POSITION, pos);
     }
 
@@ -45,7 +46,7 @@ public class LawnChairEntity extends Entity {
         BlockEntity blockEntity = this.world.getBlockEntity(linkedPosition);
 
         if(BlockPos.ORIGIN.equals(linkedPosition) || !this.world.getBlockState(linkedPosition).getBlock().matches(CampanionBlockTags.LAWN_CHAIR)||
-            !(blockEntity instanceof LawnChairBlockEntity) || ((LawnChairBlockEntity) blockEntity).findOrCreateEntity() != this) {
+            !(blockEntity instanceof LawnChairBlockEntity) || (!this.world.isClient && ((LawnChairBlockEntity) blockEntity).findOrCreateEntity() != this)) {
             this.kill();
         }
         this.setPos(linkedPosition.getX() + 0.5, linkedPosition.getY() + 1D, linkedPosition.getZ() + 0.5);

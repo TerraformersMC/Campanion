@@ -47,6 +47,7 @@ public class TentBagItem extends Item {
         if (result instanceof BlockHitResult && result.getType() == HitResult.Type.BLOCK) {
             BlockPos base = ((BlockHitResult) result).getBlockPos().up();
             if(!world.isClient && getErrorPosition(world, base, stack).isEmpty()) {
+                BlockPos tentSize = NbtHelper.toBlockPos(stack.getOrCreateTag().getCompound("TentSize"));
                 traverseBlocks(stack, (pos, state, tag) -> {
                     BlockPos off = base.add(pos);
 
@@ -61,6 +62,7 @@ public class TentBagItem extends Item {
                     }
                     if(entity instanceof TentPartBlockEntity) {
                         ((TentPartBlockEntity) entity).setLinkedPos(base);
+                        ((TentPartBlockEntity) entity).setTentSize(tentSize);
                         entity.markDirty();
                     }
 

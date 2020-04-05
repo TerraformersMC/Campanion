@@ -10,7 +10,8 @@
     "MixinMobEntity",
     "MixinPlayerEntity",
     "MixinWolfEntity",
-    "MixinEntity"
+    "MixinEntity",
+    "MixinStructure"
   ],
   "client": [
     "client.MixinCamera",

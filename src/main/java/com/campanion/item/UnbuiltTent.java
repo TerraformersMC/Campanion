@@ -1,12 +1,13 @@
 package com.campanion.item;
 
 import com.campanion.Campanion;
-import com.campanion.block.BaseTentBlock;
 import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.DynamicOps;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemUsageContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.Structure;
@@ -14,9 +15,11 @@ import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.StructureProcessor;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
 public class UnbuiltTent extends Item {
@@ -29,24 +32,33 @@ public class UnbuiltTent extends Item {
     }
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        if (!context.getWorld().isClient) {
-            Structure structure = ((ServerWorld) context.getWorld()).getStructureManager().getStructure(this.structure);
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        if (!world.isClient) {
+            Structure structure = ((ServerWorld) world).getStructureManager().getStructure(this.structure);
             if(structure != null) {
                 BlockPos size = structure.getSize();
-                structure.place(
-                    context.getWorld(),
-                    context.getBlockPos().add(-size.getX()/2, 1, -size.getZ()/2),
-                    new StructurePlacementData()
-                        .setRotation(BlockRotation.values()[context.getPlayer().getHorizontalFacing().getHorizontal()])
-                        .setPosition(new BlockPos(size.getX()/2, 0, size.getZ()/2))
-                        .setIgnoreEntities(true)
-                        .addProcessor(new TentProcessor(context.getBlockPos().up(), size))
-                );
+                ItemStack out = new ItemStack(CampanionItems.TENT_BAG);
+                ListTag list = new ListTag();
+                for (Structure.StructureBlockInfo info : ((AccessorStructure) structure).getBlocks().get(0)) {
+                    CompoundTag tag = new CompoundTag();
+                    tag.put("Pos", NbtHelper.fromBlockPos(info.pos.add(-size.getX()/2, 0, -size.getZ()/2)));
+                    tag.put("BlockState", NbtHelper.fromBlockState(info.state));
+                    if(info.tag != null && !info.tag.isEmpty()) {
+                        tag.put("BlockEntityData", info.tag);
+                    }
+                    list.add(tag);
+                }
+
+                out.getOrCreateTag().put("Blocks", list);
+                out.getOrCreateTag().put("TentSize", NbtHelper.fromBlockPos(size));
+
+                return new TypedActionResult<>(ActionResult.CONSUME, out);
             }
         }
-        return ActionResult.CONSUME;
+
+        return super.use(world, user, hand);
     }
+
 
     private class TentProcessor extends StructureProcessor {
 
@@ -60,12 +72,7 @@ public class UnbuiltTent extends Item {
 
         @Override
         public Structure.StructureBlockInfo process(WorldView worldView, BlockPos pos, Structure.StructureBlockInfo structureBlockInfo, Structure.StructureBlockInfo structureBlockInfo2, StructurePlacementData placementData) {
-            if(structureBlockInfo2.state.getBlock() instanceof BaseTentBlock) {
-                CompoundTag tag = new CompoundTag();
-                tag.put("LinkedPos", NbtHelper.fromBlockPos(this.pos));
-                tag.put("Size", NbtHelper.fromBlockPos(this.size));
-                return new Structure.StructureBlockInfo(structureBlockInfo2.pos, structureBlockInfo2.state, tag);
-            }
+
             return structureBlockInfo2;
         }
 
