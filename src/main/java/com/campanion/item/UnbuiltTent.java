@@ -43,10 +43,9 @@ public class UnbuiltTent extends Item {
                         .setIgnoreEntities(true)
                         .addProcessor(new TentProcessor(context.getBlockPos().up(), size))
                 );
-                return ActionResult.CONSUME;
             }
         }
-        return super.useOnBlock(context);
+        return ActionResult.CONSUME;
     }
 
     private class TentProcessor extends StructureProcessor {
