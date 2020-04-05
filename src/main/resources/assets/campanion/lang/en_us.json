@@ -226,7 +226,7 @@
   "advancements.campanion.adventure.sleep_in_sleeping_bag.description": "Sleep through the night in a Sleeping Bag",
   "advancements.campanion.husbandry.cook_marshmallow.title": "Roasted to Perfection",
   "advancements.campanion.husbandry.cook_marshmallow.description": "Roast a marshmallow over a campfire, but be careful not to burn it!",
-  "advancements.campanion.husbandry.eat_smore.title": "S'more than a Good Treat",
+  "advancements.campanion.husbandry.eat_smore.title": "S'more than a Treat",
   "advancements.campanion.husbandry.eat_smore.description": "Eat a S'more",
   "advancements.campanion.adventure.skip_stone.title": "Stone Cold Skipper",
   "advancements.campanion.adventure.skip_stone.description": "Throw a stone and skip it 6 or more times",
@@ -239,5 +239,8 @@
   "message.campanion.rope_bridge.length": "Length too long! Current '%s', max '%s'",
   "message.campanion.rope_bridge.ropes": "Not enough ropes! %s more ropes needed.",
   "message.campanion.rope_bridge.constructed": "%s planks left",
-  "message.campanion.rope_bridge.finished": "Bridge Built!"
+  "message.campanion.rope_bridge.finished": "Bridge Built!",
+  
+  "stat.campanion.sleep_in_sleeping_bag": "Times Slept in a Sleeping Bag",
+  "stat.campanion.stone_skips": "Stone Skips"
 }
