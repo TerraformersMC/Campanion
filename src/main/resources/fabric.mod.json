@@ -4,13 +4,15 @@
   "version": "${version}",
 
   "name": "Campanion",
-  "description": "This mod aims to add Camper Companion items and utilities!",
+  "description": "A camping companion that adds items and utilities to improve your life away from home.",
   "authors": [
-    "Me!"
+    "Wyn Price",
+    "NeusFear",
+    "Prospector"
   ],
   "contact": {
-    "homepage": "https://github.com/Wyn-Price/Campanion",
-    "sources": "https://github.com/Wyn-Price/Campanion"
+    "homepage": "https://github.com/TerraformersMC/Campanion",
+    "sources": "https://github.com/TerraformersMC/Campanion"
   },
 
   "license": "CC0-1.0",
@@ -19,10 +21,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.campanion.Campanion"
+      "com.terraformersmc.campanion.Campanion"
     ],
     "client": [
-      "com.campanion.client.CampanionClient"
+      "com.terraformersmc.campanion.client.CampanionClient"
     ]
   },
   "mixins": [
