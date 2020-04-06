@@ -6,6 +6,8 @@ import com.terraformersmc.dossier.data.DossierBlockTagsProvider;
 import com.terraformersmc.dossier.data.DossierItemTagsProvider;
 import com.terraformersmc.dossier.data.DossierLootTablesProvider;
 import com.terraformersmc.dossier.data.DossierRecipesProvider;
+import com.terraformersmc.dossier.util.CommonValues;
+import com.terraformersmc.dossier.util.TransformerFunction;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.block.Block;
@@ -25,6 +27,8 @@ import net.minecraft.predicate.NumberRange;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -91,9 +95,31 @@ public abstract class Dossier<P extends DataProvider & Consumer<F>, F> {
 		return DATA_PROVIDERS.get(modId).get(type);
 	}
 
-	public static abstract class BlockTagsDossier extends Dossier<DossierBlockTagsProvider, Runnable> {
+	public static abstract class BlockTagsDossier extends Dossier<DossierBlockTagsProvider, Runnable> implements CommonValues {
+
 		protected Tag.Builder<Block> get(Tag<Block> tag) {
 			return this.provider.getOrCreateTagBuilder(tag);
+		}
+
+		protected Tag.Builder<Block> add(Tag<Block> tag, Block... blocks) {
+			Tag.Builder<Block> builder = this.provider.getOrCreateTagBuilder(tag);
+			return builder.add(blocks);
+		}
+
+		protected Tag.Builder<Block> add(Tag<Block> tag, Tag<Block>... tags) {
+			Tag.Builder<Block> builder = this.get(tag);
+			for (Tag<Block> blockTag : tags) {
+				builder.add(blockTag);
+			}
+			return builder;
+		}
+
+		protected Tag.Builder<Block> addTransformed(Tag<Block> tag, TransformerFunction<String, String> transformer, String namespace, String pathTemplate, String... args) {
+			return this.add(tag, transformer.apply(pathTemplate, args).stream().map(transformeedPath -> Registry.BLOCK.get(new Identifier(namespace, transformeedPath))).toArray(Block[]::new));
+		}
+
+		protected Tag.Builder<Block> addReplaceTransformed(Tag<Block> tag, String namespace, String pathTemplate, String key, String... values) {
+			return this.addTransformed(tag, TransformerFunction.REPLACE_TRANSFORMER, namespace, pathTemplate, ArrayUtils.add(values, 0, key));
 		}
 
 		@Override
@@ -109,14 +135,34 @@ public abstract class Dossier<P extends DataProvider & Consumer<F>, F> {
 		}
 	}
 
-	public static abstract class ItemTagsDossier extends Dossier<DossierItemTagsProvider, Runnable> {
+	public static abstract class ItemTagsDossier extends Dossier<DossierItemTagsProvider, Runnable> implements CommonValues {
 
 		protected Tag.Builder<Item> get(Tag<Item> tag) {
 			return this.provider.getOrCreateTagBuilder(tag);
 		}
 
-		protected void fromBlock(Tag<Block> blockTag, Tag<Item> tag) {
+		protected void copyFromBlock(Tag<Item> tag, Tag<Block> blockTag) {
 			this.provider.copy(blockTag, tag);
+		}
+
+		protected Tag.Builder<Item> add(Tag<Item> tag, Item... items) {
+			return this.get(tag).add(items);
+		}
+
+		protected Tag.Builder<Item> add(Tag<Item> tag, Tag<Item>... tags) {
+			Tag.Builder<Item> builder = this.get(tag);
+			for (Tag<Item> itemTag : tags) {
+				builder.add(itemTag);
+			}
+			return builder;
+		}
+
+		protected Tag.Builder<Item> addTransformed(Tag<Item> tag, TransformerFunction<String, String> transformer, String namespace, String pathTemplate, String... args) {
+			return this.add(tag, transformer.apply(pathTemplate, args).stream().map(transformeedPath -> Registry.ITEM.get(new Identifier(namespace, transformeedPath))).toArray(Item[]::new));
+		}
+
+		protected Tag.Builder<Item> addReplaceTransformed(Tag<Item> tag, String namespace, String pathTemplate, String key, String... values) {
+			return this.addTransformed(tag, TransformerFunction.REPLACE_TRANSFORMER, namespace, pathTemplate, ArrayUtils.add(values, 0, key));
 		}
 
 		@Override
