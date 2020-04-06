@@ -21,7 +21,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.server.ServerTickCallback;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -30,15 +29,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.registry.Registry;
 
-import java.io.IOException;
-import java.nio.file.Paths;
-
 public class Campanion implements ModInitializer {
 
 	public static final String MOD_ID = "campanion";
 	public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
-
-	private static final boolean RUN_GENERATORS = false;
 
 	@Override
 	public void onInitialize() {
@@ -67,13 +61,7 @@ public class Campanion implements ModInitializer {
 		registerServerboundPackets();
 		registerBackpackHandler();
 
-		if (RUN_GENERATORS && FabricLoader.getInstance().isDevelopmentEnvironment()) {
-			try {
-				CampanionData.create(Paths.get("generated")).run();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		CampanionData.generate();
 	}
 
 	public static void registerServerboundPackets() {
