@@ -103,6 +103,6 @@ public class TentBuildingRecipe extends SpecialCraftingRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return null;
+        return CampanionRecipeSerializers.TENT_BUILDING_RECIPE;
     }
 }
