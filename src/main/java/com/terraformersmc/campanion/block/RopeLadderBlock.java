@@ -16,19 +16,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
-import net.redstoneparadox.climbable.api.event.block.ClimbingCallback;
 
 public class RopeLadderBlock extends LadderBlock {
 
 	public RopeLadderBlock(Settings settings) {
 		super(settings);
-		ClimbingCallback.EVENT.register((climber, state, pos) -> {
-			if (state.getBlock() == this) {
-				return 0.4F;
-			} else {
-				return Double.NaN;
-			}
-		});
 	}
 
 	@Override

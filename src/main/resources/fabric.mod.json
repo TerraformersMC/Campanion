@@ -28,8 +28,7 @@
     ]
   },
   "mixins": [
-    "campanion.mixins.json",
-    "climbable.mixins.json"
+    "campanion.mixins.json"
   ],
 
   "depends": {
