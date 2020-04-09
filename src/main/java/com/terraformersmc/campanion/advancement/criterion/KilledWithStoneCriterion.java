@@ -1,9 +1,9 @@
 package com.terraformersmc.campanion.advancement.criterion;
 
-import com.terraformersmc.campanion.Campanion;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.terraformersmc.campanion.Campanion;
 import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterionConditions;
 import net.minecraft.entity.Entity;
@@ -15,10 +15,12 @@ import net.minecraft.util.Identifier;
 public class KilledWithStoneCriterion extends AbstractCriterion<KilledWithStoneCriterion.Conditions> {
 	public static final Identifier ID = new Identifier(Campanion.MOD_ID, "killed_with_stone");
 
+	@Override
 	public Identifier getId() {
 		return ID;
 	}
 
+	@Override
 	public KilledWithStoneCriterion.Conditions conditionsFromJson(JsonObject json, JsonDeserializationContext context) {
 		return new KilledWithStoneCriterion.Conditions(EntityPredicate.fromJson(json.get("entity")), NumberRange.IntRange.fromJson(json.get("skips")));
 	}
@@ -45,9 +47,10 @@ public class KilledWithStoneCriterion extends AbstractCriterion<KilledWithStoneC
 			return this.skips.test(count) && this.entity.test(player, entity);
 		}
 
+		@Override
 		public JsonElement toJson() {
 			JsonObject json = new JsonObject();
-			json.add("entity", this.entity.serialize());
+			json.add("entity", this.entity.toJson());
 			json.add("skips", this.skips.toJson());
 			return json;
 		}

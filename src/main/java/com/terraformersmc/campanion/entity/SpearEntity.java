@@ -17,7 +17,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -31,7 +31,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class SpearEntity extends ProjectileEntity {
+public class SpearEntity extends PersistentProjectileEntity {
 	private static final TrackedData<Boolean> ENCHANTMENT_GLINT;
 	private ItemStack spearStack;
 	private final Set<UUID> piercedEntities = new HashSet<>();
@@ -54,6 +54,7 @@ public class SpearEntity extends ProjectileEntity {
 		this.spearStack = new ItemStack(item);
 	}
 
+	@Override
 	protected void initDataTracker() {
 		super.initDataTracker();
 		this.dataTracker.startTracking(ENCHANTMENT_GLINT, false);
@@ -64,6 +65,7 @@ public class SpearEntity extends ProjectileEntity {
 		return S2CEntitySpawnPacket.createPacket(this);
 	}
 
+	@Override
 	protected ItemStack asItemStack() {
 		return this.spearStack.copy();
 	}
@@ -116,10 +118,12 @@ public class SpearEntity extends ProjectileEntity {
 		this.playSound(soundEvent, 1.0F, 1.0F);
 	}
 
+	@Override
 	protected SoundEvent getHitSound() {
 		return CampanionSoundEvents.SPEAR_HIT_GROUND;
 	}
 
+	@Override
 	public void onPlayerCollision(PlayerEntity player) {
 		Entity entity = this.getOwner();
 		if (entity == null || entity.getUuid() == player.getUuid()) {
@@ -127,6 +131,7 @@ public class SpearEntity extends ProjectileEntity {
 		}
 	}
 
+	@Override
 	public void readCustomDataFromTag(CompoundTag tag) {
 		super.readCustomDataFromTag(tag);
 		if (tag.contains("Item", 10)) {
@@ -137,11 +142,12 @@ public class SpearEntity extends ProjectileEntity {
 		this.piercedEntities.clear();
 		if (tag.contains("HitEntities", 9)) {
 			for (Tag hitEntity : tag.getList("HitEntities", 10)) {
-				this.piercedEntities.add(((CompoundTag) hitEntity).getUuid("UUID"));
+				this.piercedEntities.add(((CompoundTag) hitEntity).getUuidNew("UUID"));
 			}
 		}
 	}
 
+	@Override
 	public void writeCustomDataToTag(CompoundTag tag) {
 		super.writeCustomDataToTag(tag);
 		tag.put("Item", this.spearStack.toTag(new CompoundTag()));
@@ -149,18 +155,20 @@ public class SpearEntity extends ProjectileEntity {
 		ListTag tags = new ListTag();
 		for (UUID uuid : this.piercedEntities) {
 			CompoundTag c = new CompoundTag();
-			c.putUuid("UUID", uuid);
+			c.putUuidNew("UUID", uuid);
 			tags.add(c);
 		}
 		tag.put("HitEntities", tags);
 	}
 
+	@Override
 	public void age() {
-		if (this.pickupType != ProjectileEntity.PickupPermission.ALLOWED) {
+		if (this.pickupType != PersistentProjectileEntity.PickupPermission.ALLOWED) {
 			super.age();
 		}
 	}
 
+	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean shouldRender(double cameraX, double cameraY, double cameraZ) {
 		return true;

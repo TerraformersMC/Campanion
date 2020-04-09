@@ -18,7 +18,8 @@ public class SpearEntityModel extends Model {
         this.base.addChild(head);
     }
 
-    public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+    @Override
+	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         this.base.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 }

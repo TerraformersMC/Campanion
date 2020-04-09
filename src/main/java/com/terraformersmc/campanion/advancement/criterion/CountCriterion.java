@@ -16,10 +16,12 @@ public class CountCriterion extends AbstractCriterion<CountCriterion.Conditions>
 		this.id = id;
 	}
 
+	@Override
 	public Identifier getId() {
 		return id;
 	}
 
+	@Override
 	public CountCriterion.Conditions conditionsFromJson(JsonObject json, JsonDeserializationContext context) {
 		NumberRange.IntRange count = NumberRange.IntRange.fromJson(json.get("count"));
 		return new CountCriterion.Conditions(id, count);
@@ -45,6 +47,7 @@ public class CountCriterion extends AbstractCriterion<CountCriterion.Conditions>
 			return this.count.test(count);
 		}
 
+		@Override
 		public JsonElement toJson() {
 			JsonObject json = new JsonObject();
 			json.add("count", this.count.toJson());

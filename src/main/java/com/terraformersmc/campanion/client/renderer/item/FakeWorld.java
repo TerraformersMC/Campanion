@@ -18,57 +18,57 @@ import java.util.Map;
 
 public class FakeWorld extends ClientWorld {
 
-    private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+	private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
 
-    public final Map<BlockPos, BlockState> blockStateMap = new HashMap<>();
-    public final Map<BlockPos, BlockEntity> blockEntityMap = new HashMap<>();
-    public final Map<BlockPos, CompoundTag> blockEntityTagMap = new HashMap<>();
+	public final Map<BlockPos, BlockState> blockStateMap = new HashMap<>();
+	public final Map<BlockPos, BlockEntity> blockEntityMap = new HashMap<>();
+	public final Map<BlockPos, CompoundTag> blockEntityTagMap = new HashMap<>();
 
-    private final BlockPos basePos;
-    private final int blockLight;
-    private final int skyLight;
+	private final BlockPos basePos;
+	private final int blockLight;
+	private final int skyLight;
 
-    public FakeWorld(BlockPos basePos, int lightOverride) {
-        super(CLIENT.player.networkHandler, new LevelInfo(CLIENT.world.getLevelProperties()), CLIENT.world.dimension.getType(), 3, CLIENT.getProfiler(), CLIENT.worldRenderer);
-        this.basePos = basePos;
-        this.blockLight = lightOverride == -1 ? -1 : LightmapTextureManager.getBlockLightCoordinates(lightOverride);
-        this.skyLight = lightOverride == -1 ? -1 : LightmapTextureManager.getSkyLightCoordinates(lightOverride);
-    }
+	public FakeWorld(BlockPos basePos, int lightOverride) {
+		super(CLIENT.player.networkHandler, new LevelInfo(CLIENT.world.getLevelProperties()), CLIENT.world.dimension.getType(), 3, CLIENT::getProfiler, CLIENT.worldRenderer);
+		this.basePos = basePos;
+		this.blockLight = lightOverride == -1 ? -1 : LightmapTextureManager.getBlockLightCoordinates(lightOverride);
+		this.skyLight = lightOverride == -1 ? -1 : LightmapTextureManager.getSkyLightCoordinates(lightOverride);
+	}
 
-    @Override
-    public int getLightLevel(LightType type, BlockPos pos) {
-        if (this.blockLight == -1 || this.skyLight == -1) {
-            return CLIENT.world.getLightLevel(type, this.basePos);
-        }
-        if(type == LightType.BLOCK) {
-            return this.blockLight;
-        }
-        return this.skyLight;
-    }
+	@Override
+	public int getLightLevel(LightType type, BlockPos pos) {
+		if (this.blockLight == -1 || this.skyLight == -1) {
+			return CLIENT.world.getLightLevel(type, this.basePos);
+		}
+		if (type == LightType.BLOCK) {
+			return this.blockLight;
+		}
+		return this.skyLight;
+	}
 
-    @Override
-    public BlockState getBlockState(BlockPos pos) {
-        return this.blockStateMap.getOrDefault(pos, Blocks.AIR.getDefaultState());
-    }
+	@Override
+	public BlockState getBlockState(BlockPos pos) {
+		return this.blockStateMap.getOrDefault(pos, Blocks.AIR.getDefaultState());
+	}
 
-    @Override
-    public BlockEntity getBlockEntity(BlockPos pos) {
-        return this.blockEntityMap.computeIfAbsent(pos, p -> {
-            if (this.blockEntityTagMap.containsKey(p)) {
-                BlockEntity entity = BlockEntity.createFromTag(this.blockEntityTagMap.get(p));
-                if(entity != null) {
-                    entity.setLocation(this, pos);
-                    return entity;
-                }
-            }
-            return null;
-        });
-    }
+	@Override
+	public BlockEntity getBlockEntity(BlockPos pos) {
+		return this.blockEntityMap.computeIfAbsent(pos, p -> {
+			if (this.blockEntityTagMap.containsKey(p)) {
+				BlockEntity entity = BlockEntity.createFromTag(getBlockState(pos), this.blockEntityTagMap.get(p));
+				if (entity != null) {
+					entity.setLocation(this, pos);
+					return entity;
+				}
+			}
+			return null;
+		});
+	}
 
 
-    @Override
-    public FluidState getFluidState(BlockPos pos) {
-        return Fluids.EMPTY.getDefaultState();
-    }
+	@Override
+	public FluidState getFluidState(BlockPos pos) {
+		return Fluids.EMPTY.getDefaultState();
+	}
 
 }

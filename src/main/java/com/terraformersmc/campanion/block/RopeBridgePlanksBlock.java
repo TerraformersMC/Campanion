@@ -4,7 +4,6 @@ import com.terraformersmc.campanion.blockentity.RopeBridgePlanksBlockEntity;
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.EntityContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -44,29 +43,19 @@ public class RopeBridgePlanksBlock extends Block implements BlockEntityProvider 
 	}
 
 	@Override
-	public boolean canSuffocate(BlockState state, BlockView view, BlockPos pos) {
-		return false;
-	}
-
-	@Override
-	public boolean isSimpleFullBlock(BlockState state, BlockView view, BlockPos pos) {
-		return false;
-	}
-
-	@Override
 	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
 		BlockEntity entity = world.getBlockEntity(pos);
-		if(entity instanceof RopeBridgePlanksBlockEntity) {
+		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			RopeBridgePlanksBlockEntity be = (RopeBridgePlanksBlockEntity) entity;
 
 			this.scheduleRemoved(world, pos);
 			boolean hasMaster = be.getPlanks().stream().anyMatch(RopeBridgePlank::isMaster);
 			boolean removed = be.removeBroken();
 			boolean deleted = be.getPlanks().isEmpty() && this.canBeCompletelyRemoved();
-			if(removed && hasMaster) {
+			if (removed && hasMaster) {
 				world.playLevelEvent(2001, pos, getRawIdFromState(state));
 			}
-			if(deleted) {
+			if (deleted) {
 				world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			}
 		}
@@ -79,9 +68,9 @@ public class RopeBridgePlanksBlock extends Block implements BlockEntityProvider 
 	private void scheduleRemoved(World world, BlockPos pos) {
 		Set<Pair<BlockPos, BlockPos>> brokenLines = new HashSet<>();
 		BlockEntity entity = world.getBlockEntity(pos);
-		if(entity instanceof RopeBridgePlanksBlockEntity) {
+		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			for (RopeBridgePlank plank : ((RopeBridgePlanksBlockEntity) entity).getPlanks()) {
-				if(plank.isBroken()) {
+				if (plank.isBroken()) {
 					brokenLines.add(Pair.of(plank.getFrom(), plank.getTo()));
 				}
 			}
@@ -91,17 +80,17 @@ public class RopeBridgePlanksBlock extends Block implements BlockEntityProvider 
 		for (int x = -1; x <= 1; x++) {
 			for (int y = -1; y <= 1; y++) {
 				for (int z = -1; z <= 1; z++) {
-					if(x != 0 || y != 0 || z != 0) {
+					if (x != 0 || y != 0 || z != 0) {
 						BlockPos off = pos.add(x, y, z);
 						BlockEntity be = world.getBlockEntity(off);
-						if(be instanceof RopeBridgePlanksBlockEntity) {
+						if (be instanceof RopeBridgePlanksBlockEntity) {
 							((RopeBridgePlanksBlockEntity) be).getPlanks()
-								.stream()
-								.filter(plank -> brokenLines.contains(Pair.of(plank.getFrom(), plank.getTo())))
-								.forEach(plank -> {
-									plank.setBroken();
-									neighbours.add(off);
-								});
+									.stream()
+									.filter(plank -> brokenLines.contains(Pair.of(plank.getFrom(), plank.getTo())))
+									.forEach(plank -> {
+										plank.setBroken();
+										neighbours.add(off);
+									});
 						}
 					}
 				}
@@ -116,7 +105,7 @@ public class RopeBridgePlanksBlock extends Block implements BlockEntityProvider 
 	@Override
 	public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
 		BlockEntity entity = world.getBlockEntity(pos);
-		if(entity instanceof RopeBridgePlanksBlockEntity) {
+		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			for (RopeBridgePlank plank : ((RopeBridgePlanksBlockEntity) entity).getPlanks()) {
 				plank.setBroken();
 			}
@@ -135,7 +124,7 @@ public class RopeBridgePlanksBlock extends Block implements BlockEntityProvider 
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
+	public VoxelShape getCollisionShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 		BlockEntity entity = view.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			return ((RopeBridgePlanksBlockEntity) entity).getCollisionShape();
@@ -144,7 +133,7 @@ public class RopeBridgePlanksBlock extends Block implements BlockEntityProvider 
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
+	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 		BlockEntity entity = view.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			return ((RopeBridgePlanksBlockEntity) entity).getOutlineShape();

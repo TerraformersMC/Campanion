@@ -54,26 +54,26 @@ public class SleepingBagItem extends Item implements DyeableItem {
 		ItemStack stack = user.getStackInHand(hand);
 		if (!world.isClient) {
 			BlockPos pos = user.getBlockPos();
-			if (!world.dimension.canPlayersSleep() || world.getBiome(pos) == Biomes.NETHER) {
+			if (!world.dimension.canPlayersSleep() || world.getBiome(pos) == Biomes.NETHER_WASTES) {
 				world.createExplosion(null, DamageSource.netherBed(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0F, true, Explosion.DestructionType.DESTROY);
 				stack.damage(25, user, e -> e.sendToolBreakStatus(hand));
 			} else if (world.isDay()) {
-				user.addChatMessage(CANT_SLEEP_DAY, true);
-			} else if (!user.onGround) {
-				user.addChatMessage(NOT_ON_GROUND, true);
+				user.addMessage(CANT_SLEEP_DAY, true);
+			} else if (!user.isOnGround()) {
+				user.addMessage(NOT_ON_GROUND, true);
 			} else if (world.dimension.hasVisibleSky()) {
 				if (!user.isCreative()) {
 					List<HostileEntity> list = world.getEntities(HostileEntity.class,
 							new Box(pos).offset(0.5D, 0.0D, 0.5D).expand(8.0D, 5.0D, 8.0D),
 							hostileEntity -> hostileEntity.isAngryAt(user));
 					if (!list.isEmpty()) {
-						user.addChatMessage(NOT_SAFE, true);
+						user.addMessage(NOT_SAFE, true);
 						return new TypedActionResult<>(ActionResult.SUCCESS, stack);
 					}
 				}
 				if (world.isRaining()) {
-					if (!checkForCover(world, new BlockPos.Mutable(user.getBlockPos()))) {
-						user.addChatMessage(TOO_WET, true);
+					if (!checkForCover(world, user.getBlockPos().mutableCopy())) {
+						user.addMessage(TOO_WET, true);
 						return new TypedActionResult<>(ActionResult.SUCCESS, stack);
 					}
 				}
@@ -91,7 +91,7 @@ public class SleepingBagItem extends Item implements DyeableItem {
 
 	private boolean checkForCover(World world, BlockPos.Mutable pos) {
 		for (int i = pos.getY(); i < world.getHeight(); i++) {
-			pos.setOffset(Direction.UP);
+			pos.move(Direction.UP);
 			if (!world.getBlockState(pos).isAir()) {
 				return true;
 			}

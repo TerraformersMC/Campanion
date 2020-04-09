@@ -2,7 +2,7 @@ package com.terraformersmc.campanion.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityContext;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
@@ -25,16 +25,20 @@ public class TentTopBlock extends BaseTentBlock {
 		super(settings, color);
 	}
 
+	@Override
 	public BlockState getPlacementState(ItemPlacementContext ctx) {
 		return this.getDefaultState().with(AXIS, ctx.getPlayerFacing().getAxis());
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
+	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 		switch (state.get(AXIS)) {
-			case X: return XSHAPE;
-			case Z: return ZSHAPE;
-			default: return super.getOutlineShape(state, view, pos, context);
+			case X:
+				return XSHAPE;
+			case Z:
+				return ZSHAPE;
+			default:
+				return super.getOutlineShape(state, view, pos, context);
 		}
 	}
 
@@ -45,7 +49,7 @@ public class TentTopBlock extends BaseTentBlock {
 
 	@Override
 	public BlockState rotate(BlockState state, BlockRotation rotation) {
-		if(rotation == BlockRotation.NONE || rotation == BlockRotation.CLOCKWISE_180) {
+		if (rotation == BlockRotation.NONE || rotation == BlockRotation.CLOCKWISE_180) {
 			return state;
 		}
 		return state.with(AXIS, state.get(AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X);

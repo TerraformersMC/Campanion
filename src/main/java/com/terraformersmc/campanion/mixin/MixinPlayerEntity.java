@@ -32,7 +32,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 		super.sleep(pos);
 		this.sleepTimer = 0;
 		if (this.world instanceof ServerWorld) {
-			((ServerWorld) this.world).updatePlayersSleeping();
+			((ServerWorld) this.world).updateSleepingPlayers();
 		}
 	}
 

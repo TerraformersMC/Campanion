@@ -13,6 +13,7 @@ import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.server.AbstractTagProvider;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
@@ -83,8 +84,9 @@ public abstract class Dossier<P extends DataProvider & Consumer<F>, F> {
 			DataGenerator generator = new DataGenerator(output, Collections.emptyList());
 			EnumMap<Type, DataProvider> providers = Maps.newEnumMap(Type.class);
 
-			providers.put(Type.BLOCK_TAGS, new DossierBlockTagsProvider(generator));
-			providers.put(Type.ITEM_TAGS, new DossierItemTagsProvider(generator));
+			DossierBlockTagsProvider blockTagsProvider = new DossierBlockTagsProvider(generator);
+			providers.put(Type.BLOCK_TAGS, blockTagsProvider);
+			providers.put(Type.ITEM_TAGS, new DossierItemTagsProvider(generator, blockTagsProvider));
 			providers.put(Type.RECIPES, new DossierRecipesProvider(generator));
 			providers.put(Type.LOOT_TABLES, new DossierLootTablesProvider(generator));
 
@@ -97,28 +99,28 @@ public abstract class Dossier<P extends DataProvider & Consumer<F>, F> {
 
 	public static abstract class BlockTagsDossier extends Dossier<DossierBlockTagsProvider, Runnable> implements CommonValues {
 
-		protected Tag.Builder<Block> get(Tag<Block> tag) {
+		protected AbstractTagProvider.ObjectBuilder<Block> get(Tag.Identified<Block> tag) {
 			return this.provider.getOrCreateTagBuilder(tag);
 		}
 
-		protected Tag.Builder<Block> add(Tag<Block> tag, Block... blocks) {
-			Tag.Builder<Block> builder = this.provider.getOrCreateTagBuilder(tag);
+		protected AbstractTagProvider.ObjectBuilder<Block> add(Tag.Identified<Block> tag, Block... blocks) {
+			AbstractTagProvider.ObjectBuilder<Block> builder = this.provider.getOrCreateTagBuilder(tag);
 			return builder.add(blocks);
 		}
 
-		protected Tag.Builder<Block> add(Tag<Block> tag, Tag<Block>... tags) {
-			Tag.Builder<Block> builder = this.get(tag);
-			for (Tag<Block> blockTag : tags) {
-				builder.add(blockTag);
+		protected AbstractTagProvider.ObjectBuilder<Block> add(Tag.Identified<Block> tag, Tag.Identified<Block>... tags) {
+			AbstractTagProvider.ObjectBuilder<Block> builder = this.get(tag);
+			for (Tag.Identified<Block> blockTag : tags) {
+				builder.addTag(blockTag);
 			}
 			return builder;
 		}
 
-		protected Tag.Builder<Block> addTransformed(Tag<Block> tag, TransformerFunction<String, String> transformer, String namespace, String pathTemplate, String... args) {
+		protected AbstractTagProvider.ObjectBuilder<Block> addTransformed(Tag.Identified<Block> tag, TransformerFunction<String, String> transformer, String namespace, String pathTemplate, String... args) {
 			return this.add(tag, transformer.apply(pathTemplate, args).stream().map(transformeedPath -> Registry.BLOCK.get(new Identifier(namespace, transformeedPath))).toArray(Block[]::new));
 		}
 
-		protected Tag.Builder<Block> addReplaceTransformed(Tag<Block> tag, String namespace, String pathTemplate, String key, String... values) {
+		protected AbstractTagProvider.ObjectBuilder<Block> addReplaceTransformed(Tag.Identified<Block> tag, String namespace, String pathTemplate, String key, String... values) {
 			return this.addTransformed(tag, TransformerFunction.REPLACE_TRANSFORMER, namespace, pathTemplate, ArrayUtils.add(values, 0, key));
 		}
 
@@ -137,31 +139,31 @@ public abstract class Dossier<P extends DataProvider & Consumer<F>, F> {
 
 	public static abstract class ItemTagsDossier extends Dossier<DossierItemTagsProvider, Runnable> implements CommonValues {
 
-		protected Tag.Builder<Item> get(Tag<Item> tag) {
+		protected AbstractTagProvider.ObjectBuilder<Item> get(Tag.Identified<Item> tag) {
 			return this.provider.getOrCreateTagBuilder(tag);
 		}
 
-		protected void copyFromBlock(Tag<Item> tag, Tag<Block> blockTag) {
+		protected void copyFromBlock(Tag.Identified<Item> tag, Tag.Identified<Block> blockTag) {
 			this.provider.copy(blockTag, tag);
 		}
 
-		protected Tag.Builder<Item> add(Tag<Item> tag, Item... items) {
+		protected AbstractTagProvider.ObjectBuilder<Item> add(Tag.Identified<Item> tag, Item... items) {
 			return this.get(tag).add(items);
 		}
 
-		protected Tag.Builder<Item> add(Tag<Item> tag, Tag<Item>... tags) {
-			Tag.Builder<Item> builder = this.get(tag);
-			for (Tag<Item> itemTag : tags) {
-				builder.add(itemTag);
+		protected AbstractTagProvider.ObjectBuilder<Item> add(Tag.Identified<Item> tag, Tag.Identified<Item>... tags) {
+			AbstractTagProvider.ObjectBuilder<Item> builder = this.get(tag);
+			for (Tag.Identified<Item> itemTag : tags) {
+				builder.addTag(itemTag);
 			}
 			return builder;
 		}
 
-		protected Tag.Builder<Item> addTransformed(Tag<Item> tag, TransformerFunction<String, String> transformer, String namespace, String pathTemplate, String... args) {
+		protected AbstractTagProvider.ObjectBuilder<Item> addTransformed(Tag.Identified<Item> tag, TransformerFunction<String, String> transformer, String namespace, String pathTemplate, String... args) {
 			return this.add(tag, transformer.apply(pathTemplate, args).stream().map(transformeedPath -> Registry.ITEM.get(new Identifier(namespace, transformeedPath))).toArray(Item[]::new));
 		}
 
-		protected Tag.Builder<Item> addReplaceTransformed(Tag<Item> tag, String namespace, String pathTemplate, String key, String... values) {
+		protected AbstractTagProvider.ObjectBuilder<Item> addReplaceTransformed(Tag.Identified<Item> tag, String namespace, String pathTemplate, String key, String... values) {
 			return this.addTransformed(tag, TransformerFunction.REPLACE_TRANSFORMER, namespace, pathTemplate, ArrayUtils.add(values, 0, key));
 		}
 
@@ -228,7 +230,7 @@ public abstract class Dossier<P extends DataProvider & Consumer<F>, F> {
 
 		protected void addDrop(Block block, LootTable.Builder builder) {
 			List<Pair<Identifier, LootTable.Builder>> lootTables = this.provider.lootTables.get(LootContextTypes.BLOCK);
-			lootTables.add(new Pair<>(block.getDropTableId(), builder));
+			lootTables.add(new Pair<>(block.getDropTableID(), builder));
 			this.provider.lootTables.put(LootContextTypes.BLOCK, lootTables);
 		}
 

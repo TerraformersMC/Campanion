@@ -38,7 +38,7 @@ public class CampanionData {
 			this.addReplaceTransformed(CampanionBlockTags.TENT_TOPS, Campanion.MOD_ID, "<color>_tent_top", "color", COLORS);
 			this.addReplaceTransformed(CampanionBlockTags.TOPPED_TENT_POLES, Campanion.MOD_ID, "<color>_topped_tent_pole", "color", COLORS);
 			this.addReplaceTransformed(CampanionBlockTags.FLAT_TENT_TOPS, Campanion.MOD_ID, "<color>_flat_tent_top", "color", COLORS);
-			this.get(CampanionBlockTags.TENT_POLES).add(CampanionBlocks.TENT_POLE).add(CampanionBlockTags.TOPPED_TENT_POLES);
+			this.get(CampanionBlockTags.TENT_POLES).add(CampanionBlocks.TENT_POLE).addTag(CampanionBlockTags.TOPPED_TENT_POLES);
 		}
 	}
 
@@ -53,7 +53,7 @@ public class CampanionData {
 			this.copyFromBlock(CampanionItemTags.TENT_POLES, CampanionBlockTags.TENT_POLES);
 
 			this.get(CampanionItemTags.MELTED_MARSHMALLOWS).add(CampanionItems.COOKED_MARSHMALLOW, CampanionItems.BLACKENED_MARSHMALLOW);
-			this.get(CampanionItemTags.MARSHMALLOWS).add(CampanionItems.MARSHMALLOW).add(CampanionItemTags.MELTED_MARSHMALLOWS);
+			this.get(CampanionItemTags.MARSHMALLOWS).add(CampanionItems.MARSHMALLOW).addTag(CampanionItemTags.MELTED_MARSHMALLOWS);
 			this.get(CampanionItemTags.MARSHMALLOWS_ON_STICKS).add(CampanionItems.MARSHMALLOW_ON_A_STICK, CampanionItems.COOKED_MARSHMALLOW_ON_A_STICK, CampanionItems.BLACKENED_MARSHMALLOW_ON_A_STICK);
 			this.get(CampanionItemTags.SPEARS).add(CampanionItems.WOODEN_SPEAR, CampanionItems.STONE_SPEAR, CampanionItems.IRON_SPEAR, CampanionItems.GOLDEN_SPEAR, CampanionItems.DIAMOND_SPEAR);
 			this.get(CampanionItemTags.BACKPACKS).add(CampanionItems.DAY_PACK, CampanionItems.CAMPING_PACK, CampanionItems.HIKING_PACK);
@@ -61,7 +61,7 @@ public class CampanionData {
 			this.get(CampanionItemTags.GRAINS).add(Items.BREAD, Items.CAKE, Items.COOKIE, CampanionItems.CRACKER);
 			this.get(CampanionItemTags.PROTEINS).add(Items.COOKED_BEEF, Items.COOKED_CHICKEN, Items.COOKED_COD, Items.COOKED_MUTTON, Items.COOKED_PORKCHOP, Items.COOKED_RABBIT, Items.COOKED_SALMON);
 			this.get(CampanionItemTags.VEGETABLES).add(Items.BEETROOT, Items.CARROT, Items.POTATO, Items.BAKED_POTATO);
-			this.get(CampanionItemTags.MRE_COMPONENTS).add(CampanionItemTags.FRUITS).add(CampanionItemTags.GRAINS).add(CampanionItemTags.PROTEINS).add(CampanionItemTags.VEGETABLES);
+			this.get(CampanionItemTags.MRE_COMPONENTS).addTag(CampanionItemTags.FRUITS).addTag(CampanionItemTags.GRAINS).addTag(CampanionItemTags.PROTEINS).addTag(CampanionItemTags.VEGETABLES);
 		}
 	}
 

@@ -53,6 +53,7 @@ public class GrapplingHookItem extends Item {
 		return TypedActionResult.success(itemStack);
 	}
 
+	@Override
 	public int getEnchantability() {
 		return 1;
 	}

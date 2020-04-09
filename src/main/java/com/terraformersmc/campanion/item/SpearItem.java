@@ -1,9 +1,9 @@
 package com.terraformersmc.campanion.item;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import com.terraformersmc.campanion.entity.SpearEntity;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -11,10 +11,11 @@ import net.minecraft.block.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
@@ -29,18 +30,22 @@ import java.util.function.Supplier;
 
 public class SpearItem extends TridentItem {
 
+	private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
+
 	private final ToolMaterial material;
 	private final float attackDamage;
-	private final float attackSpeed;
 	private final Supplier<EntityType<SpearEntity>> typeSupplier;
 	private EntityType<SpearEntity> cachedType = null;
 
 	public SpearItem(ToolMaterial material, float attackDamage, float attackSpeed, Supplier<EntityType<SpearEntity>> typeSupplier, Item.Settings settings) {
 		super(settings.maxDamageIfAbsent(material.getDurability()));
 		this.material = material;
-		this.attackSpeed = attackSpeed;
 		this.attackDamage = attackDamage + material.getAttackDamage();
 		this.typeSupplier = typeSupplier;
+		ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_UUID, "Tool modifier", attackDamage, EntityAttributeModifier.Operation.ADDITION));
+		builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_UUID, "Tool modifier", attackSpeed, EntityAttributeModifier.Operation.ADDITION));
+		this.attributeModifiers = builder.build();
 	}
 
 	public EntityType<SpearEntity> getType() {
@@ -74,13 +79,13 @@ public class SpearItem extends TridentItem {
 	}
 
 	@Override
-	public float getMiningSpeed(ItemStack stack, BlockState state) {
+	public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
 		Block block = state.getBlock();
 		if (block == Blocks.COBWEB) {
 			return 15.0F;
 		} else {
 			Material material = state.getMaterial();
-			return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.UNUSED_PLANT && !state.matches(BlockTags.LEAVES) && material != Material.PUMPKIN ? 1.0F : 1.5F;
+			return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.UNUSED_PLANT && !state.isIn(BlockTags.LEAVES) && material != Material.PUMPKIN ? 1.0F : 1.5F;
 		}
 	}
 
@@ -100,14 +105,8 @@ public class SpearItem extends TridentItem {
 	}
 
 	@Override
-	public Multimap<String, EntityAttributeModifier> getModifiers(EquipmentSlot slot) {
-		Multimap<String, EntityAttributeModifier> multimap = HashMultimap.create();
-		if (slot == EquipmentSlot.MAINHAND) {
-			multimap.put(EntityAttributes.ATTACK_DAMAGE.getId(), new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_UUID, "Weapon modifier", this.attackDamage, EntityAttributeModifier.Operation.ADDITION));
-			multimap.put(EntityAttributes.ATTACK_SPEED.getId(), new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_UUID, "Weapon modifier", this.attackSpeed, EntityAttributeModifier.Operation.ADDITION));
-		}
-
-		return multimap;
+	public Multimap<EntityAttribute, EntityAttributeModifier> getModifiers(EquipmentSlot equipmentSlot) {
+		return attributeModifiers;
 	}
 
 	@Override
@@ -121,7 +120,7 @@ public class SpearItem extends TridentItem {
 					SpearEntity spearEntity = new SpearEntity(world, playerEntity, this, stack);
 					spearEntity.setProperties(playerEntity, playerEntity.pitch, playerEntity.yaw, 0.0F, 2.5F, 1.0F);
 					if (playerEntity.abilities.creativeMode) {
-						spearEntity.pickupType = ProjectileEntity.PickupPermission.CREATIVE_ONLY;
+						spearEntity.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
 					}
 
 					world.spawnEntity(spearEntity);

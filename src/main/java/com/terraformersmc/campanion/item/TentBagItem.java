@@ -53,7 +53,7 @@ public class TentBagItem extends Item {
 						tag.putInt("x", off.getX());
 						tag.putInt("y", off.getY());
 						tag.putInt("z", off.getZ());
-						entity.fromTag(tag);
+						entity.fromTag(state, tag);
 						entity.markDirty();
 					}
 					if (entity instanceof TentPartBlockEntity) {
@@ -75,7 +75,7 @@ public class TentBagItem extends Item {
 	public static List<BlockPos> getErrorPosition(WorldView world, BlockPos pos, ItemStack stack) {
 		List<BlockPos> list = new ArrayList<>();
 		if (hasBlocks(stack)) {
-			Vec3d changeSize = new Vec3d(NbtHelper.toBlockPos(stack.getOrCreateTag().getCompound("TentSize"))).add(-1, -1, -1).multiply(1 / 2F);
+			Vec3d changeSize = Vec3d.method_24954(NbtHelper.toBlockPos(stack.getOrCreateTag().getCompound("TentSize"))).add(-1, -1, -1).multiply(1 / 2F);
 			for (int x = MathHelper.floor(-changeSize.x); x <= MathHelper.floor(changeSize.x); x++) {
 				for (int y = -1; y <= 2 * changeSize.getY(); y++) {
 					for (int z = MathHelper.floor(-changeSize.z); z <= MathHelper.floor(changeSize.z); z++) {

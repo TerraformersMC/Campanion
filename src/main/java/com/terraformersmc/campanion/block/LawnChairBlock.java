@@ -2,12 +2,8 @@ package com.terraformersmc.campanion.block;
 
 import com.terraformersmc.campanion.blockentity.LawnChairBlockEntity;
 import com.terraformersmc.campanion.entity.LawnChairEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -48,7 +44,7 @@ public class LawnChairBlock extends HorizontalFacingBlock implements BlockEntity
 	@Override
 	public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
 		BlockEntity entity = world.getBlockEntity(pos);
-		if(entity instanceof LawnChairBlockEntity && !world.isClient) {
+		if (entity instanceof LawnChairBlockEntity && !world.isClient) {
 			((LawnChairBlockEntity) entity).findOrCreateEntity();
 		}
 		super.onPlaced(world, pos, state, placer, itemStack);
@@ -57,7 +53,7 @@ public class LawnChairBlock extends HorizontalFacingBlock implements BlockEntity
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		BlockEntity entity = world.getBlockEntity(pos);
-		if(entity instanceof LawnChairBlockEntity && !world.isClient) {
+		if (entity instanceof LawnChairBlockEntity && !world.isClient) {
 			LawnChairEntity chairEntity = ((LawnChairBlockEntity) entity).findOrCreateEntity();
 
 			player.startRiding(chairEntity);
@@ -66,13 +62,18 @@ public class LawnChairBlock extends HorizontalFacingBlock implements BlockEntity
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
+	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 		switch (state.get(FACING)) {
-			case NORTH: return NORTH_SHAPE;
-			case EAST: return EAST_SHAPE;
-			case SOUTH: return SOUTH_SHAPE;
-			case WEST: return WEST_SHAPE;
-			default: return super.getOutlineShape(state, view, pos, context);
+			case NORTH:
+				return NORTH_SHAPE;
+			case EAST:
+				return EAST_SHAPE;
+			case SOUTH:
+				return SOUTH_SHAPE;
+			case WEST:
+				return WEST_SHAPE;
+			default:
+				return super.getOutlineShape(state, view, pos, context);
 		}
 	}
 
@@ -98,11 +99,11 @@ public class LawnChairBlock extends HorizontalFacingBlock implements BlockEntity
 	}
 
 	private static VoxelShape rotate(Direction from, Direction to, VoxelShape shape) {
-		VoxelShape[] buffer = new VoxelShape[]{ shape, VoxelShapes.empty() };
+		VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
 
 		int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
 		for (int i = 0; i < times; i++) {
-			buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(1-maxZ, minY, minX, 1-minZ, maxY, maxX)));
+			buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
 			buffer[0] = buffer[1];
 			buffer[1] = VoxelShapes.empty();
 		}

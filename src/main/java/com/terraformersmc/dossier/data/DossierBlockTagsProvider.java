@@ -27,8 +27,8 @@ public class DossierBlockTagsProvider extends BlockTagsProvider implements Consu
 	}
 
 	@Override
-	public Tag.Builder<Block> getOrCreateTagBuilder(Tag<Block> tag) {
-		return super.getOrCreateTagBuilder(tag);
+	public ObjectBuilder<Block> getOrCreateTagBuilder(Tag.Identified<Block> identified) {
+		return super.getOrCreateTagBuilder(identified);
 	}
 
 	@Override

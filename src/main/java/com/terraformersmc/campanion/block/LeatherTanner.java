@@ -4,7 +4,7 @@ import com.terraformersmc.campanion.item.CampanionItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.entity.EntityContext;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -90,7 +90,7 @@ public class LeatherTanner extends HorizontalFacingBlock {
 	}
 
 	public int getAge(BlockState state) {
-		return (Integer)state.get(AGE);
+		return (Integer) state.get(AGE);
 	}
 
 	@Override
@@ -103,19 +103,24 @@ public class LeatherTanner extends HorizontalFacingBlock {
 		super.scheduledTick(state, world, pos, random);
 		if (getAge(state) == 1) {
 			if (random.nextInt(8) == 0) {
-				world.setBlockState(pos, state.with(AGE,2), 2);
+				world.setBlockState(pos, state.with(AGE, 2), 2);
 			}
 		}
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
+	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 		switch (state.get(FACING)) {
-			case NORTH: return NORTH_SHAPE;
-			case EAST: return EAST_SHAPE;
-			case SOUTH: return SOUTH_SHAPE;
-			case WEST: return WEST_SHAPE;
-			default: return super.getOutlineShape(state, view, pos, context);
+			case NORTH:
+				return NORTH_SHAPE;
+			case EAST:
+				return EAST_SHAPE;
+			case SOUTH:
+				return SOUTH_SHAPE;
+			case WEST:
+				return WEST_SHAPE;
+			default:
+				return super.getOutlineShape(state, view, pos, context);
 		}
 	}
 
@@ -131,11 +136,11 @@ public class LeatherTanner extends HorizontalFacingBlock {
 	}
 
 	private static VoxelShape rotate(Direction from, Direction to, VoxelShape shape) {
-		VoxelShape[] buffer = new VoxelShape[]{ shape, VoxelShapes.empty() };
+		VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
 
 		int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
 		for (int i = 0; i < times; i++) {
-			buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(1-maxZ, minY, minX, 1-minZ, maxY, maxX)));
+			buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
 			buffer[0] = buffer[1];
 			buffer[1] = VoxelShapes.empty();
 		}

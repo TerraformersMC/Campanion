@@ -20,6 +20,7 @@ public class HowlGoal extends Goal {
 		this.setControls(EnumSet.of(Control.MOVE, Control.LOOK, Control.JUMP));
 	}
 
+	@Override
 	public void start() {
 		this.timer = 60;
 		this.world.sendEntityStatus(this.mob, (byte)64);
@@ -27,10 +28,12 @@ public class HowlGoal extends Goal {
 		this.mob.playSound(CampanionSoundEvents.HOWL, 0.15F, this.mob.getRandom().nextFloat() + 0.5F);
 	}
 
+	@Override
 	public void stop() {
 		this.timer = 0;
 	}
 
+	@Override
 	public boolean shouldContinue() {
 		return getTimer() > 0;
 	}
@@ -39,6 +42,7 @@ public class HowlGoal extends Goal {
 		return this.timer;
 	}
 
+	@Override
 	public void tick() {
 		this.timer = Math.max(0, this.timer - 1);
 		if (this.timer < 1) {
@@ -48,6 +52,7 @@ public class HowlGoal extends Goal {
 	}
 
 	//&& world.getMoonSize() == 1.0
+	@Override
 	public boolean canStart() {
 		return world.getTimeOfDay() > 16000 && world.getTimeOfDay() < 21000  &&
 				!mob.isBaby() && this.mob.getRandom().nextInt(250) == 0;

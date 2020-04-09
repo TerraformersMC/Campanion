@@ -12,7 +12,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
 
 public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEntity> {
@@ -32,6 +32,7 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 		super(dispatcher);
 	}
 
+	@Override
 	public void render(GrapplingHookEntity entity, float yaw, float tickDelta, MatrixStack stack, VertexConsumerProvider vertexConsumers, int light) {
 		PlayerEntity player = entity.getPlayer();
 		if (player != null) {
@@ -59,8 +60,8 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 			double playerY;
 			double playerZ;
 			float playerEye;
-			if (this.renderManager.gameOptions != null && this.renderManager.gameOptions.perspective <= 0 && player == MinecraftClient.getInstance().player) {
-				double x = this.renderManager.gameOptions.fov / 100.0D;
+			if (this.getRenderManager().gameOptions != null && this.getRenderManager().gameOptions.perspective <= 0 && player == MinecraftClient.getInstance().player) {
+				double x = this.getRenderManager().gameOptions.fov / 100.0D;
 				Vec3d vec3d = new Vec3d((double) armOffset * -0.36D * x, -0.045D * x, 0.4D);
 				vec3d = vec3d.rotateX(-MathHelper.lerp(tickDelta, player.prevPitch, player.pitch) * 0.017453292F);
 				vec3d = vec3d.rotateY(-MathHelper.lerp(tickDelta, player.prevYaw, player.yaw) * 0.017453292F);
@@ -97,10 +98,12 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 			super.render(entity, yaw, tickDelta, stack, vertexConsumers, light);
 		}
 	}
+
 	private static void drawLineVertex(float x, float y, float z, VertexConsumer buffer, Matrix4f mat, float t, float a) {
-		buffer.vertex(mat, (float) (x * t + a*Math.sin(t * 2F*Math.PI)), y * t + 0.25F, z * t).color(0, 0, 0, 255).next();
+		buffer.vertex(mat, (float) (x * t + a * Math.sin(t * 2F * Math.PI)), y * t + 0.25F, z * t).color(0, 0, 0, 255).next();
 	}
 
+	@Override
 	public Identifier getTexture(GrapplingHookEntity hook) {
 		return TEXTURE;
 	}
