@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tag.ItemTags;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -65,15 +66,21 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
                         if(reason.isPresent()) {
                             player.addChatMessage(reason.get(), false);
                         } else {
-                            if(player.isCreative()) {
-                                bridge.generateBlocks(world).forEach(pair -> {
+                            List<Pair<BlockPos, List<RopeBridgePlank>>> planks = bridge.generateBlocks(world);
+                            long failed = planks.stream().map(Pair::getLeft).filter(p -> !world.canPlayerModifyAt(player, p)).count();
+                            if (failed > 1) {
+                                player.addChatMessage(new TranslatableText("message.campanion.rope_bridge.no_permission", failed),true);
+                                return ActionResult.SUCCESS;
+                            }
+                            if (player.isCreative()) {
+                                planks.forEach(pair -> {
                                     BlockPos left = pair.getLeft();
                                     BlockEntity blockEntityTwo = world.getBlockEntity(left);
-                                    if(!(blockEntityTwo instanceof RopeBridgePlanksBlockEntity)) {
+                                    if (!(blockEntityTwo instanceof RopeBridgePlanksBlockEntity)) {
                                         world.setBlockState(left, CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState());
                                         blockEntityTwo = world.getBlockEntity(left);
                                     }
-                                    if(blockEntityTwo instanceof RopeBridgePlanksBlockEntity) {
+                                    if (blockEntityTwo instanceof RopeBridgePlanksBlockEntity) {
                                         for (RopeBridgePlank plank : pair.getRight()) {
                                             ((RopeBridgePlanksBlockEntity) blockEntityTwo).addPlank(plank);
                                         }
@@ -82,9 +89,9 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
                                     }
                                 });
                             } else {
-                                be.getGhostPlanks().put(clickedPos, bridge.generateBlocks(world));
+                                be.getGhostPlanks().put(clickedPos, planks);
                                 BlockEntity blockEntityTwo = world.getBlockEntity(clickedPos);
-                                if(blockEntityTwo instanceof RopeBridgePostBlockEntity) {
+                                if (blockEntityTwo instanceof RopeBridgePostBlockEntity) {
                                     ((RopeBridgePostBlockEntity) blockEntityTwo).getLinkedPositions().add(pos);
                                 }
                             }
