@@ -106,7 +106,7 @@ public class SpearItem extends TridentItem {
 
 	@Override
 	public Multimap<EntityAttribute, EntityAttributeModifier> getModifiers(EquipmentSlot equipmentSlot) {
-		return attributeModifiers;
+		return equipmentSlot == EquipmentSlot.MAINHAND ? attributeModifiers : super.getModifiers(equipmentSlot);
 	}
 
 	@Override

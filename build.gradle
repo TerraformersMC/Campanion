@@ -1,27 +1,33 @@
 plugins {
-	id 'fabric-loom' version '0.2.7-SNAPSHOT'
+	id 'java'
 	id 'maven-publish'
+	id 'idea'
+	id 'eclipse'
+	id 'fabric-loom' version '0.2.7-SNAPSHOT'
 	id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
-archivesBaseName = project.archives_base_name
+archivesBaseName = project.archive_name
 version = project.mod_version
 group = project.maven_group
 
+def ENV = System.getenv()
+version = version + "+" + (ENV.BUILD_NUMBER ? ("build." + ENV.BUILD_NUMBER) : "custom")
+
+repositories {
+	mavenLocal()
+}
+
 dependencies {
-	//to change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
+	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-	// You may need to force-disable transitiveness on them.
+	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 }
 
 processResources {
@@ -37,9 +43,6 @@ processResources {
 	}
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
 }
@@ -49,40 +52,42 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	from sourceSets.main.allSource
 }
 
-artifacts {
-	archives sourcesJar
-}
-
 jar {
-	from "LICENSE.md"
+	from "LICENSE"
 }
 
-// configure the maven publication
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
-			artifact(remapJar) {
-				builtBy remapJar
-			}
 			artifact(sourcesJar) {
 				builtBy remapSourcesJar
+			}
+
+			afterEvaluate {
+				artifact remapJar
 			}
 		}
 	}
 
-	// select the repositories you want to publish to
 	repositories {
-		// uncomment to publish to the local maven
-		// mavenLocal()
+		if (project.hasProperty('mavenPass')) {
+			maven {
+				url = "http://mavenupload.modmuss50.me/"
+				credentials {
+					username = "buildslave"
+					password = project.getProperty('mavenPass')
+				}
+			}
+		}
 	}
 }
 
 curseforge {
-	apiKey = project.hasProperty("curseforge_api_key") ? curseforge_api_key : "###"//In the GRADLE_USER_HOME /.gradle/gradle.properties file
+	apiKey = project.hasProperty("curseforge_api_key") ? curseforge_api_key : "###" //In the GRADLE_USER_HOME /.gradle/gradle.properties file
 	project {
 		id = '373138'
 		releaseType = 'beta'
+		addGameVersion project.curse_version
 		addGameVersion "Java 8"
 		addGameVersion "Fabric"
 		mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
