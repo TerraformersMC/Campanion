@@ -6,15 +6,15 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MovementType;
+import net.minecraft.entity.ProjectileUtil;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -74,8 +74,8 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 		Vec3d vec3d = this.getVelocity();
 		if (!this.dataTracker.get(IS_IN_BLOCK) && this.prevPitch == 0.0F && this.prevYaw == 0.0F) {
 			float f = MathHelper.sqrt(squaredHorizontalLength(vec3d));
-			this.yaw = (float) (MathHelper.atan2(vec3d.x, vec3d.z) * 57.2957763671875D);
-			this.pitch = (float) (MathHelper.atan2(vec3d.y, (double) f) * 57.2957763671875D);
+			this.yaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * 57.2957763671875D);
+			this.pitch = (float)(MathHelper.atan2(vec3d.y, (double)f) * 57.2957763671875D);
 			this.prevYaw = this.yaw;
 			this.prevPitch = this.pitch;
 		}
@@ -86,7 +86,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 			if (!this.world.isClient) {
 				this.checkForCollision();
 			}
-			if (!this.dataTracker.get(IS_IN_BLOCK)) {
+			if(!this.dataTracker.get(IS_IN_BLOCK)) {
 				this.move(MovementType.SELF, this.getVelocity());
 				this.setVelocity(this.getVelocity().add(0, -0.02D, 0));
 				this.refreshPosition();
@@ -97,7 +97,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 			}
 		}
 
-		if (!this.dataTracker.get(IS_IN_BLOCK)) {
+		if(!this.dataTracker.get(IS_IN_BLOCK)) {
 			this.smoothMovement();
 		}
 	}
@@ -110,20 +110,20 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 
 		float l = MathHelper.sqrt(squaredHorizontalLength(vec3d));
 
-		this.yaw = (float) (MathHelper.atan2(d, g) * 57.2957763671875D);
+		this.yaw = (float)(MathHelper.atan2(d, g) * 57.2957763671875D);
 
-		for (this.pitch = (float) (MathHelper.atan2(e, (double) l) * 57.2957763671875D); this.pitch - this.prevPitch < -180.0F; this.prevPitch -= 360.0F) {
+		for(this.pitch = (float)(MathHelper.atan2(e, (double)l) * 57.2957763671875D); this.pitch - this.prevPitch < -180.0F; this.prevPitch -= 360.0F) {
 		}
 
-		while (this.pitch - this.prevPitch >= 180.0F) {
+		while(this.pitch - this.prevPitch >= 180.0F) {
 			this.prevPitch += 360.0F;
 		}
 
-		while (this.yaw - this.prevYaw < -180.0F) {
+		while(this.yaw - this.prevYaw < -180.0F) {
 			this.prevYaw -= 360.0F;
 		}
 
-		while (this.yaw - this.prevYaw >= 180.0F) {
+		while(this.yaw - this.prevYaw >= 180.0F) {
 			this.prevYaw += 360.0F;
 		}
 
@@ -136,12 +136,12 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 		ItemStack offHandStack = this.player.getOffHandStack();
 		boolean inMainHand = mainHandStack.getItem() == CampanionItems.GRAPPLING_HOOK;
 		boolean inOffHand = offHandStack.getItem() == CampanionItems.GRAPPLING_HOOK;
-		boolean isHookedEntity = ((GrapplingHookUser) this.player).getGrapplingHook() == this;
+		boolean isHookedEntity = ((GrapplingHookUser)this.player).getGrapplingHook() == this;
 		double dist = this.squaredDistanceTo(this.player);
 		if (
-				this.player.removed || !this.player.isAlive() || !isHookedEntity
-						|| (!inMainHand && !inOffHand) || dist > 16384 ||
-						(this.dataTracker.get(IS_IN_BLOCK) && dist < 2)) {
+			this.player.removed || !this.player.isAlive() || !isHookedEntity
+				|| (!inMainHand && !inOffHand) || dist > 16384 ||
+				(this.dataTracker.get(IS_IN_BLOCK) && dist < 2)) {
 			this.remove();
 			return false;
 		} else {
@@ -150,9 +150,12 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	}
 
 	private void checkForCollision() {
-		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> false, RayTraceContext.ShapeType.COLLIDER);
+		HitResult hitResult = ProjectileUtil.getCollision(
+			this, this.getBoundingBox().expand(0.2D),
+			entity -> false, RayTraceContext.ShapeType.COLLIDER, true
+		);
 
-		if (this.horizontalCollision || this.verticalCollision || hitResult.getType() == HitResult.Type.BLOCK && this.grappleTicks == -1) {
+		if (hitResult.getType() == HitResult.Type.BLOCK && this.grappleTicks == -1) {
 			this.previousPlayerPos = this.player.getPos();
 			this.dataTracker.set(IS_IN_BLOCK, true);
 			this.grappleTicks = 0;
@@ -166,7 +169,9 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	@Override
 	public void remove() {
 		super.remove();
-		((GrapplingHookUser) this.player).setGrapplingHook(null);
+		if(this.player != null) {
+			((GrapplingHookUser)this.player).setGrapplingHook(null);
+		}
 	}
 
 	@Override
@@ -183,13 +188,13 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 			double dx = this.getX() - this.player.getX();
 			double dy = this.getY() - this.player.getY() + 1;
 			double dz = this.getZ() - this.player.getZ();
-			double xzDist = (double) MathHelper.sqrt(dx * dx + dz * dz);
+			double xzDist = (double)MathHelper.sqrt(dx * dx + dz * dz);
 
 			double theta = Math.atan2(dy, xzDist);
 			double xzTheta = Math.atan2(dz, dx);
 
 			double xzAmount = Math.cos(theta);
-			Vec3d movement = new Vec3d(xzAmount * Math.cos(xzTheta), Math.sin(theta), xzAmount * Math.sin(xzTheta));
+			Vec3d movement = new Vec3d(xzAmount*Math.cos(xzTheta), Math.sin(theta) , xzAmount*Math.sin(xzTheta));
 
 			boolean xCollide = false;
 			boolean zCollide = false;
@@ -200,22 +205,22 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 				zCollide |= box.contains(box.x1, box.y1, shape.getMinimum(Direction.Axis.Z)) || box.contains(box.x1, box.y1, shape.getMaximum(Direction.Axis.Z));
 			}
 
-			if (xCollide && zCollide) {
+			if(xCollide && zCollide) {
 				movement = new Vec3d(0, movement.y, 0);
-			} else if (xCollide) {
-				movement = new Vec3d(0, movement.y, xzAmount * Math.signum(movement.z));
-			} else if (zCollide) {
-				movement = new Vec3d(xzAmount * Math.signum(movement.x), movement.y, 0);
+			} else if(xCollide) {
+				movement = new Vec3d(0, movement.y, xzAmount*Math.signum(movement.z));
+			} else if(zCollide) {
+				movement = new Vec3d(xzAmount*Math.signum(movement.x), movement.y, 0);
 			}
 
 //			movement = movement.normalize().add(0, -0.25, 0);
 
-			movement = movement.normalize();
+            movement = movement.normalize();
 
 			Vec3d playerVelocity = this.player.getVelocity();
 			Vec3d velocity = movement.subtract(movement.subtract(playerVelocity).multiply(0.5));
 			this.player.setVelocity(velocity);
-			this.player.velocityModified = true;
+            this.player.velocityModified = true;
 		}
 	}
 
@@ -236,7 +241,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 
 	@Override
 	public void writeToBuffer(PacketByteBuf buffer) {
-		if (this.player != null) {
+		if(this.player != null) {
 			buffer.writeBoolean(true);
 			buffer.writeInt(this.player.getEntityId());
 		} else {
@@ -246,12 +251,12 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 
 	@Override
 	public void readFromBuffer(PacketByteBuf buffer) {
-		if (buffer.readBoolean()) {
+		if(buffer.readBoolean()) {
 			int i = buffer.readInt();
 			Entity entity = this.world.getEntityById(i);
-			if (entity instanceof PlayerEntity) {
+			if(entity instanceof PlayerEntity) {
 				this.player = (PlayerEntity) entity;
-				((GrapplingHookUser) this.player).setGrapplingHook(this);
+				((GrapplingHookUser)this.player).setGrapplingHook(this);
 			}
 		}
 	}
