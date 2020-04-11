@@ -151,11 +151,11 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 
 	private void checkForCollision() {
 		HitResult hitResult = ProjectileUtil.getCollision(
-			this, this.getBoundingBox().expand(1.0D),
+			this, this.getBoundingBox().expand(0.2D),
 			entity -> false, RayTraceContext.ShapeType.COLLIDER, true
 		);
 
-		if (this.horizontalCollision || this.verticalCollision || hitResult.getType() == HitResult.Type.BLOCK && this.grappleTicks == -1) {
+		if (hitResult.getType() == HitResult.Type.BLOCK && this.grappleTicks == -1) {
 			this.previousPlayerPos = this.player.getPos();
 			this.dataTracker.set(IS_IN_BLOCK, true);
 			this.grappleTicks = 0;
