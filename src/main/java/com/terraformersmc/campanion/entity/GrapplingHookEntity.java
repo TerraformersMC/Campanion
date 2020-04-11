@@ -169,7 +169,9 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	@Override
 	public void remove() {
 		super.remove();
-		((GrapplingHookUser)this.player).setGrapplingHook(null);
+		if(this.player != null) {
+			((GrapplingHookUser)this.player).setGrapplingHook(null);
+		}
 	}
 
 	@Override
