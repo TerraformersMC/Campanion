@@ -183,14 +183,15 @@ curseforge {
 	apiKey = project.hasProperty('terraformersmc_curse_api_key') ? project.property('terraformersmc_curse_api_key') : "###"
 	project {
 		id = project.curseforge_id
-		displayName = "$project.project_name v$project.mod_version for $project.minecraft_version"
 		releaseType = curseReleaseType
 		project.curseforge_game_versions.split(", ").each {
 			String gameVersion -> addGameVersion gameVersion
 		}
 		changelog = releaseChangelog
 		mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+		mainArtifact.displayName = "$project.project_name v$project.mod_version for $project.minecraft_version"
 		addArtifact sourcesJar
+		additionalArtifacts.forEach { artifact -> artifact.displayName = "$project.project_name v$project.mod_version for $project.minecraft_version"}
 		relations {
 			if (!project.curseforge_required_dependencies.isEmpty()) {
 				project.curseforge_required_dependencies.split(", ").each {
