@@ -240,7 +240,8 @@
   "message.campanion.rope_bridge.ropes": "Not enough ropes! %s more ropes needed.",
   "message.campanion.rope_bridge.constructed": "%s planks left",
   "message.campanion.rope_bridge.finished": "Bridge Built!",
-  
+  "message.campanion.rope_bridge.no_permission": "You dont have permission to place %s blocks.",
+
   "stat.campanion.sleep_in_sleeping_bag": "Times Slept in a Sleeping Bag",
   "stat.campanion.stone_skips": "Stone Skips"
 }

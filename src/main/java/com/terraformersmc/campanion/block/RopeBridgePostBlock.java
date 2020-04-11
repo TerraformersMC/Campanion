@@ -67,6 +67,12 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 						if (reason.isPresent()) {
 							player.addMessage(reason.get(), false);
 						} else {
+							List<Pair<BlockPos, List<RopeBridgePlank>>> planks = bridge.generateBlocks(world);
+							long failed = planks.stream().map(Pair::getLeft).filter(p -> !world.canPlayerModifyAt(player, p)).count();
+							if (failed > 1) {
+								player.addChatMessage(new TranslatableText("message.campanion.rope_bridge.no_permission", failed),true);
+								return ActionResult.SUCCESS;
+							}
 							if (player.isCreative()) {
 								bridge.generateBlocks(world).forEach(pair -> {
 									BlockPos left = pair.getLeft();
