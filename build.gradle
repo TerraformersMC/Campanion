@@ -87,7 +87,7 @@ import com.matthewprenger.cursegradle.CurseArtifact
 
 def fullChangelogBuilder = StringBuilder.newInstance()
 def curseReleaseType = "release"
-def releaseChangelog = ""
+def releaseChangelog = "No Changelog Available"
 def stabilitySuffix = ""
 
 task buildAndAttemptRelease {
