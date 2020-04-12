@@ -83,28 +83,6 @@ publishing {
 	}
 }
 
-curseforge {
-	apiKey = project.hasProperty("curseforge_api_key") ? curseforge_api_key : "###" //In the GRADLE_USER_HOME /.gradle/gradle.properties file
-	project {
-		id = '373138'
-		releaseType = 'beta'
-		addGameVersion project.curse_version
-		addGameVersion "Java 8"
-		addGameVersion "Fabric"
-		mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
-		addArtifact sourcesJar
-		relations {
-			requiredDependency 'fabric-api'
-		}
-		afterEvaluate {
-			uploadTask.dependsOn(remapJar)
-		}
-	}
-	options {
-		forgeGradleIntegration = false
-	}
-}
-
 import com.matthewprenger.cursegradle.CurseArtifact
 
 def fullChangelogBuilder = StringBuilder.newInstance()
