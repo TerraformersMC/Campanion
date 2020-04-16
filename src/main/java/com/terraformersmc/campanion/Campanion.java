@@ -11,6 +11,7 @@ import com.terraformersmc.campanion.data.CampanionData;
 import com.terraformersmc.campanion.entity.CampanionEntities;
 import com.terraformersmc.campanion.item.BackpackItem;
 import com.terraformersmc.campanion.item.CampanionItems;
+import com.terraformersmc.campanion.mixin.InvokerEntity;
 import com.terraformersmc.campanion.network.C2SEmptyBackpack;
 import com.terraformersmc.campanion.network.C2SRotateHeldItem;
 import com.terraformersmc.campanion.network.S2CClearBackpackHeldItem;
@@ -76,7 +77,7 @@ public class Campanion implements ModInitializer {
 				for (ServerPlayerEntity player : world.getPlayers()) {
 					ItemStack cursorItem = player.inventory.getCursorStack();
 					if (cursorItem.getItem() instanceof BackpackItem && cursorItem.hasTag() && cursorItem.getOrCreateTag().contains("Inventory", 10)) {
-						ItemScatterer.spawn(player.world, player.getBlockPos().add(0, player.getEyeHeight(player.getPose()), 0), BackpackItem.getItems(cursorItem));
+						ItemScatterer.spawn(player.world, player.getBlockPos().add(0, ((InvokerEntity) player).callGetEyeHeight(player.getPose(), player.getDimensions(player.getPose())), 0), BackpackItem.getItems(cursorItem));
 						cursorItem.getTag().remove("Inventory");
 						player.networkHandler.sendPacket(S2CClearBackpackHeldItem.createPacket());
 					}

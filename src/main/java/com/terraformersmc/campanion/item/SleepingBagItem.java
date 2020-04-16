@@ -58,22 +58,22 @@ public class SleepingBagItem extends Item implements DyeableItem {
 				world.createExplosion(null, DamageSource.netherBed(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0F, true, Explosion.DestructionType.DESTROY);
 				stack.damage(25, user, e -> e.sendToolBreakStatus(hand));
 			} else if (world.isDay()) {
-				user.addMessage(CANT_SLEEP_DAY, true);
+				user.sendMessage(CANT_SLEEP_DAY, true);
 			} else if (!user.isOnGround()) {
-				user.addMessage(NOT_ON_GROUND, true);
+				user.sendMessage(NOT_ON_GROUND, true);
 			} else if (world.dimension.hasVisibleSky()) {
 				if (!user.isCreative()) {
 					List<HostileEntity> list = world.getEntities(HostileEntity.class,
 							new Box(pos).offset(0.5D, 0.0D, 0.5D).expand(8.0D, 5.0D, 8.0D),
 							hostileEntity -> hostileEntity.isAngryAt(user));
 					if (!list.isEmpty()) {
-						user.addMessage(NOT_SAFE, true);
+						user.sendMessage(NOT_SAFE, true);
 						return new TypedActionResult<>(ActionResult.SUCCESS, stack);
 					}
 				}
 				if (world.isRaining()) {
 					if (!checkForCover(world, user.getBlockPos().mutableCopy())) {
-						user.addMessage(TOO_WET, true);
+						user.sendMessage(TOO_WET, true);
 						return new TypedActionResult<>(ActionResult.SUCCESS, stack);
 					}
 				}

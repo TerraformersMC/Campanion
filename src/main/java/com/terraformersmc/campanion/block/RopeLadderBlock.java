@@ -50,10 +50,12 @@ public class RopeLadderBlock extends LadderBlock {
 			if (!canPlaceAt(state, world, progrees) || !world.getBlockState(progrees).isAir() || itemStack.getCount() < 1) {
 				break;
 			}
-			world.setBlockState(progrees, state);
-		}
-		if (!((PlayerEntity) placer).abilities.creativeMode) {
-			itemStack.decrement(count - 1);
+			if (itemStack.getCount() > 1) {
+				world.setBlockState(progrees, state);
+			}
+			if (!((PlayerEntity)placer).abilities.creativeMode) {
+				itemStack.decrement(1);
+			}
 		}
 	}
 
@@ -91,8 +93,8 @@ public class RopeLadderBlock extends LadderBlock {
 			}
 			world.setBlockState(progress, Blocks.AIR.getDefaultState());
 		}
-
-		player.giveItemStack(new ItemStack(CampanionBlocks.ROPE_LADDER, count));
-
+		if (!player.abilities.creativeMode) {
+			player.giveItemStack(new ItemStack(CampanionBlocks.ROPE_LADDER, count + 1));
+		}
 	}
 }
