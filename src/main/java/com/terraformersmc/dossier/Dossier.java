@@ -230,7 +230,7 @@ public abstract class Dossier<P extends DataProvider & Consumer<F>, F> {
 
 		protected void addDrop(Block block, LootTable.Builder builder) {
 			List<Pair<Identifier, LootTable.Builder>> lootTables = this.provider.lootTables.get(LootContextTypes.BLOCK);
-			lootTables.add(new Pair<>(block.getDropTableID(), builder));
+			lootTables.add(new Pair<>(block.getLootTableId(), builder));
 			this.provider.lootTables.put(LootContextTypes.BLOCK, lootTables);
 		}
 

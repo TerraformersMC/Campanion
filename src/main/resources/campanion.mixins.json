@@ -4,8 +4,10 @@
   "package": "com.terraformersmc.campanion.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "InvokerCriterions",
+    "InvokerCriteria",
     "InvokerEntity",
+    "AccessorBlockTags",
+    "AccessorItemTags",
     "MixinEnchantment",
     "MixinLivingEntity",
     "MixinMobEntity",

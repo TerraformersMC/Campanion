@@ -65,12 +65,12 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 							stack.decrement(itemsToUse);
 						}
 						if (reason.isPresent()) {
-							player.addMessage(reason.get(), false);
+							player.sendMessage(reason.get(), false);
 						} else {
 							List<Pair<BlockPos, List<RopeBridgePlank>>> planks = bridge.generateBlocks(world);
 							long failed = planks.stream().map(Pair::getLeft).filter(p -> !world.canPlayerModifyAt(player, p)).count();
 							if (failed > 1) {
-								player.addMessage(new TranslatableText("message.campanion.rope_bridge.no_permission", failed), true);
+								player.sendMessage(new TranslatableText("message.campanion.rope_bridge.no_permission", failed), true);
 								return ActionResult.SUCCESS;
 							}
 							if (player.isCreative()) {
@@ -176,7 +176,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 					if (!(be instanceof RopeBridgePlanksBlockEntity)) {
 						BlockState state = world.getBlockState(planksPos);
 						if (!state.getMaterial().isReplaceable()) {
-							player.addMessage(new TranslatableText("message.campanion.rope_bridge.obstructed", planksPos.getX(), planksPos.getY(), planksPos.getZ(), new TranslatableText(world.getBlockState(planksPos).getBlock().getTranslationKey())), false);
+							player.sendMessage(new TranslatableText("message.campanion.rope_bridge.obstructed", planksPos.getX(), planksPos.getY(), planksPos.getZ(), new TranslatableText(world.getBlockState(planksPos).getBlock().getTranslationKey())), false);
 							return false;
 						}
 						world.setBlockState(planksPos, CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState());
@@ -216,10 +216,10 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 					((RopeBridgePostBlockEntity) other).sync();
 				}
 			}
-			player.addMessage(new TranslatableText("message.campanion.rope_bridge.finished"), false);
+			player.sendMessage(new TranslatableText("message.campanion.rope_bridge.finished"), false);
 		} else {
 			double counted = list.stream().flatMap(p -> p.getRight().stream()).filter(RopeBridgePlank::isMaster).count();
-			player.addMessage(new TranslatableText("message.campanion.rope_bridge.constructed", Math.round(counted / RopeBridge.PLANKS_PER_ITEM) + 1), true);
+			player.sendMessage(new TranslatableText("message.campanion.rope_bridge.constructed", Math.round(counted / RopeBridge.PLANKS_PER_ITEM) + 1), true);
 		}
 		return true;
 	}
