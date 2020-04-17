@@ -25,6 +25,9 @@
     ],
     "client": [
       "com.terraformersmc.campanion.client.CampanionClient"
+    ],
+    "dossier": [
+      "com.terraformersmc.campanion.data.CampanionData"
     ]
   },
   "mixins": [

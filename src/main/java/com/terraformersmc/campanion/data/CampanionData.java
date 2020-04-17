@@ -6,7 +6,13 @@ import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.recipe.CampanionRecipeSerializers;
 import com.terraformersmc.campanion.tag.CampanionBlockTags;
 import com.terraformersmc.campanion.tag.CampanionItemTags;
-import com.terraformersmc.dossier.Dossier;
+import com.terraformersmc.dossier.DossierProvider;
+import com.terraformersmc.dossier.Dossiers;
+import com.terraformersmc.dossier.generator.BlockTagsDossier;
+import com.terraformersmc.dossier.generator.ItemTagsDossier;
+import com.terraformersmc.dossier.generator.LootTablesDossier;
+import com.terraformersmc.dossier.generator.RecipesDossier;
+import com.terraformersmc.dossier.util.BlockLootTableCreator;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.ComplexRecipeJsonFactory;
@@ -19,18 +25,22 @@ import net.minecraft.loot.function.SetCountLootFunction;
 
 import java.util.function.Consumer;
 
-public class CampanionData {
-
-	public static void generate() {
-		Dossier.generateData(Campanion.MOD_ID, true, Dossier.Builder.create()
-				.add(new BlockTags())
-				.add(new ItemTags())
-				.add(new Recipes())
-				.add(new LootTables())
-		);
+public class CampanionData implements DossierProvider {
+	@Override
+	public Dossiers createDossiers() {
+		return Dossiers.builder()
+				.addBlockTags(CampanionBlockTagsGenerator::new)
+				.addItemTags(CampanionItemTagsGenerator::new)
+				.addRecipes(CampanionRecipesGenerator::new)
+				.addLootTables(CampanionLootTablesGenerator::new);
 	}
 
-	private static class BlockTags extends Dossier.BlockTagsDossier {
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
+	private static class CampanionBlockTagsGenerator extends BlockTagsDossier {
 		@Override
 		protected void addBlockTags() {
 			this.addReplaceTransformed(CampanionBlockTags.LAWN_CHAIRS, Campanion.MOD_ID, "<color>_lawn_chair", "color", COLORS);
@@ -42,7 +52,7 @@ public class CampanionData {
 		}
 	}
 
-	private static class ItemTags extends Dossier.ItemTagsDossier {
+	private static class CampanionItemTagsGenerator extends ItemTagsDossier {
 		@Override
 		protected void addItemTags() {
 			this.copyFromBlock(CampanionItemTags.LAWN_CHAIRS, CampanionBlockTags.LAWN_CHAIRS);
@@ -65,7 +75,7 @@ public class CampanionData {
 		}
 	}
 
-	private static class Recipes extends Dossier.RecipesDossier {
+	private static class CampanionRecipesGenerator extends RecipesDossier {
 		@Override
 		protected void addRecipes(Consumer<RecipeJsonProvider> provider) {
 			ShapedRecipeJsonFactory.create(CampanionItems.MARSHMALLOW, 2).input('S', Items.SUGAR).pattern("SS").pattern("SS").criterion("has_sugar", this.conditionsFrom(Items.SUGAR)).offerTo(provider);
@@ -138,29 +148,29 @@ public class CampanionData {
 	}
 
 
-	private static class LootTables extends Dossier.LootTablesDossier {
+	private static class CampanionLootTablesGenerator extends LootTablesDossier {
 		@Override
 		protected void addLootTables() {
-			this.addSelfDrop(CampanionBlocks.ROPE_BRIDGE_POST);
-			this.addSelfDrop(CampanionBlocks.TENT_POLE);
+			this.drops(CampanionBlocks.ROPE_BRIDGE_POST);
+			this.drops(CampanionBlocks.TENT_POLE);
 
-			this.addSelfDrop(CampanionBlocks.WHITE_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.ORANGE_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.MAGENTA_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.LIGHT_BLUE_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.YELLOW_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.LIME_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.PINK_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.GRAY_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.LIGHT_GRAY_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.CYAN_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.PURPLE_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.BLUE_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.BROWN_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.GREEN_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.RED_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.BLACK_LAWN_CHAIR);
-			this.addSelfDrop(CampanionBlocks.LEATHER_TANNER);
+			this.drops(CampanionBlocks.WHITE_LAWN_CHAIR);
+			this.drops(CampanionBlocks.ORANGE_LAWN_CHAIR);
+			this.drops(CampanionBlocks.MAGENTA_LAWN_CHAIR);
+			this.drops(CampanionBlocks.LIGHT_BLUE_LAWN_CHAIR);
+			this.drops(CampanionBlocks.YELLOW_LAWN_CHAIR);
+			this.drops(CampanionBlocks.LIME_LAWN_CHAIR);
+			this.drops(CampanionBlocks.PINK_LAWN_CHAIR);
+			this.drops(CampanionBlocks.GRAY_LAWN_CHAIR);
+			this.drops(CampanionBlocks.LIGHT_GRAY_LAWN_CHAIR);
+			this.drops(CampanionBlocks.CYAN_LAWN_CHAIR);
+			this.drops(CampanionBlocks.PURPLE_LAWN_CHAIR);
+			this.drops(CampanionBlocks.BLUE_LAWN_CHAIR);
+			this.drops(CampanionBlocks.BROWN_LAWN_CHAIR);
+			this.drops(CampanionBlocks.GREEN_LAWN_CHAIR);
+			this.drops(CampanionBlocks.RED_LAWN_CHAIR);
+			this.drops(CampanionBlocks.BLACK_LAWN_CHAIR);
+			this.drops(CampanionBlocks.LEATHER_TANNER);
 
 
 			this.addTentPartDrop(CampanionBlocks.WHITE_TENT_SIDE);
@@ -233,7 +243,7 @@ public class CampanionData {
 		}
 
 		public void addTentPartDrop(Block block) {
-			this.addDrop(block, createBlockLootTable(Items.STRING).withFunction(SetCountLootFunction.builder(UniformLootTableRange.between(5F, 5F))));
+			this.drops(block, BlockLootTableCreator.drops(Items.STRING).withFunction(SetCountLootFunction.builder(UniformLootTableRange.between(5F, 5F))));
 		}
 	}
 }
