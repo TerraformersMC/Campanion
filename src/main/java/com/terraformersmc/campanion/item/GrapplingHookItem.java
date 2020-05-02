@@ -17,17 +17,17 @@ import net.minecraft.world.World;
 public class GrapplingHookItem extends Item {
 	public GrapplingHookItem(Item.Settings settings) {
 		super(settings);
-		this.addPropertyGetter(new Identifier(Campanion.MOD_ID, "deployed"), (stack, world, entity) -> {
-			if(entity instanceof PlayerEntity) {
-				for (Hand value : Hand.values()) {
-					ItemStack heldStack = entity.getStackInHand(value);
-					if(heldStack == stack && ((GrapplingHookUser)entity).getGrapplingHook() != null) {
-						return 1;
-					}
-				}
-			}
-			return 0;
-		});
+//		this.addPropertyGetter(new Identifier(Campanion.MOD_ID, "deployed"), (stack, world, entity) -> {
+//			if(entity instanceof PlayerEntity) {
+//				for (Hand value : Hand.values()) {
+//					ItemStack heldStack = entity.getStackInHand(value);
+//					if(heldStack == stack && ((GrapplingHookUser)entity).getGrapplingHook() != null) {
+//						return 1;
+//					}
+//				}
+//			}
+//			return 0;
+//		});
 	}
 
 	@Override

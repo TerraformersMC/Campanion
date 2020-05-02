@@ -11,7 +11,6 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
-import net.minecraft.world.level.LevelInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +28,7 @@ public class FakeWorld extends ClientWorld {
 	private final int skyLight;
 
 	public FakeWorld(BlockPos basePos, int lightOverride) {
-		super(CLIENT.player.networkHandler, new LevelInfo(CLIENT.world.getLevelProperties()), CLIENT.world.dimension.getType(), 3, CLIENT::getProfiler, CLIENT.worldRenderer);
+		super(CLIENT.player.networkHandler, new class_5271(CLIENT.world.getLevelProperties().getSeed(), CLIENT.world.getLevelProperties().getDifficulty(), CLIENT.world.getLevelProperties().isDifficultyLocked(), CLIENT.world.getLevelProperties().method_27421()), CLIENT.world.dimension.getType(), 3, CLIENT::getProfiler, CLIENT.worldRenderer);
 		this.basePos = basePos;
 		this.blockLight = lightOverride == -1 ? -1 : LightmapTextureManager.getBlockLightCoordinates(lightOverride);
 		this.skyLight = lightOverride == -1 ? -1 : LightmapTextureManager.getSkyLightCoordinates(lightOverride);

@@ -13,10 +13,10 @@ public class MixinStructure implements AccessorStructure {
 
     @Final
     @Shadow
-    private List<List<Structure.StructureBlockInfo>> blocks;
+    private List<Structure.PalettedBlockInfoList> blockInfoLists;
 
     @Override
-    public List<List<Structure.StructureBlockInfo>> getBlocks() {
-        return this.blocks;
+    public List<Structure.PalettedBlockInfoList> getBlocks() {
+        return this.blockInfoLists;
     }
 }

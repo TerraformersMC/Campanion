@@ -67,7 +67,7 @@ public class TentBuildingRecipe extends SpecialCraftingRecipe {
 					BlockPos size = structure.getSize();
 					ItemStack out = new ItemStack(CampanionItems.TENT_BAG);
 					ListTag list = new ListTag();
-					for (Structure.StructureBlockInfo info : ((AccessorStructure) structure).getBlocks().get(0)) {
+					for (Structure.StructureBlockInfo info : ((AccessorStructure) structure).getBlocks().get(0).getAll()) {
 						CompoundTag tag = new CompoundTag();
 						tag.put("Pos", NbtHelper.fromBlockPos(info.pos.add(-size.getX() / 2, 0, -size.getZ() / 2)));
 						tag.put("BlockState", NbtHelper.fromBlockState(info.state));

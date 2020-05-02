@@ -53,7 +53,7 @@ public class RopeBridgePlanksBlock extends Block implements BlockEntityProvider 
 			boolean removed = be.removeBroken();
 			boolean deleted = be.getPlanks().isEmpty() && this.canBeCompletelyRemoved();
 			if (removed && hasMaster) {
-				world.playLevelEvent(2001, pos, getRawIdFromState(state));
+				world.syncWorldEvent(2001, pos, getRawIdFromState(state));
 			}
 			if (deleted) {
 				world.setBlockState(pos, Blocks.AIR.getDefaultState());

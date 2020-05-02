@@ -5,7 +5,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.SleepingChatScreen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +20,7 @@ public abstract class MixinScreen {
 	@Inject(method = "addButton", at = @At("HEAD"))
 	private <T extends AbstractButtonWidget> void onAddButton(T button, CallbackInfoReturnable<T> info) {
 		if ((Object) this instanceof SleepingChatScreen && SleepingBagItem.getUsingStack(MinecraftClient.getInstance().player).isPresent()) {
-			button.setMessage(I18n.translate("item.campanion.sleeping_bag.stop_sleeping"));
+			button.setMessage(new TranslatableText("item.campanion.sleeping_bag.stop_sleeping"));
 		}
 	}
 }
