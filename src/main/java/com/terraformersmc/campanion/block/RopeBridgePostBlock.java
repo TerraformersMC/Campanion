@@ -76,6 +76,16 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 								return ActionResult.SUCCESS;
 							}
 							if (player.isCreative()) {
+
+								//Check for obstructions
+								for (Pair<BlockPos, ?> pair : planks) {
+									BlockPos planksPos = pair.getLeft();
+									if (!world.getBlockState(planksPos).getMaterial().isReplaceable() && world.getBlockState(planksPos).getBlock() != CampanionBlocks.ROPE_BRIDGE_POST) {
+										player.sendMessage(new TranslatableText("message.campanion.rope_bridge.obstructed", planksPos.getX(), planksPos.getY(), planksPos.getZ(), new TranslatableText(world.getBlockState(planksPos).getBlock().getTranslationKey())), false);
+										return ActionResult.PASS;
+									}
+								}
+
 								planks.forEach(pair -> {
 									BlockPos left = pair.getLeft();
 									BlockEntity blockEntityTwo = world.getBlockEntity(left);
@@ -91,6 +101,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 										((RopeBridgePlanksBlockEntity) blockEntityTwo).sync();
 									}
 								});
+
 							} else {
 								be.getGhostPlanks().put(clickedPos, planks);
 								BlockEntity blockEntityTwo = world.getBlockEntity(clickedPos);
