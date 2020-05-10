@@ -61,11 +61,13 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 							int itemsToUse = Math.round(xzDist / RopeBridge.BLOCKS_PER_ROPE);
 							if (stack.getCount() < itemsToUse) {
 								reason = Optional.of(new TranslatableText("message.campanion.rope_bridge.ropes", itemsToUse - stack.getCount()));
+							} else {
+								stack.decrement(itemsToUse);
 							}
-							stack.decrement(itemsToUse);
 						}
 						if (reason.isPresent()) {
 							player.sendMessage(reason.get(), false);
+							return ActionResult.SUCCESS;
 						} else {
 							List<Pair<BlockPos, List<RopeBridgePlank>>> planks = bridge.generateBlocks(world);
 							long failed = planks.stream().map(Pair::getLeft).filter(p -> !world.canPlayerModifyAt(player, p)).count();
