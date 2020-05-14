@@ -58,7 +58,7 @@ public class BaseTentBlock extends Block implements BlockEntityProvider {
 			DyeColor stackColor = ((DyeItem) stack.getItem()).getColor();
 			TentPartBlockEntity tentPart = (TentPartBlockEntity) blockEntity;
 
-			Vec3d changeSize = Vec3d.method_24954(tentPart.getSize()).add(-1, -1, -1).multiply(1 / 2F);
+			Vec3d changeSize = Vec3d.of(tentPart.getSize()).add(-1, -1, -1).multiply(1 / 2F);
 
 			for (int x = MathHelper.floor(-changeSize.x); x <= MathHelper.floor(changeSize.x); x++) {
 				for (int y = 0; y <= 2 * changeSize.getY(); y++) {
@@ -100,7 +100,7 @@ public class BaseTentBlock extends Block implements BlockEntityProvider {
 		if (slotIndex != -1 && be instanceof TentPartBlockEntity) {
 			TentPartBlockEntity tentPart = (TentPartBlockEntity) be;
 
-			Vec3d changeSize = Vec3d.method_24954(tentPart.getSize()).add(-1, -1, -1).multiply(1 / 2F);
+			Vec3d changeSize = Vec3d.of(tentPart.getSize()).add(-1, -1, -1).multiply(1 / 2F);
 
 			ItemStack out = new ItemStack(CampanionItems.TENT_BAG);
 			ListTag list = new ListTag();

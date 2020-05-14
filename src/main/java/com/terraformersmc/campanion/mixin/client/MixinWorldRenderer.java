@@ -48,7 +48,7 @@ public class MixinWorldRenderer {
 					HitResult result = player.rayTrace(10, 0, true);
 					if (result instanceof BlockHitResult && result.getType() == HitResult.Type.BLOCK) {
 						BlockPos placePos = ((BlockHitResult) result).getBlockPos().offset(((BlockHitResult) result).getSide());
-						Vec3d d = camera.getPos().subtract(Vec3d.method_24954(placePos));
+						Vec3d d = camera.getPos().subtract(Vec3d.of(placePos));
 
 						matrices.push();
 						matrices.translate(-d.x, -d.y, -d.z);

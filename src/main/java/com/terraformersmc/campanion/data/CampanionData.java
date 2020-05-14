@@ -243,7 +243,7 @@ public class CampanionData implements DossierProvider {
 		}
 
 		public void addTentPartDrop(Block block) {
-			this.drops(block, BlockLootTableCreator.drops(Items.STRING).withFunction(SetCountLootFunction.builder(UniformLootTableRange.between(5F, 5F))));
+			this.drops(block, BlockLootTableCreator.drops(Items.STRING).apply(SetCountLootFunction.builder(UniformLootTableRange.between(5F, 5F))));
 		}
 	}
 }

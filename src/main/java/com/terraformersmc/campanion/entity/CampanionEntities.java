@@ -4,9 +4,9 @@ import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.SpearItem;
 import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
-import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -23,11 +23,11 @@ public class CampanionEntities {
 	public static final EntityType<SpearEntity> GOLDEN_SPEAR = add("golden_spear", createSpear(CampanionItems.GOLDEN_SPEAR));
 	public static final EntityType<SpearEntity> DIAMOND_SPEAR = add("diamond_spear", createSpear(CampanionItems.DIAMOND_SPEAR));
 
-	public static final EntityType<GrapplingHookEntity> GRAPPLING_HOOK = add("grappling_hook", FabricEntityTypeBuilder.<GrapplingHookEntity>create(EntityCategory.MISC, (type, world) -> new GrapplingHookEntity(world)).disableSaving().disableSummon().size(EntityDimensions.fixed(0.3F, 0.3F)).build());
+	public static final EntityType<GrapplingHookEntity> GRAPPLING_HOOK = add("grappling_hook", FabricEntityTypeBuilder.<GrapplingHookEntity>create(SpawnGroup.MISC, (type, world) -> new GrapplingHookEntity(world)).disableSaving().disableSummon().size(EntityDimensions.fixed(0.3F, 0.3F)).build());
 
-	public static final EntityType<LawnChairEntity> LAWN_CHAIR = add("lawn_chair", FabricEntityTypeBuilder.<LawnChairEntity>create(EntityCategory.MISC, (type, world) -> new LawnChairEntity(world)).build());
+	public static final EntityType<LawnChairEntity> LAWN_CHAIR = add("lawn_chair", FabricEntityTypeBuilder.<LawnChairEntity>create(SpawnGroup.MISC, (type, world) -> new LawnChairEntity(world)).build());
 
-	public static final EntityType<SkippingStoneEntity> THROWING_STONE = add("skipping_stone", FabricEntityTypeBuilder.<SkippingStoneEntity>create(EntityCategory.MISC).disableSaving().disableSummon().size(EntityDimensions.fixed(0.25F,0.25F)).build());
+	public static final EntityType<SkippingStoneEntity> THROWING_STONE = add("skipping_stone", FabricEntityTypeBuilder.<SkippingStoneEntity>create(SpawnGroup.MISC).disableSaving().disableSummon().size(EntityDimensions.fixed(0.25F, 0.25F)).build());
 
 	public static void register() {
 		for (Identifier id : ENTITY_TYPES.keySet()) {
@@ -42,6 +42,6 @@ public class CampanionEntities {
 	}
 
 	private static EntityType<SpearEntity> createSpear(SpearItem item) {
-		return FabricEntityTypeBuilder.<SpearEntity>create(EntityCategory.MISC, (entity, world) -> new SpearEntity(entity, world, item)).size(EntityDimensions.fixed(0.5F, 0.5F)).build();
+		return FabricEntityTypeBuilder.<SpearEntity>create(SpawnGroup.MISC, (entity, world) -> new SpearEntity(entity, world, item)).size(EntityDimensions.fixed(0.5F, 0.5F)).build();
 	}
 }

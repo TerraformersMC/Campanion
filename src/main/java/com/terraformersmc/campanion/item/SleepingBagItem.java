@@ -54,14 +54,14 @@ public class SleepingBagItem extends Item implements DyeableItem {
 		ItemStack stack = user.getStackInHand(hand);
 		if (!world.isClient) {
 			BlockPos pos = user.getBlockPos();
-			if (!world.dimension.canPlayersSleep() || world.getBiome(pos) == Biomes.NETHER_WASTES) {
+			if (!world.getDimension().canPlayersSleep() || world.getBiome(pos) == Biomes.NETHER_WASTES) {
 				world.createExplosion(null, DamageSource.netherBed(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0F, true, Explosion.DestructionType.DESTROY);
 				stack.damage(25, user, e -> e.sendToolBreakStatus(hand));
 			} else if (world.isDay()) {
 				user.sendMessage(CANT_SLEEP_DAY, true);
 			} else if (!user.isOnGround()) {
 				user.sendMessage(NOT_ON_GROUND, true);
-			} else if (world.dimension.hasVisibleSky()) {
+			} else if (world.getDimension().hasVisibleSky()) {
 				if (!user.isCreative()) {
 					List<HostileEntity> list = world.getEntities(HostileEntity.class,
 							new Box(pos).offset(0.5D, 0.0D, 0.5D).expand(8.0D, 5.0D, 8.0D),

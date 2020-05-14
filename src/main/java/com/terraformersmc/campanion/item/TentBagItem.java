@@ -1,6 +1,5 @@
 package com.terraformersmc.campanion.item;
 
-import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.blockentity.TentPartBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -12,7 +11,6 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -75,7 +73,7 @@ public class TentBagItem extends Item {
 	public static List<BlockPos> getErrorPosition(WorldView world, BlockPos pos, ItemStack stack) {
 		List<BlockPos> list = new ArrayList<>();
 		if (hasBlocks(stack)) {
-			Vec3d changeSize = Vec3d.method_24954(NbtHelper.toBlockPos(stack.getOrCreateTag().getCompound("TentSize"))).add(-1, -1, -1).multiply(1 / 2F);
+			Vec3d changeSize = Vec3d.of(NbtHelper.toBlockPos(stack.getOrCreateTag().getCompound("TentSize"))).add(-1, -1, -1).multiply(1 / 2F);
 			for (int x = MathHelper.floor(-changeSize.x); x <= MathHelper.floor(changeSize.x); x++) {
 				for (int y = -1; y <= 2 * changeSize.getY(); y++) {
 					for (int z = MathHelper.floor(-changeSize.z); z <= MathHelper.floor(changeSize.z); z++) {

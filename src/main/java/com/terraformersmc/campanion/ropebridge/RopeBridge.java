@@ -47,8 +47,8 @@ public class RopeBridge {
 	private final double c;
 
 	public RopeBridge(BlockPos from, BlockPos to) {
-		this.from = Vec3d.method_24954(from).add(0.5, 0, 0.5);
-		this.to = Vec3d.method_24954(to).add(0.5, 0, 0.5);
+		this.from = Vec3d.ofBottomCenter(from);
+		this.to = Vec3d.ofBottomCenter(to);
 		this.angle = Math.atan2(this.to.getZ() - this.from.getZ(), this.to.getX() - this.from.getX());
 
 		double length = this.from.distanceTo(this.to);

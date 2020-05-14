@@ -1,5 +1,6 @@
 package com.terraformersmc.campanion.client.renderer.item;
 
+import com.terraformersmc.campanion.mixin.AccessorBiomeAccess;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -28,7 +29,7 @@ public class FakeWorld extends ClientWorld {
 	private final int skyLight;
 
 	public FakeWorld(BlockPos basePos, int lightOverride) {
-		super(CLIENT.player.networkHandler, new class_5271(CLIENT.world.getLevelProperties().getSeed(), CLIENT.world.getLevelProperties().getDifficulty(), CLIENT.world.getLevelProperties().isDifficultyLocked(), CLIENT.world.getLevelProperties().method_27421()), CLIENT.world.dimension.getType(), 3, CLIENT::getProfiler, CLIENT.worldRenderer);
+		super(CLIENT.player.networkHandler, new class_5271(CLIENT.world.getLevelProperties().getDifficulty(), CLIENT.world.getLevelProperties().isDifficultyLocked(), CLIENT.world.getLevelProperties().isHardcore()), CLIENT.world.getDimension().getType(), 3, CLIENT::getProfiler, CLIENT.worldRenderer, CLIENT.world.method_27982(), ((AccessorBiomeAccess) CLIENT.world.getBiomeAccess()).getSeed());
 		this.basePos = basePos;
 		this.blockLight = lightOverride == -1 ? -1 : LightmapTextureManager.getBlockLightCoordinates(lightOverride);
 		this.skyLight = lightOverride == -1 ? -1 : LightmapTextureManager.getSkyLightCoordinates(lightOverride);

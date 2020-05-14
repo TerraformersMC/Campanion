@@ -20,8 +20,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -145,7 +145,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
+	public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
 		if (facing == Direction.DOWN && !world.getBlockState(pos.down()).isSideSolidFullSquare(world, pos, Direction.UP)) {
 			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 		}
