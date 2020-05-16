@@ -13,7 +13,8 @@
     "MixinWolfEntity",
     "MixinEntity",
     "MixinStructure",
-    "MixinPlayerManager"
+    "MixinPlayerManager",
+    "MixingPlayerInventory"
   ],
   "client": [
     "client.MixinCamera",

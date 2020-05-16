@@ -60,7 +60,6 @@ public class Campanion implements ModInitializer {
 		})).build();
 
 		registerServerboundPackets();
-		registerBackpackHandler();
 
 		CampanionData.generate();
 	}
@@ -69,21 +68,4 @@ public class Campanion implements ModInitializer {
 		ServerSidePacketRegistry.INSTANCE.register(C2SEmptyBackpack.ID, C2SEmptyBackpack::onPacket);
 		ServerSidePacketRegistry.INSTANCE.register(C2SRotateHeldItem.ID, C2SRotateHeldItem::onPacket);
 	}
-
-	//Maybe move to a mixin (PlayerInventory#setCursorStack)
-	public static void registerBackpackHandler() {
-		ServerTickCallback.EVENT.register(e -> {
-			for (ServerWorld world : e.getWorlds()) {
-				for (ServerPlayerEntity player : world.getPlayers()) {
-					ItemStack cursorItem = player.inventory.getCursorStack();
-					if (cursorItem.getItem() instanceof BackpackItem && cursorItem.hasTag() && cursorItem.getOrCreateTag().contains("Inventory", 10)) {
-						ItemScatterer.spawn(player.world, player.getBlockPos().add(0, ((InvokerEntity) player).callGetEyeHeight(player.getPose(), player.getDimensions(player.getPose())), 0), BackpackItem.getItems(cursorItem));
-						cursorItem.getTag().remove("Inventory");
-						player.networkHandler.sendPacket(S2CClearBackpackHeldItem.createPacket());
-					}
-				}
-			}
-		});
-	}
-
 }
