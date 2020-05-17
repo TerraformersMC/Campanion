@@ -28,4 +28,7 @@ public class CampanionItemTags {
 	private static Tag.Identified<Item> get(String id) {
 		return AccessorItemTags.callRegister(Campanion.MOD_ID + ":" + id);
 	}
+
+	public static void load() {
+	}
 }

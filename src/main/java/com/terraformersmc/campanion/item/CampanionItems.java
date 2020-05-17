@@ -43,6 +43,7 @@ public class CampanionItems {
 	public static final SpearItem IRON_SPEAR = add("iron_spear", new SpearItem(ToolMaterials.IRON, 2.5F, -2.5F, () -> CampanionEntities.IRON_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
 	public static final SpearItem GOLDEN_SPEAR = add("golden_spear", new SpearItem(ToolMaterials.GOLD, 2.5F, -2.7F, () -> CampanionEntities.GOLDEN_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
 	public static final SpearItem DIAMOND_SPEAR = add("diamond_spear", new SpearItem(ToolMaterials.DIAMOND, 2.5F, -2.7F, () -> CampanionEntities.DIAMOND_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
+	public static final SpearItem NETHERITE_SPEAR = add("netherite_spear", new SpearItem(ToolMaterials.NETHERITE, 2.5F, -2.8F, () -> CampanionEntities.NETHERITE_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
 
 	public static final SkippingStoneItem SKIPPING_STONE = add("skipping_stone", new SkippingStoneItem(new Item.Settings().group(ItemGroup.MISC)));
 

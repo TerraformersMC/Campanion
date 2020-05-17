@@ -43,7 +43,7 @@ public class SpearItem extends TridentItem {
 		this.attackDamage = attackDamage + material.getAttackDamage();
 		this.typeSupplier = typeSupplier;
 		ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_UUID, "Tool modifier", attackDamage, EntityAttributeModifier.Operation.ADDITION));
+		builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_UUID, "Tool modifier", this.attackDamage, EntityAttributeModifier.Operation.ADDITION));
 		builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_UUID, "Tool modifier", attackSpeed, EntityAttributeModifier.Operation.ADDITION));
 		this.attributeModifiers = builder.build();
 	}

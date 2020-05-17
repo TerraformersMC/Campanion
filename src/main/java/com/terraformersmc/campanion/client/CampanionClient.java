@@ -48,6 +48,7 @@ public class CampanionClient implements ClientModInitializer {
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.IRON_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.GOLDEN_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.DIAMOND_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.NETHERITE_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
 
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.GRAPPLING_HOOK, (dispatcher, context) -> new GrapplingHookEntityRenderer(dispatcher));
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.LAWN_CHAIR, (dispatcher, context) -> new EmptyRenderer<>(dispatcher));

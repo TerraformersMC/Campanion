@@ -16,4 +16,7 @@ public class CampanionBlockTags {
 	private static Tag.Identified<Block> get(String id) {
 		return AccessorBlockTags.callRegister(Campanion.MOD_ID + ":" + id);
 	}
+
+	public static void load() {
+	}
 }
