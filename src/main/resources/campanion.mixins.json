@@ -10,16 +10,20 @@
     "AccessorBiomeAccess",
     "AccessorItemTags",
     "MixinEnchantment",
+    "MixinEnchantmentHelper",
     "MixinLivingEntity",
     "MixinMobEntity",
     "MixinPlayerEntity",
     "MixinWolfEntity",
     "MixinEntity",
     "MixinStructure",
-    "MixinPlayerManager"
+    "MixinPlayerManager",
+    "MixingPlayerInventory"
   ],
   "client": [
     "client.MixinCamera",
+    "client.MixinClientPlayerInteractionManager",
+    "client.MixinGameRenderer",
     "client.MixinItemRenderer",
     "client.MixinPlayerEntityRenderer",
     "client.MixinScreen",

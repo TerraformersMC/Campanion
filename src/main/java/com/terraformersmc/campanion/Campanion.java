@@ -24,13 +24,22 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.server.ServerTickCallback;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.loader.api.FabricLoader;
+
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
+import net.minecraft.entity.projectile.Projectile;
+import net.minecraft.entity.thrown.SnowballEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.Position;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 
 public class Campanion implements ModInitializer {
 
@@ -62,28 +71,18 @@ public class Campanion implements ModInitializer {
 		})).build();
 
 		registerServerboundPackets();
-		registerBackpackHandler();
+
+		DispenserBlock.registerBehavior(CampanionItems.SKIPPING_STONE, new ProjectileDispenserBehavior() {
+			protected Projectile createProjectile(World world, Position position, ItemStack stack) {
+				return Util.make(new SkippingStoneEntity(world, position.getX(), position.getY(), position.getZ()), (snowballEntity) -> {
+					snowballEntity.setItem(stack);
+				});
+			}
+		});
 	}
 
 	public static void registerServerboundPackets() {
 		ServerSidePacketRegistry.INSTANCE.register(C2SEmptyBackpack.ID, C2SEmptyBackpack::onPacket);
 		ServerSidePacketRegistry.INSTANCE.register(C2SRotateHeldItem.ID, C2SRotateHeldItem::onPacket);
 	}
-
-	//Maybe move to a mixin (PlayerInventory#setCursorStack)
-	public static void registerBackpackHandler() {
-		ServerTickCallback.EVENT.register(e -> {
-			for (ServerWorld world : e.getWorlds()) {
-				for (ServerPlayerEntity player : world.getPlayers()) {
-					ItemStack cursorItem = player.inventory.getCursorStack();
-					if (cursorItem.getItem() instanceof BackpackItem && cursorItem.hasTag() && cursorItem.getOrCreateTag().contains("Inventory", 10)) {
-						ItemScatterer.spawn(player.world, player.getBlockPos().add(0, ((InvokerEntity) player).callGetEyeHeight(player.getPose(), player.getDimensions(player.getPose())), 0), BackpackItem.getItems(cursorItem));
-						cursorItem.getTag().remove("Inventory");
-						player.networkHandler.sendPacket(S2CClearBackpackHeldItem.createPacket());
-					}
-				}
-			}
-		});
-	}
-
 }
