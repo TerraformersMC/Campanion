@@ -33,6 +33,10 @@ public class SkippingStoneEntity extends ThrownItemEntity {
 		super(EntityType.SNOWBALL, owner, world);
 	}
 
+	public SkippingStoneEntity(World world, double x, double y, double z) {
+		super(EntityType.SNOWBALL, x, y, z, world);
+	}
+
 	protected Item getDefaultItem() {
 		return Items.SNOWBALL;
 	}
