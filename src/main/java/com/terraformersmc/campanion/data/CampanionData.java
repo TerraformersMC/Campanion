@@ -15,13 +15,13 @@ import com.terraformersmc.dossier.generator.RecipesDossier;
 import com.terraformersmc.dossier.util.BlockLootTableCreator;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.ComplexRecipeJsonFactory;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory;
-import net.minecraft.data.server.recipe.ShapelessRecipeJsonFactory;
+import net.minecraft.data.server.recipe.*;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.loot.UniformLootTableRange;
 import net.minecraft.loot.function.SetCountLootFunction;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.util.registry.Registry;
 
 import java.util.function.Consumer;
 
@@ -142,6 +142,8 @@ public class CampanionData implements DossierProvider {
 			ShapelessRecipeJsonFactory.create(CampanionBlocks.RED_LAWN_CHAIR).input(CampanionItemTags.LAWN_CHAIRS).input(Items.RED_DYE).group("dyed_lawn_chair").criterion("has_lawn_chair", this.conditionsFrom(CampanionItemTags.LAWN_CHAIRS)).offerTo(exporter, "campanion:red_lawn_chair_from_existing_chair");
 			ShapedRecipeJsonFactory.create(CampanionBlocks.BLACK_LAWN_CHAIR).input('P', net.minecraft.tag.ItemTags.PLANKS).input('C', Blocks.BLACK_CARPET).input('S', Items.STICK).pattern("P  ").pattern("PCP").pattern("S S").group("lawn_chair").criterion("has_black_carpet", this.conditionsFrom(Blocks.BLACK_CARPET)).offerTo(exporter);
 			ShapelessRecipeJsonFactory.create(CampanionBlocks.BLACK_LAWN_CHAIR).input(CampanionItemTags.LAWN_CHAIRS).input(Items.BLACK_DYE).group("dyed_lawn_chair").criterion("has_lawn_chair", this.conditionsFrom(CampanionItemTags.LAWN_CHAIRS)).offerTo(exporter, "campanion:black_lawn_chair_from_existing_chair");
+
+			SmithingRecipeJsonFactory.create(Ingredient.ofItems(CampanionItems.DIAMOND_SPEAR), Ingredient.ofItems(Items.NETHERITE_INGOT), CampanionItems.NETHERITE_SPEAR).criterion("has_netherite_ingot", this.conditionsFrom(Items.NETHERITE_INGOT)).offerTo(exporter, "campanion:netherite_spear");
 
 			ComplexRecipeJsonFactory.create(CampanionRecipeSerializers.TENT_BUILDING_RECIPE).offerTo(exporter, "campanion:tent_building");
 		}

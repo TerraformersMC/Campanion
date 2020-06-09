@@ -125,7 +125,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 	}
 
 	@Override
-	public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
 		BlockEntity entity = world.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePostBlockEntity) {
 			for (BlockPos position : ((RopeBridgePostBlockEntity) entity).getLinkedPositions()) {
@@ -141,7 +141,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 				}
 			}
 		}
-		super.onBlockRemoved(state, world, pos, newState, moved);
+		super.onStateReplaced(state, world, pos, newState, moved);
 	}
 
 	@Override

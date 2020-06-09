@@ -142,7 +142,7 @@ public class SpearEntity extends PersistentProjectileEntity {
 		this.piercedEntities.clear();
 		if (tag.contains("HitEntities", 9)) {
 			for (Tag hitEntity : tag.getList("HitEntities", 10)) {
-				this.piercedEntities.add(((CompoundTag) hitEntity).getUuidNew("UUID"));
+				this.piercedEntities.add(((CompoundTag) hitEntity).getUuid("UUID"));
 			}
 		}
 	}
@@ -155,7 +155,7 @@ public class SpearEntity extends PersistentProjectileEntity {
 		ListTag tags = new ListTag();
 		for (UUID uuid : this.piercedEntities) {
 			CompoundTag c = new CompoundTag();
-			c.putUuidNew("UUID", uuid);
+			c.putUuid("UUID", uuid);
 			tags.add(c);
 		}
 		tag.put("HitEntities", tags);

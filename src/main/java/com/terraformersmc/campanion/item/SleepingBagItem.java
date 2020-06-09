@@ -1,6 +1,5 @@
 package com.terraformersmc.campanion.item;
 
-import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.advancement.criterion.CampanionCriteria;
 import com.terraformersmc.campanion.entity.SleepNoSetSpawnPlayer;
 import com.terraformersmc.campanion.stat.CampanionStats;
@@ -19,7 +18,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -54,14 +52,14 @@ public class SleepingBagItem extends Item implements DyeableItem {
 		ItemStack stack = user.getStackInHand(hand);
 		if (!world.isClient) {
 			BlockPos pos = user.getBlockPos();
-			if (!world.getDimension().canPlayersSleep() || world.getBiome(pos) == Biomes.NETHER_WASTES) {
-				world.createExplosion(null, DamageSource.netherBed(), pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0F, true, Explosion.DestructionType.DESTROY);
+			if (!world.getDimension().isOverworld() || world.getBiome(pos) == Biomes.NETHER_WASTES) {
+				world.createExplosion(null, DamageSource.badRespawnPoint(), null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0F, true, Explosion.DestructionType.DESTROY);
 				stack.damage(25, user, e -> e.sendToolBreakStatus(hand));
 			} else if (world.isDay()) {
 				user.sendMessage(CANT_SLEEP_DAY, true);
 			} else if (!user.isOnGround()) {
 				user.sendMessage(NOT_ON_GROUND, true);
-			} else if (world.getDimension().hasVisibleSky()) {
+			} else if (world.getDimension().hasSkyLight()) {
 				if (!user.isCreative()) {
 					List<HostileEntity> list = world.getEntities(HostileEntity.class,
 							new Box(pos).offset(0.5D, 0.0D, 0.5D).expand(8.0D, 5.0D, 8.0D),

@@ -50,13 +50,13 @@ public class LawnChairBlockEntity extends BlockEntity implements BlockEntityClie
 
 	@Override
 	public void fromClientTag(CompoundTag tag) {
-		this.entityUUID = tag.getUuidNew("EntityUUID");
+		this.entityUUID = tag.getUuid("EntityUUID");
 		this.cachedEntity = null;
 	}
 
 	@Override
 	public CompoundTag toClientTag(CompoundTag tag) {
-		tag.putUuidNew("EntityUUID", this.entityUUID);
+		tag.putUuid("EntityUUID", this.entityUUID);
 		return tag;
 	}
 }

@@ -24,8 +24,8 @@ public class MixinEnchantmentHelper {
 				}
 			});
 			Enchantment piercing = Enchantments.PIERCING;
-			for (int level = piercing.getMaximumLevel(); level > piercing.getMinimumLevel() - 1; --level) {
-				if (power >= piercing.getMinimumPower(level) && power <= piercing.getMaximumPower(level)) {
+			for (int level = piercing.getMaxLevel(); level > piercing.getMinLevel() - 1; --level) {
+				if (power >= piercing.getMinPower(level) && power <= piercing.getMaxPower(level)) {
 					enchantments.add(new EnchantmentLevelEntry(piercing, level));
 					break;
 				}

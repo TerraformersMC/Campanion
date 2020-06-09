@@ -80,11 +80,11 @@ public class BaseTentBlock extends Block implements BlockEntityProvider {
 	}
 
 	@Override
-	public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
 		if (state.getBlock().getClass() == newState.getBlock().getClass()) {
 			return;
 		}
-		super.onBlockRemoved(state, world, pos, newState, moved);
+		super.onStateReplaced(state, world, pos, newState, moved);
 	}
 
 	@Override

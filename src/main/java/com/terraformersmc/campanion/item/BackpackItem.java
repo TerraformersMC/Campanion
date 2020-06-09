@@ -5,8 +5,8 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -83,7 +83,7 @@ public class BackpackItem extends Item {
 
 		@Override
 		public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-			BasicInventory inventory = new BasicInventory(getItems(this.stack).toArray(new ItemStack[0]));
+			SimpleInventory inventory = new SimpleInventory(getItems(this.stack).toArray(new ItemStack[0]));
 			inventory.addListener(newinv -> {
 				DefaultedList<ItemStack> invList = DefaultedList.ofSize(newinv.size(), ItemStack.EMPTY);
 				for (int slot = 0; slot < newinv.size(); slot++) {
