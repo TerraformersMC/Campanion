@@ -38,12 +38,12 @@ public class CampanionItems {
 	public static final BackpackItem CAMPING_PACK = add("camping_pack", new BackpackItem(BackpackItem.Type.CAMPING_PACK, new Item.Settings().group(ItemGroup.TOOLS)));
 	public static final BackpackItem HIKING_PACK = add("hiking_pack", new BackpackItem(BackpackItem.Type.HIKING_PACK, new Item.Settings().group(ItemGroup.TOOLS)));
 
-	public static final SpearItem WOODEN_SPEAR = add("wooden_spear", new SpearItem(ToolMaterials.WOOD, 2.5F, -2.2F, () -> CampanionEntities.WOODEN_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
-	public static final SpearItem STONE_SPEAR = add("stone_spear", new SpearItem(ToolMaterials.STONE, 2.5F, -2.3F, () -> CampanionEntities.STONE_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
-	public static final SpearItem IRON_SPEAR = add("iron_spear", new SpearItem(ToolMaterials.IRON, 2.5F, -2.5F, () -> CampanionEntities.IRON_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
-	public static final SpearItem GOLDEN_SPEAR = add("golden_spear", new SpearItem(ToolMaterials.GOLD, 2.5F, -2.7F, () -> CampanionEntities.GOLDEN_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
-	public static final SpearItem DIAMOND_SPEAR = add("diamond_spear", new SpearItem(ToolMaterials.DIAMOND, 2.5F, -2.7F, () -> CampanionEntities.DIAMOND_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
-	public static final SpearItem NETHERITE_SPEAR = add("netherite_spear", new SpearItem(ToolMaterials.NETHERITE, 2.5F, -2.8F, () -> CampanionEntities.NETHERITE_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
+	public static final SpearItem WOODEN_SPEAR = add("wooden_spear", new SpearItem(ToolMaterials.WOOD, 2.0F, -2.2F, () -> CampanionEntities.WOODEN_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
+	public static final SpearItem STONE_SPEAR = add("stone_spear", new SpearItem(ToolMaterials.STONE, 2.0F, -2.3F, () -> CampanionEntities.STONE_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
+	public static final SpearItem IRON_SPEAR = add("iron_spear", new SpearItem(ToolMaterials.IRON, 2.0F, -2.5F, () -> CampanionEntities.IRON_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
+	public static final SpearItem GOLDEN_SPEAR = add("golden_spear", new SpearItem(ToolMaterials.GOLD, 2.0F, -2.7F, () -> CampanionEntities.GOLDEN_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
+	public static final SpearItem DIAMOND_SPEAR = add("diamond_spear", new SpearItem(ToolMaterials.DIAMOND, 2.0F, -2.7F, () -> CampanionEntities.DIAMOND_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
+	public static final SpearItem NETHERITE_SPEAR = add("netherite_spear", new SpearItem(ToolMaterials.NETHERITE, 2.0F, -2.8F, () -> CampanionEntities.NETHERITE_SPEAR, new Item.Settings().group(ItemGroup.COMBAT)));
 
 	public static final SkippingStoneItem SKIPPING_STONE = add("skipping_stone", new SkippingStoneItem(new Item.Settings().group(ItemGroup.MISC)));
 

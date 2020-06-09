@@ -28,6 +28,9 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modImplementation "com.terraformersmc:dossier:${project.dossier_version}"
+	modImplementation "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
+
+	include "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
 
 	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 }
