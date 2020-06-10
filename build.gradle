@@ -20,6 +20,9 @@ version = version + "+" + (ENV.BUILD_NUMBER ? ("build." + ENV.BUILD_NUMBER) : "c
 
 repositories {
 	mavenLocal()
+	maven {
+		url "https://maven.jamieswhiteshirt.com/libs-release/"
+	}
 }
 
 dependencies {
