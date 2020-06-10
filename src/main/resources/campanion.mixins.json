@@ -19,8 +19,6 @@
   ],
   "client": [
     "client.MixinCamera",
-    "client.MixinClientPlayerInteractionManager",
-    "client.MixinGameRenderer",
     "client.MixinItemRenderer",
     "client.MixinPlayerEntityRenderer",
     "client.MixinScreen",

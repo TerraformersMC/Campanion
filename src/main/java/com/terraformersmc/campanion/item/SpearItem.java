@@ -1,9 +1,12 @@
 package com.terraformersmc.campanion.item;
 
-import com.terraformersmc.campanion.entity.SpearEntity;
-import com.terraformersmc.campanion.sound.CampanionSoundEvents;
+import java.util.UUID;
+import java.util.function.Supplier;
+
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -25,7 +28,8 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.function.Supplier;
+import com.terraformersmc.campanion.entity.SpearEntity;
+import com.terraformersmc.campanion.sound.CampanionSoundEvents;
 
 public class SpearItem extends TridentItem {
 
@@ -34,6 +38,8 @@ public class SpearItem extends TridentItem {
 	private final float attackSpeed;
 	private final Supplier<EntityType<SpearEntity>> typeSupplier;
 	private EntityType<SpearEntity> cachedType = null;
+	protected static final UUID REACH_MODIFIER_UUID = UUID.fromString("2a07575e-f0ce-47df-a606-cc7f36e0aafd");
+	protected static final UUID ATTACK_RANGE_MODIFIER_UUID = UUID.fromString("8eb6f3b4-f689-4706-ae45-ada2f22f6e5a");
 
 	public SpearItem(ToolMaterial material, float attackDamage, float attackSpeed, Supplier<EntityType<SpearEntity>> typeSupplier, Item.Settings settings) {
 		super(settings.maxDamageIfAbsent(material.getDurability()));
@@ -80,7 +86,7 @@ public class SpearItem extends TridentItem {
 			return 15.0F;
 		} else {
 			Material material = state.getMaterial();
-			return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.UNUSED_PLANT && !state.matches(BlockTags.LEAVES) && material != Material.PUMPKIN ? 1.0F : 1.5F;
+			return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.UNUSED_PLANT && !state.matches(BlockTags.LEAVES) && material != Material.GOURD ? 1.0F : 1.5F;
 		}
 	}
 
@@ -105,6 +111,8 @@ public class SpearItem extends TridentItem {
 		if (slot == EquipmentSlot.MAINHAND) {
 			multimap.put(EntityAttributes.ATTACK_DAMAGE.getId(), new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_UUID, "Weapon modifier", this.attackDamage, EntityAttributeModifier.Operation.ADDITION));
 			multimap.put(EntityAttributes.ATTACK_SPEED.getId(), new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_UUID, "Weapon modifier", this.attackSpeed, EntityAttributeModifier.Operation.ADDITION));
+			multimap.put(ReachEntityAttributes.REACH.getId(), new EntityAttributeModifier(REACH_MODIFIER_UUID, "Reach", 1.5, EntityAttributeModifier.Operation.ADDITION));
+			multimap.put(ReachEntityAttributes.ATTACK_RANGE.getId(), new EntityAttributeModifier(ATTACK_RANGE_MODIFIER_UUID, "Attack range", 1.5, EntityAttributeModifier.Operation.ADDITION));
 		}
 
 		return multimap;
