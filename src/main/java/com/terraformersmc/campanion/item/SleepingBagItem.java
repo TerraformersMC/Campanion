@@ -3,6 +3,7 @@ package com.terraformersmc.campanion.item;
 import com.terraformersmc.campanion.advancement.criterion.CampanionCriteria;
 import com.terraformersmc.campanion.entity.SleepNoSetSpawnPlayer;
 import com.terraformersmc.campanion.stat.CampanionStats;
+import net.minecraft.block.BedBlock;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -52,7 +53,7 @@ public class SleepingBagItem extends Item implements DyeableItem {
 		ItemStack stack = user.getStackInHand(hand);
 		if (!world.isClient) {
 			BlockPos pos = user.getBlockPos();
-			if (!world.getDimension().isOverworld() || world.getBiome(pos) == Biomes.NETHER_WASTES) {
+			if (!BedBlock.isOverworld(world) || world.getBiome(pos) == Biomes.NETHER_WASTES) {
 				world.createExplosion(null, DamageSource.badRespawnPoint(), null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0F, true, Explosion.DestructionType.DESTROY);
 				stack.damage(25, user, e -> e.sendToolBreakStatus(hand));
 			} else if (world.isDay()) {
