@@ -24,7 +24,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.explosion.Explosion;
 
 import java.util.List;
@@ -53,7 +52,7 @@ public class SleepingBagItem extends Item implements DyeableItem {
 		ItemStack stack = user.getStackInHand(hand);
 		if (!world.isClient) {
 			BlockPos pos = user.getBlockPos();
-			if (!BedBlock.isOverworld(world) || world.getBiome(pos) == Biomes.NETHER_WASTES) {
+			if (!BedBlock.isOverworld(world)) {
 				world.createExplosion(null, DamageSource.badRespawnPoint(), null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0F, true, Explosion.DestructionType.DESTROY);
 				stack.damage(25, user, e -> e.sendToolBreakStatus(hand));
 			} else if (world.isDay()) {

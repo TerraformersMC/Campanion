@@ -45,7 +45,7 @@ public class SpearEntity extends PersistentProjectileEntity {
 		super(item.getType(), owner, world);
 		this.spearStack = new ItemStack(item);
 		this.spearStack = stack.copy();
-		this.dataTracker.set(ENCHANTMENT_GLINT, stack.hasEnchantmentGlint());
+		this.dataTracker.set(ENCHANTMENT_GLINT, stack.hasGlint());
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -136,7 +136,7 @@ public class SpearEntity extends PersistentProjectileEntity {
 		super.readCustomDataFromTag(tag);
 		if (tag.contains("Item", 10)) {
 			this.spearStack = ItemStack.fromTag(tag.getCompound("Item"));
-			this.dataTracker.set(ENCHANTMENT_GLINT, this.spearStack.hasEnchantmentGlint());
+			this.dataTracker.set(ENCHANTMENT_GLINT, this.spearStack.hasGlint());
 		}
 
 		this.piercedEntities.clear();

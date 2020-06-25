@@ -39,7 +39,7 @@ public enum SpearItemRenderer {
             vertexConsumers,
             this.spearEntityModel.getLayer(SpearEntityRenderer.getTexture(((SpearItem)stack.getItem()).getType())),
             false,
-            stack.hasEnchantmentGlint()
+            stack.hasGlint()
         );
         this.spearEntityModel.render(matrices, spear, light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 
