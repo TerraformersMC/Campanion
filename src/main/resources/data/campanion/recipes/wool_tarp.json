@@ -1,15 +1,3 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "WW",
-    "WW"
-  ],
-  "key": {
-    "W": {
-      "tag": "minecraft:wool"
-    }
-  },
-  "result": {
-    "item": "campanion:wool_tarp"
-  }
+  "type": "campanion:tarp_recipe"
 }

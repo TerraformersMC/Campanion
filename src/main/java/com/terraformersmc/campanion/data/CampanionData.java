@@ -91,7 +91,6 @@ public class CampanionData implements DossierProvider {
 			ShapedRecipeJsonFactory.create(CampanionItems.SLEEPING_BAG).input('T', CampanionItems.WOOL_TARP).pattern("TT").criterion("has_wool", this.conditionsFrom(net.minecraft.tag.ItemTags.WOOL)).offerTo(exporter);
 
 			ShapedRecipeJsonFactory.create(CampanionItems.WOODEN_ROD).input('S', Items.STICK).pattern("S").pattern("S").pattern("S").criterion("has_stick", this.conditionsFrom(Items.STICK)).offerTo(exporter);
-			ShapedRecipeJsonFactory.create(CampanionItems.WOOL_TARP).input('W', net.minecraft.tag.ItemTags.WOOL).pattern("WW").pattern("WW").criterion("has_wool", this.conditionsFrom(net.minecraft.tag.ItemTags.WOOL)).offerTo(exporter);
 			ShapedRecipeJsonFactory.create(CampanionItems.SMALL_UNBUILT_TENT).input('T', CampanionItems.WOOL_TARP).input('S', CampanionItems.WOODEN_ROD).input('R', CampanionItems.ROPE).pattern(" T ").pattern("TST").pattern("R R").criterion("has_wool", this.conditionsFrom(net.minecraft.tag.ItemTags.WOOL)).offerTo(exporter);
 			ShapedRecipeJsonFactory.create(CampanionItems.LARGE_UNBUILT_TENT).input('T', CampanionItems.WOOL_TARP).input('S', CampanionItems.WOODEN_ROD).input('R', CampanionItems.ROPE).pattern("TTT").pattern("TST").pattern("RSR").criterion("has_wool", this.conditionsFrom(net.minecraft.tag.ItemTags.WOOL)).offerTo(exporter);
 			ShapedRecipeJsonFactory.create(CampanionItems.TENT_BAG).input('T', CampanionItems.TANNED_LEATHER).input('I', Items.IRON_INGOT).input('R', CampanionItems.ROPE).pattern("IRI").pattern("TTT").criterion("has_rope", this.conditionsFrom(CampanionItems.ROPE)).offerTo(exporter);
@@ -146,6 +145,7 @@ public class CampanionData implements DossierProvider {
 			SmithingRecipeJsonFactory.create(Ingredient.ofItems(CampanionItems.DIAMOND_SPEAR), Ingredient.ofItems(Items.NETHERITE_INGOT), CampanionItems.NETHERITE_SPEAR).criterion("has_netherite_ingot", this.conditionsFrom(Items.NETHERITE_INGOT)).offerTo(exporter, "campanion:netherite_spear");
 
 			ComplexRecipeJsonFactory.create(CampanionRecipeSerializers.TENT_BUILDING_RECIPE).offerTo(exporter, "campanion:tent_building");
+			ComplexRecipeJsonFactory.create(CampanionRecipeSerializers.TARP_RECIPE).offerTo(exporter, "campanion:wool_tarp");
 		}
 	}
 

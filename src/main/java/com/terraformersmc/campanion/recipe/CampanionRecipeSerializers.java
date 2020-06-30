@@ -14,10 +14,11 @@ public class CampanionRecipeSerializers {
 
     private static final Map<Identifier, RecipeSerializer<?>> RECIPE_SERIALIZERS = new LinkedHashMap<>();
 
-    public static final SpecialRecipeSerializer<TentBuildingRecipe> TENT_BUILDING_RECIPE = add("tent_building_recipe", new SpecialRecipeSerializer<>(TentBuildingRecipe::new));
+	public static final SpecialRecipeSerializer<TentBuildingRecipe> TENT_BUILDING_RECIPE = add("tent_building_recipe", new SpecialRecipeSerializer<>(TentBuildingRecipe::new));
+	public static final SpecialRecipeSerializer<TarpRecipe> TARP_RECIPE = add("tarp_recipe", new SpecialRecipeSerializer<>(TarpRecipe::new));
 
     private static <S extends RecipeSerializer<T>, T extends Recipe<?>> S add(String id, S serializer) {
-        RECIPE_SERIALIZERS.put(new Identifier(Campanion.MOD_ID, id), serializer);
+		RECIPE_SERIALIZERS.put(new Identifier(Campanion.MOD_ID, id), serializer);
         return serializer;
     }
 
