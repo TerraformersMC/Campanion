@@ -27,7 +27,6 @@ import java.util.List;
 public class TentBagItem extends Item {
 	public TentBagItem(Settings settings) {
 		super(settings.maxCount(1));
-//		this.addPropertyGetter(new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity) -> hasBlocks(stack) ? 0 : 1);
 	}
 
 	public static boolean hasBlocks(ItemStack stack) {

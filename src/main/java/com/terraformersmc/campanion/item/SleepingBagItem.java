@@ -38,7 +38,6 @@ public class SleepingBagItem extends Item implements DyeableItem {
 
 	public SleepingBagItem(Settings settings) {
 		super(settings);
-//		this.addPropertyGetter(new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity) -> inUse(stack) ? 1 : 0);
 	}
 
 	@Override
