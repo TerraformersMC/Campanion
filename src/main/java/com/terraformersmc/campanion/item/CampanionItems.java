@@ -16,7 +16,7 @@ public class CampanionItems {
 
 	private static final Map<Identifier, Item> ITEMS = new LinkedHashMap<>();
 
-	public static final Item MRE = add("mre", new Item(new Item.Settings().group(ItemGroup.FOOD).food(new FoodComponent.Builder().hunger(20).saturationModifier(24.8F).build())));
+	public static final Item MRE = add("mre", new Item(new Item.Settings().group(ItemGroup.FOOD).food(new FoodComponent.Builder().hunger(20).saturationModifier(1.24F).build())));
 	public static final Item ROPE = add("rope", new Item(new Item.Settings().group(ItemGroup.MATERIALS)));
 	public static final Item LEATHER_POUCH = add("leather_pouch", new Item(new Item.Settings().group(ItemGroup.MATERIALS)));
 	public static final Item TANNED_LEATHER_POUCH = add("tanned_leather_pouch", new Item(new Item.Settings().group(ItemGroup.MATERIALS)));
