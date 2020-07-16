@@ -39,8 +39,9 @@
   "item.campanion.iron_spear": "Железное копьё",
   "item.campanion.golden_spear": "Золотое копьё",
   "item.campanion.diamond_spear": "Алмазное копьё",
-
-  "item.campanion.grappling_hook": "Якорь",
+  "item.campanion.netherite_spear": "Незеритовое копьё",
+  
+  "item.campanion.grappling_hook": "Абордажный крюк",
 
   "item.campanion.skipping_stone": "Гладкий камень",
 
@@ -224,6 +225,7 @@
   "block.campanion.green_flat_tent_top": "Зелёная палатка с плоским верхом",
   "block.campanion.red_flat_tent_top": "Красная палатка с плоским верхом",
   "block.campanion.black_flat_tent_top": "Чёрная палатка с плоским верхом",
+  "block.campanion.tent_pole": "Распорка для палатки",
 
   "container.campanion.day_pack": "Дневной ранец",
   "container.campanion.camping_pack": "Походный ранец",
@@ -232,7 +234,7 @@
   "key.campanion.open_backpack": "Открыть ранец",
 
   "advancements.campanion.adventure.sleep_in_sleeping_bag.title": "Оставаться в тепле",
-  "advancements.campanion.adventure.sleep_in_sleeping_bag.description": "Поспи всю ночь в спальном мешке",
+  "advancements.campanion.adventure.sleep_in_sleeping_bag.description": "Поспите всю ночь в спальном мешке",
   "advancements.campanion.husbandry.cook_marshmallow.title": "Жареный до совершенства",
   "advancements.campanion.husbandry.cook_marshmallow.description": "Жарьте зефир над костром, но будьте осторожны, чтобы не сжечь его!",
   "advancements.campanion.husbandry.eat_smore.title": "Сморе удовольствия",
