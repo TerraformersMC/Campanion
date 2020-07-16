@@ -98,7 +98,6 @@ def releaseChangelog = "No Changelog Available"
 def stabilitySuffix = ""
 
 task buildAndAttemptRelease {
-
 }
 
 buildAndAttemptRelease {
