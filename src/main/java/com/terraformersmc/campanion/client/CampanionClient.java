@@ -1,15 +1,19 @@
 package com.terraformersmc.campanion.client;
 
+import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.block.CampanionBlocks;
 import com.terraformersmc.campanion.blockentity.CampanionBlockEntities;
+import com.terraformersmc.campanion.client.model.block.BridgePlanksUnbakedModel;
 import com.terraformersmc.campanion.client.renderer.blockentity.RopeBridgePostBlockEntityRenderer;
 import com.terraformersmc.campanion.client.renderer.entity.EmptyRenderer;
 import com.terraformersmc.campanion.client.renderer.entity.GrapplingHookEntityRenderer;
 import com.terraformersmc.campanion.client.renderer.entity.SpearEntityRenderer;
-import com.terraformersmc.campanion.client.model.block.BridgePlanksUnbakedModel;
 import com.terraformersmc.campanion.entity.CampanionEntities;
+import com.terraformersmc.campanion.entity.GrapplingHookUser;
 import com.terraformersmc.campanion.entity.SkippingStoneEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
+import com.terraformersmc.campanion.item.SleepingBagItem;
+import com.terraformersmc.campanion.item.TentBagItem;
 import com.terraformersmc.campanion.network.S2CClearBackpackHeldItem;
 import com.terraformersmc.campanion.network.S2CEntitySpawnPacket;
 import net.fabricmc.api.ClientModInitializer;
@@ -19,10 +23,15 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegi
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.BlockModels;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 
 public class CampanionClient implements ClientModInitializer {
 	@Override
@@ -32,10 +41,11 @@ public class CampanionClient implements ClientModInitializer {
 		registerRenderLayers();
 		registerBlockEntityRenderers();
 		registerClientboundPackets();
+		registerModelPredicateProviders();
 		CampanionKeybinds.initialize();
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(rm -> (modelId, context) -> {
-			if(modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState())) || modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_POST.getDefaultState()))) {
+			if (modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState())) || modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_POST.getDefaultState()))) {
 				return new BridgePlanksUnbakedModel();
 			}
 			return null;
@@ -55,6 +65,7 @@ public class CampanionClient implements ClientModInitializer {
 
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.THROWING_STONE, (dispatcher, context) -> new FlyingItemEntityRenderer<SkippingStoneEntity>(dispatcher, context.getItemRenderer()));
 	}
+
 	private static void registerRenderLayers() {
 		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.ROPE_LADDER, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.LEATHER_TANNER, RenderLayer.getCutout());
@@ -66,11 +77,27 @@ public class CampanionClient implements ClientModInitializer {
 
 
 	private static void registerColorProviders() {
-		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0 ? ((DyeableItem)stack.getItem()).getColor(stack) : -1, CampanionItems.SLEEPING_BAG);
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0 ? ((DyeableItem) stack.getItem()).getColor(stack) : -1, CampanionItems.SLEEPING_BAG);
 	}
 
 	public static void registerClientboundPackets() {
 		ClientSidePacketRegistry.INSTANCE.register(S2CEntitySpawnPacket.ID, S2CEntitySpawnPacket::onPacket);
 		ClientSidePacketRegistry.INSTANCE.register(S2CClearBackpackHeldItem.ID, S2CClearBackpackHeldItem::onPacket);
+	}
+
+	public static void registerModelPredicateProviders() {
+		FabricModelPredicateProviderRegistry.register(CampanionItems.GRAPPLING_HOOK, new Identifier(Campanion.MOD_ID, "deployed"), (stack, world, entity) -> {
+			if (entity instanceof PlayerEntity) {
+				for (Hand value : Hand.values()) {
+					ItemStack heldStack = entity.getStackInHand(value);
+					if (heldStack == stack && ((GrapplingHookUser) entity).getGrapplingHook() != null) {
+						return 1;
+					}
+				}
+			}
+			return 0;
+		});
+		FabricModelPredicateProviderRegistry.register(CampanionItems.TENT_BAG, new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity) -> TentBagItem.hasBlocks(stack) ? 0 : 1);
+		FabricModelPredicateProviderRegistry.register(CampanionItems.SLEEPING_BAG, new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity) -> SleepingBagItem.inUse(stack) ? 1 : 0);
 	}
 }

@@ -60,21 +60,6 @@ public class Campanion implements ModInitializer {
 		CampanionCriteria.loadClass();
 		CampanionStats.loadClass();
 
-
-		FabricModelPredicateProviderRegistry.register(CampanionItems.GRAPPLING_HOOK, new Identifier(MOD_ID, "deployed"), (stack, world, entity) -> {
-			if(entity instanceof PlayerEntity) {
-				for (Hand value : Hand.values()) {
-					ItemStack heldStack = entity.getStackInHand(value);
-					if(heldStack == stack && ((GrapplingHookUser)entity).getGrapplingHook() != null) {
-						return 1;
-					}
-				}
-			}
-			return 0;
-		});
-		FabricModelPredicateProviderRegistry.register(CampanionItems.TENT_BAG, new Identifier(MOD_ID, "open"), (stack, world, entity) -> TentBagItem.hasBlocks(stack) ? 0 : 1);
-		FabricModelPredicateProviderRegistry.register(CampanionItems.SLEEPING_BAG, new Identifier(MOD_ID, "open"), (stack, world, entity) -> SleepingBagItem.inUse(stack) ? 0 : 1);
-
 		FabricItemGroupBuilder.create(new Identifier(MOD_ID, "items")).icon(() -> CampanionItems.SMORE.asItem().getStackForRender()).appendItems(stacks -> Registry.ITEM.forEach(item -> {
 			if (Registry.ITEM.getId(item).getNamespace().equals(MOD_ID)) {
 				item.appendStacks(item.getGroup(), (DefaultedList<ItemStack>) stacks);
