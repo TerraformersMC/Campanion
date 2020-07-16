@@ -16,5 +16,8 @@ public class MixinEnchantment {
 		if (((Object) this == Enchantments.PIERCING || (Object) this == Enchantments.IMPALING) && stack.getItem() instanceof SpearItem) {
 			info.setReturnValue(true);
 		}
+		if((Object) this == Enchantments.LOYALTY) {
+			info.setReturnValue(false);
+		}
 	}
 }
