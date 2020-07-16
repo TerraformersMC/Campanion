@@ -3,6 +3,11 @@ package com.terraformersmc.campanion.blockentity;
 import com.terraformersmc.campanion.ropebridge.RopeBridge;
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.fabricmc.fabric.api.renderer.v1.Renderer;
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -25,6 +30,8 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
 	private VoxelShape cutPlankShape;
 	private VoxelShape slimPlankShape;
 
+	private Mesh mesh;
+
 	public RopeBridgePlanksBlockEntity(BlockEntityType<?> type) {
 		super(type);
 	}
@@ -37,17 +44,39 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
 		return Collections.unmodifiableList(this.planks);
 	}
 
-	public void addPlank(RopeBridgePlank plank) {
-		this.planks.add(plank);
+	private void clearPlankCache() {
+		this.mesh = null;
 		this.fullPlankShape = null;
 		this.cutPlankShape = null;
 		this.slimPlankShape = null;
 	}
 
+	public Mesh getMesh() {
+		if(this.mesh != null) {
+			return this.mesh;
+		}
+		Renderer renderer = RendererAccess.INSTANCE.getRenderer();
+		MeshBuilder builder = renderer.meshBuilder();
+		QuadEmitter emitter = builder.getEmitter();
+
+		if(this.planks.isEmpty() || this.forceRenderStopper()) {
+			RopeBridgePlank.generateDefaultStoppers(emitter);
+		}
+		for (RopeBridgePlank plank : this.planks) {
+			plank.generateMesh(false, emitter);
+		}
+		return this.mesh = builder.build();
+	}
+
+	public void addPlank(RopeBridgePlank plank) {
+		this.planks.add(plank);
+		this.markDirty();
+		this.clearPlankCache();
+	}
+
 	public boolean removeBroken() {
 		boolean ret = this.planks.removeIf(RopeBridgePlank::isBroken);
-		this.fullPlankShape = null;
-		this.cutPlankShape = null;
+		this.clearPlankCache();
 		this.markDirty();
 		if (this.world != null && !this.world.isClient) {
 			this.sync();
@@ -134,9 +163,7 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
 	public void fromClientTag(CompoundTag tag) {
 		this.planks.clear();
 		this.planks.addAll(this.getFrom(tag.getList("Planks", 10)));
-		this.fullPlankShape = null;
-		this.cutPlankShape = null;
-		this.slimPlankShape = null;
+		this.clearPlankCache();
 
 		if (this.world != null && this.world.isClient) {
 			this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState(), 11);

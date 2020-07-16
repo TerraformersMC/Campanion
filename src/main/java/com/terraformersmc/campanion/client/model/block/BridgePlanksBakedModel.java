@@ -4,6 +4,11 @@ import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.blockentity.RopeBridgePlanksBlockEntity;
 import com.terraformersmc.campanion.ropebridge.RopeBridge;
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;
+import net.fabricmc.fabric.api.renderer.v1.Renderer;
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
@@ -41,13 +46,7 @@ public class BridgePlanksBakedModel implements FabricBakedModel, BakedModel {
 	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		BlockEntity entity = blockView.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
-			List<RopeBridgePlank> planks = ((RopeBridgePlanksBlockEntity) entity).getPlanks();
-			if (planks.isEmpty() || ((RopeBridgePlanksBlockEntity) entity).forceRenderStopper()) {
-				context.meshConsumer().accept(RopeBridgePlank.getEmptyPlanksMesh());
-			}
-			for (RopeBridgePlank plank : planks) {
-				plank.getOrGenerateMesh(false).ifPresent(context.meshConsumer());
-			}
+			context.meshConsumer().accept(((RopeBridgePlanksBlockEntity) entity).getMesh());
 		}
 	}
 
@@ -106,17 +105,21 @@ public class BridgePlanksBakedModel implements FabricBakedModel, BakedModel {
 
 	private static class StaticPlanksModel extends BridgePlanksBakedModel {
 
-		private final List<RopeBridgePlank> planks;
+		private final Mesh mesh;
 
 		private StaticPlanksModel(List<RopeBridgePlank> planks) {
-			this.planks = planks;
+			Renderer renderer = RendererAccess.INSTANCE.getRenderer();
+			MeshBuilder builder = renderer.meshBuilder();
+			QuadEmitter emitter = builder.getEmitter();
+			for (RopeBridgePlank plank : planks) {
+				plank.generateMesh(true, emitter);
+			}
+			this.mesh = builder.build();
 		}
 
 		@Override
 		public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-			for (RopeBridgePlank plank : this.planks) {
-				plank.getOrGenerateMesh(true).ifPresent(context.meshConsumer());
-			}
+			context.meshConsumer().accept(this.mesh);
 		}
 	}
 }

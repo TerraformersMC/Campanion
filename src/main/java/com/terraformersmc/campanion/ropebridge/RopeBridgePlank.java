@@ -1,6 +1,7 @@
 package com.terraformersmc.campanion.ropebridge;
 
 import com.terraformersmc.campanion.client.model.block.BridgePlanksBakedModel;
+import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
@@ -37,7 +38,6 @@ public class RopeBridgePlank {
 
 
     private boolean broken;
-    private Mesh mesh;
 
     public RopeBridgePlank(
         BlockPos from, BlockPos to, Vec3d deltaPosition, double yAngle, double tiltAngle, float distToPrevious,
@@ -132,12 +132,9 @@ public class RopeBridgePlank {
         return tag;
     }
 
-    public Optional<Mesh> getOrGenerateMesh(boolean translucent) {
+    public void generateMesh(boolean translucent, QuadEmitter emitter) {
         if(!this.master) {
-            return Optional.empty();
-        }
-        if(this.mesh != null) {
-            return Optional.of(this.mesh);
+            return;
         }
         Random random = new Random(this.ropeVariant);
 
@@ -147,9 +144,6 @@ public class RopeBridgePlank {
         random.nextBytes(discarded);
 
         RenderMaterial material = RendererAccess.INSTANCE.getRenderer().materialFinder().blendMode(0, BlendMode.CUTOUT).find();
-        MeshBuilder builder = IndigoRenderer.INSTANCE.meshBuilder();
-        QuadEmitter emitter = builder.getEmitter();
-
 
         MatrixStack stack = new MatrixStack();
         stack.push();
@@ -160,8 +154,6 @@ public class RopeBridgePlank {
 
         this.drawRope(emitter, stack, material, random, translucent);
         stack.pop();
-
-        return Optional.of(this.mesh = builder.build());
     }
 
     private void renderPlank(QuadEmitter emitter, MatrixStack stack, RenderMaterial material, Random random, boolean translucent) {
@@ -201,7 +193,12 @@ public class RopeBridgePlank {
             stack.push();
             stack.translate(0, RopeBridge.ROPE_LENGTH/16F - this.ropesSubtract, modifier * RopeBridge.PLANK_LENGTH / 2D);
             if(this.ropes) {
+            	//Rotate it a tiny bit as to not make the knots axis aligned. See: https://imgur.com/iCGrpn9
+				stack.push();
+				stack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(0.5F));
+				stack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(0.5F));
                 this.drawKnot(emitter, stack, material, rope, random, translucent);
+            	stack.pop();
             }
             stack.multiply(Vector3f.POSITIVE_Z.getRadialQuaternion(this.tiltAngle));
             this.drawConnectingRope(emitter, stack, material, rope, random, translucent, modifier);
@@ -379,23 +376,10 @@ public class RopeBridgePlank {
             .spriteColor(index, 0, translucent ? 0x88FFFFFF : 0xFFFFFFFF)
             .cullFace(null)
             .normal(index, normal);
-
-        //Needed so we don't have problems with the knots sides being set to black
-        if(emitter instanceof QuadViewImpl) {
-            ((QuadViewImpl) emitter).geometryFlags(((QuadViewImpl) emitter).geometryFlags() - GeometryHelper.AXIS_ALIGNED_FLAG);
-        }
     }
 
-    private static Mesh emptyPlanksMesh;
-
-    public static Mesh getEmptyPlanksMesh() {
-        if(emptyPlanksMesh != null) {
-            return emptyPlanksMesh;
-        }
-
-        RenderMaterial material = RendererAccess.INSTANCE.getRenderer().materialFinder().blendMode(0, BlendMode.CUTOUT).find();
-        MeshBuilder builder = IndigoRenderer.INSTANCE.meshBuilder();
-        QuadEmitter emitter = builder.getEmitter();
+    public static void generateDefaultStoppers(QuadEmitter emitter) {
+		RenderMaterial material = RendererAccess.INSTANCE.getRenderer().materialFinder().blendMode(0, BlendMode.CUTOUT).find();
 
         MatrixStack stack = new MatrixStack();
         stack.push();
@@ -404,9 +388,6 @@ public class RopeBridgePlank {
         drawStopper(emitter, stack, material, new Random(0), false, 1);
         drawStopper(emitter, stack, material, new Random(0), false, -1);
         stack.pop();
-
-        return emptyPlanksMesh = builder.build();
-
     }
 
     @FunctionalInterface
