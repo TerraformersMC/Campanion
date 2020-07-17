@@ -5,6 +5,7 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.ShearsItem;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.tag.ItemTags;
@@ -25,7 +26,7 @@ public class TarpRecipe extends SpecialCraftingRecipe {
 		int shearAmount = 0;
 		for (int i = 0; i < inv.size(); i++) {
 			ItemStack stack = inv.getStack(i);
-			if(stack.getItem() == Items.SHEARS) {
+			if(stack.getItem() instanceof ShearsItem) {
 				shearAmount++;
 			} else if(stack.getItem().isIn(ItemTags.WOOL)) {
 				woolAmount++;
