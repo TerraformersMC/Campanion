@@ -4,7 +4,6 @@ import com.terraformersmc.campanion.item.CampanionItems;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.ShearsItem;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
@@ -59,7 +58,7 @@ public class TarpRecipe extends SpecialCraftingRecipe {
 			if (item.hasRecipeRemainder()) {
 				defaultedList.set(i, new ItemStack(item.getRecipeRemainder()));
 			}
-			if(item == Items.SHEARS) {
+			if(item instanceof ShearsItem) {
 				ItemStack stack = inventory.getStack(i).copy();
 				if (!stack.damage(1, new Random(), null)) {
 					defaultedList.set(i, stack);
