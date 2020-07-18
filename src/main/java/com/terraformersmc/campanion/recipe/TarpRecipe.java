@@ -1,10 +1,10 @@
 package com.terraformersmc.campanion.recipe;
 
 import com.terraformersmc.campanion.item.CampanionItems;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShearsItem;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.tag.ItemTags;
@@ -25,7 +25,7 @@ public class TarpRecipe extends SpecialCraftingRecipe {
 		int shearAmount = 0;
 		for (int i = 0; i < inv.size(); i++) {
 			ItemStack stack = inv.getStack(i);
-			if(stack.getItem() instanceof ShearsItem) {
+			if(stack.getItem().isIn(FabricToolTags.SHEARS)) {
 				shearAmount++;
 			} else if(stack.getItem().isIn(ItemTags.WOOL)) {
 				woolAmount++;
@@ -58,7 +58,7 @@ public class TarpRecipe extends SpecialCraftingRecipe {
 			if (item.hasRecipeRemainder()) {
 				defaultedList.set(i, new ItemStack(item.getRecipeRemainder()));
 			}
-			if(item instanceof ShearsItem) {
+			if(item.isIn(FabricToolTags.SHEARS)) {
 				ItemStack stack = inventory.getStack(i).copy();
 				if (!stack.damage(1, new Random(), null)) {
 					defaultedList.set(i, stack);
