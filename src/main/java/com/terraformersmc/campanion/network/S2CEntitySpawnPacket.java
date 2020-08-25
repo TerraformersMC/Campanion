@@ -48,6 +48,7 @@ public class S2CEntitySpawnPacket {
 		double z = byteBuf.readDouble();
 		float pitch = (byteBuf.readByte() * 360) / 256.0F;
 		float yaw = (byteBuf.readByte() * 360) / 256.0F;
+		@SuppressWarnings("resource")
 		ClientWorld world = MinecraftClient.getInstance().world;
 		Entity entity = type.create(world);
 		if (entity instanceof AdditionalSpawnDataEntity) {

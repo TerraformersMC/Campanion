@@ -1,8 +1,12 @@
 package com.terraformersmc.campanion.entity;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.SpearItem;
+
 import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -10,25 +14,34 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+@SuppressWarnings("deprecation")
 public class CampanionEntities {
 
 	private static final Map<Identifier, EntityType<?>> ENTITY_TYPES = new LinkedHashMap<>();
 
-	public static final EntityType<SpearEntity> WOODEN_SPEAR = add("wooden_spear", createSpear(CampanionItems.WOODEN_SPEAR));
-	public static final EntityType<SpearEntity> STONE_SPEAR = add("stone_spear", createSpear(CampanionItems.STONE_SPEAR));
+	public static final EntityType<SpearEntity> WOODEN_SPEAR = add("wooden_spear",
+			createSpear(CampanionItems.WOODEN_SPEAR));
+	public static final EntityType<SpearEntity> STONE_SPEAR = add("stone_spear",
+			createSpear(CampanionItems.STONE_SPEAR));
 	public static final EntityType<SpearEntity> IRON_SPEAR = add("iron_spear", createSpear(CampanionItems.IRON_SPEAR));
-	public static final EntityType<SpearEntity> GOLDEN_SPEAR = add("golden_spear", createSpear(CampanionItems.GOLDEN_SPEAR));
-	public static final EntityType<SpearEntity> DIAMOND_SPEAR = add("diamond_spear", createSpear(CampanionItems.DIAMOND_SPEAR));
-	public static final EntityType<SpearEntity> NETHERITE_SPEAR = add("netherite_spear", createSpear(CampanionItems.NETHERITE_SPEAR));
+	public static final EntityType<SpearEntity> GOLDEN_SPEAR = add("golden_spear",
+			createSpear(CampanionItems.GOLDEN_SPEAR));
+	public static final EntityType<SpearEntity> DIAMOND_SPEAR = add("diamond_spear",
+			createSpear(CampanionItems.DIAMOND_SPEAR));
+	public static final EntityType<SpearEntity> NETHERITE_SPEAR = add("netherite_spear",
+			createSpear(CampanionItems.NETHERITE_SPEAR));
 
-	public static final EntityType<GrapplingHookEntity> GRAPPLING_HOOK = add("grappling_hook", FabricEntityTypeBuilder.<GrapplingHookEntity>create(SpawnGroup.MISC, (type, world) -> new GrapplingHookEntity(world)).disableSaving().disableSummon().size(EntityDimensions.fixed(0.3F, 0.3F)).build());
+	public static final EntityType<GrapplingHookEntity> GRAPPLING_HOOK = add("grappling_hook",
+			FabricEntityTypeBuilder
+					.<GrapplingHookEntity>create(SpawnGroup.MISC, (type, world) -> new GrapplingHookEntity(world))
+					.disableSaving().disableSummon().size(EntityDimensions.fixed(0.3F, 0.3F)).build());
 
-	public static final EntityType<LawnChairEntity> LAWN_CHAIR = add("lawn_chair", FabricEntityTypeBuilder.<LawnChairEntity>create(SpawnGroup.MISC, (type, world) -> new LawnChairEntity(world)).build());
+	public static final EntityType<LawnChairEntity> LAWN_CHAIR = add("lawn_chair", FabricEntityTypeBuilder
+			.<LawnChairEntity>create(SpawnGroup.MISC, (type, world) -> new LawnChairEntity(world)).build());
 
-	public static final EntityType<SkippingStoneEntity> THROWING_STONE = add("skipping_stone", FabricEntityTypeBuilder.<SkippingStoneEntity>create(SpawnGroup.MISC).disableSaving().disableSummon().size(EntityDimensions.fixed(0.25F, 0.25F)).build());
+	public static final EntityType<SkippingStoneEntity> THROWING_STONE = add("skipping_stone",
+			FabricEntityTypeBuilder.<SkippingStoneEntity>create(SpawnGroup.MISC).disableSaving().disableSummon()
+					.size(EntityDimensions.fixed(0.25F, 0.25F)).build());
 
 	public static void register() {
 		for (Identifier id : ENTITY_TYPES.keySet()) {
@@ -43,6 +56,8 @@ public class CampanionEntities {
 	}
 
 	private static EntityType<SpearEntity> createSpear(SpearItem item) {
-		return FabricEntityTypeBuilder.<SpearEntity>create(SpawnGroup.MISC, (entity, world) -> new SpearEntity(entity, world, item)).size(EntityDimensions.fixed(0.5F, 0.5F)).build();
+		return FabricEntityTypeBuilder
+				.<SpearEntity>create(SpawnGroup.MISC, (entity, world) -> new SpearEntity(entity, world, item))
+				.size(EntityDimensions.fixed(0.5F, 0.5F)).build();
 	}
 }

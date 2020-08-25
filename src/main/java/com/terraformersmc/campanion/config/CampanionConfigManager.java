@@ -1,14 +1,21 @@
 package com.terraformersmc.campanion.config;
 
-import com.terraformersmc.campanion.Campanion;
-import net.fabricmc.loader.api.FabricLoader;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
-import java.io.*;
+import com.terraformersmc.campanion.Campanion;
+
+import net.fabricmc.loader.api.FabricLoader;
 
 public class CampanionConfigManager {
 	private static File file;
 	private static CampanionConfig config;
 
+	@SuppressWarnings("deprecation")
 	private static void prepareBiomeConfigFile() {
 		if (file != null) {
 			return;

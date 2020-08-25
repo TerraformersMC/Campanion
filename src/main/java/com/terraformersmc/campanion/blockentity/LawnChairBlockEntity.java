@@ -25,7 +25,7 @@ public class LawnChairBlockEntity extends BlockEntity implements BlockEntityClie
 		if (this.cachedEntity != null && this.cachedEntity.isAlive()) {
 			return this.cachedEntity;
 		}
-		List<LawnChairEntity> entities = this.world.getEntities(CampanionEntities.LAWN_CHAIR, new Box(this.pos).expand(2, 2, 2), e -> e.getBlockPos().equals(this.pos) && e.getUuid().equals(this.entityUUID));
+		List<LawnChairEntity> entities = this.world.getEntitiesByType(CampanionEntities.LAWN_CHAIR, new Box(this.pos).expand(2, 2, 2), e -> e.getBlockPos().equals(this.pos) && e.getUuid().equals(this.entityUUID));
 		if (entities.isEmpty()) {
 			this.cachedEntity = new LawnChairEntity(this.world, this.pos);
 			this.world.spawnEntity(this.cachedEntity);

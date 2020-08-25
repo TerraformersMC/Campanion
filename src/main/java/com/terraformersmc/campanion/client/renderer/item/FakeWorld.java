@@ -29,7 +29,13 @@ public class FakeWorld extends ClientWorld {
 	private final int skyLight;
 
 	public FakeWorld(BlockPos basePos, int lightOverride) {
-		super(CLIENT.player.networkHandler, new ClientWorld.Properties(CLIENT.world.getLevelProperties().getDifficulty(), CLIENT.world.getLevelProperties().isDifficultyLocked(), CLIENT.world.getLevelProperties().isHardcore()), CLIENT.world.getRegistryKey(), CLIENT.world.getDimensionRegistryKey(), CLIENT.world.getDimension(), 3, CLIENT::getProfiler, CLIENT.worldRenderer, CLIENT.world.isDebugWorld(), ((AccessorBiomeAccess) CLIENT.world.getBiomeAccess()).getSeed());
+		super(CLIENT.player.networkHandler,
+				new ClientWorld.Properties(CLIENT.world.getLevelProperties().getDifficulty(),
+						CLIENT.world.getLevelProperties().isDifficultyLocked(),
+						CLIENT.world.getLevelProperties().isHardcore()),
+				CLIENT.world.getRegistryKey(), CLIENT.world.getDimension(), 3, CLIENT::getProfiler,
+				CLIENT.worldRenderer, CLIENT.world.isDebugWorld(),
+				((AccessorBiomeAccess) CLIENT.world.getBiomeAccess()).getSeed());
 		this.basePos = basePos;
 		this.blockLight = lightOverride == -1 ? -1 : LightmapTextureManager.getBlockLightCoordinates(lightOverride);
 		this.skyLight = lightOverride == -1 ? -1 : LightmapTextureManager.getSkyLightCoordinates(lightOverride);
@@ -64,7 +70,6 @@ public class FakeWorld extends ClientWorld {
 			return null;
 		});
 	}
-
 
 	@Override
 	public FluidState getFluidState(BlockPos pos) {

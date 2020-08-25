@@ -1,7 +1,10 @@
 package com.terraformersmc.campanion.entity;
 
+import java.util.stream.Collectors;
+
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.network.S2CEntitySpawnPacket;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
@@ -21,18 +24,17 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.RayTraceContext;
 import net.minecraft.world.World;
-
-import java.util.stream.Collectors;
 
 public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEntity {
 
-	private static final TrackedData<Boolean> IS_IN_BLOCK = DataTracker.registerData(GrapplingHookEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final TrackedData<Boolean> IS_IN_BLOCK = DataTracker.registerData(GrapplingHookEntity.class,
+			TrackedDataHandlerRegistry.BOOLEAN);
 
 	private PlayerEntity player;
 	private int grappleTicks = -1;
 
+	@SuppressWarnings("unused")
 	private Vec3d previousPlayerPos;
 
 	public GrapplingHookEntity(World world) {
@@ -53,7 +55,8 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 		this.prevYaw = this.yaw;
 		this.prevPitch = this.pitch;
 
-		this.refreshPositionAndAngles(this.player.getX(), this.player.getEyeY() - 0.1, this.player.getZ(), this.yaw, this.pitch);
+		this.refreshPositionAndAngles(this.player.getX(), this.player.getEyeY() - 0.1, this.player.getZ(), this.yaw,
+				this.pitch);
 	}
 
 	@Override
@@ -112,7 +115,8 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 
 		this.yaw = (float) (MathHelper.atan2(d, g) * 57.2957763671875D);
 
-		for (this.pitch = (float) (MathHelper.atan2(e, (double) l) * 57.2957763671875D); this.pitch - this.prevPitch < -180.0F; this.prevPitch -= 360.0F) {
+		for (this.pitch = (float) (MathHelper.atan2(e, (double) l) * 57.2957763671875D); this.pitch
+				- this.prevPitch < -180.0F; this.prevPitch -= 360.0F) {
 		}
 
 		while (this.pitch - this.prevPitch >= 180.0F) {
@@ -138,10 +142,8 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 		boolean inOffHand = offHandStack.getItem() == CampanionItems.GRAPPLING_HOOK;
 		boolean isHookedEntity = ((GrapplingHookUser) this.player).getGrapplingHook() == this;
 		double dist = this.squaredDistanceTo(this.player);
-		if (
-				this.player.removed || !this.player.isAlive() || !isHookedEntity
-						|| (!inMainHand && !inOffHand) || dist > 16384 ||
-						(this.dataTracker.get(IS_IN_BLOCK) && dist < 2)) {
+		if (this.player.removed || !this.player.isAlive() || !isHookedEntity || (!inMainHand && !inOffHand)
+				|| dist > 16384 || (this.dataTracker.get(IS_IN_BLOCK) && dist < 2)) {
 			this.remove();
 			return false;
 		} else {
@@ -150,7 +152,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	}
 
 	private void checkForCollision() {
-		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> false, RayTraceContext.ShapeType.COLLIDER);
+		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> false);
 
 		if (hitResult.getType() == HitResult.Type.BLOCK && this.grappleTicks == -1) {
 			this.previousPlayerPos = this.player.getPos();
@@ -179,7 +181,6 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	public void readCustomDataFromTag(CompoundTag tag) {
 	}
 
-
 	protected void ensureEntityVelocity() {
 		if (this.player != null) {
 			double dx = this.getX() - this.player.getX();
@@ -198,8 +199,10 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 
 			Box box = this.player.getBoundingBox().stretch(movement.normalize().x, 0, movement.normalize().z);
 			for (VoxelShape shape : this.world.getBlockCollisions(this.player, box).collect(Collectors.toList())) {
-				xCollide |= box.contains(shape.getMax(Direction.Axis.X), box.minY, box.minZ) || box.contains(shape.getMax(Direction.Axis.X), box.minY, box.minZ);
-				zCollide |= box.contains(box.minX, box.minY, shape.getMin(Direction.Axis.Z)) || box.contains(box.minX, box.minY, shape.getMax(Direction.Axis.Z));
+				xCollide |= box.contains(shape.getMax(Direction.Axis.X), box.minY, box.minZ)
+						|| box.contains(shape.getMax(Direction.Axis.X), box.minY, box.minZ);
+				zCollide |= box.contains(box.minX, box.minY, shape.getMin(Direction.Axis.Z))
+						|| box.contains(box.minX, box.minY, shape.getMax(Direction.Axis.Z));
 			}
 
 			if (xCollide && zCollide) {

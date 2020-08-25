@@ -1,11 +1,18 @@
 package com.terraformersmc.campanion.mixin;
 
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
 import com.terraformersmc.campanion.block.BaseTentBlock;
 import com.terraformersmc.campanion.entity.GrapplingHookEntity;
 import com.terraformersmc.campanion.entity.GrapplingHookUser;
 import com.terraformersmc.campanion.entity.SleepNoSetSpawnPlayer;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.TentBagItem;
+
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,13 +23,6 @@ import net.minecraft.stat.Stats;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.concurrent.Callable;
 
 @Mixin(PlayerEntity.class)
 public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoSetSpawnPlayer, GrapplingHookUser {
@@ -47,8 +47,9 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 	}
 
 	@Inject(method = "isBlockBreakingRestricted(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/GameMode;)Z", at = @At("HEAD"), cancellable = true)
-	public void isBlockBreakingRestricted(World world, BlockPos pos, GameMode gameMode, CallbackInfoReturnable<Boolean> info) {
-		if(world.getBlockState(pos).getBlock() instanceof BaseTentBlock) {
+	public void isBlockBreakingRestricted(World world, BlockPos pos, GameMode gameMode,
+			CallbackInfoReturnable<Boolean> info) {
+		if (world.getBlockState(pos).getBlock() instanceof BaseTentBlock) {
 			int slotIndex = -1;
 			PlayerEntity player = (PlayerEntity) (Object) this;
 			for (int i = 0; i < player.inventory.size(); i++) {
@@ -57,7 +58,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 					slotIndex = i;
 				}
 			}
-			if(!gameMode.isCreative() && slotIndex == -1) {
+			if (!gameMode.isCreative() && slotIndex == -1) {
 				info.setReturnValue(true);
 			}
 		}

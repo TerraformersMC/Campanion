@@ -25,6 +25,7 @@ public class S2CClearBackpackHeldItem {
 	@Environment(EnvType.CLIENT)
 	public static void onPacket(PacketContext context, PacketByteBuf byteBuf) {
 		context.getTaskQueue().execute(() -> {
+			@SuppressWarnings("resource")
 			ItemStack stack = Objects.requireNonNull(MinecraftClient.getInstance().player).inventory.getCursorStack();
 			if (stack.getItem() instanceof BackpackItem && stack.hasTag()) {
 				stack.getTag().remove("Inventory");
