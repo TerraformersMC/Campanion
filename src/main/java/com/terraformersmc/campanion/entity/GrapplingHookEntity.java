@@ -21,7 +21,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.RayTraceContext;
 import net.minecraft.world.World;
 
 import java.util.stream.Collectors;
@@ -150,7 +149,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	}
 
 	private void checkForCollision() {
-		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> false, RayTraceContext.ShapeType.COLLIDER);
+		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> false);
 
 		if (hitResult.getType() == HitResult.Type.BLOCK && this.grappleTicks == -1) {
 			this.previousPlayerPos = this.player.getPos();

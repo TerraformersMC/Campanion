@@ -60,7 +60,7 @@ public class SleepingBagItem extends Item implements DyeableItem {
 				user.sendMessage(NOT_ON_GROUND, true);
 			} else if (world.getDimension().hasSkyLight()) {
 				if (!user.isCreative()) {
-					List<HostileEntity> list = world.getEntities(HostileEntity.class,
+					List<HostileEntity> list = world.getEntitiesByClass(HostileEntity.class,
 							new Box(pos).offset(0.5D, 0.0D, 0.5D).expand(8.0D, 5.0D, 8.0D),
 							hostileEntity -> hostileEntity.isAngryAt(user));
 					if (!list.isEmpty()) {

@@ -5,6 +5,7 @@ import com.terraformersmc.campanion.client.model.entity.GrapplingHookEntityModel
 import com.terraformersmc.campanion.entity.GrapplingHookEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.options.Perspective;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -60,7 +61,7 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 			double playerY;
 			double playerZ;
 			float playerEye;
-			if (this.getRenderManager().gameOptions != null && this.getRenderManager().gameOptions.perspective <= 0 && player == MinecraftClient.getInstance().player) {
+			if (this.getRenderManager().gameOptions != null && this.getRenderManager().gameOptions.getPerspective() != Perspective.FIRST_PERSON && player == MinecraftClient.getInstance().player) {
 				double x = this.getRenderManager().gameOptions.fov / 100.0D;
 				Vec3d vec3d = new Vec3d((double) armOffset * -0.36D * x, -0.045D * x, 0.4D);
 				vec3d = vec3d.rotateX(-MathHelper.lerp(tickDelta, player.prevPitch, player.pitch) * 0.017453292F);
