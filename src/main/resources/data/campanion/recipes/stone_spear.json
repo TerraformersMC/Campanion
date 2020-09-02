@@ -9,7 +9,7 @@
       "item": "campanion:wooden_rod"
     },
     "X": {
-      "item": "minecraft:cobblestone"
+      "tag": "minecraft:stone_tool_materials"
     }
   },
   "result": {
