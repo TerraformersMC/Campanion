@@ -1,6 +1,7 @@
 package com.terraformersmc.campanion.network;
 
 import com.terraformersmc.campanion.Campanion;
+import com.terraformersmc.campanion.integration.Curios;
 import com.terraformersmc.campanion.item.BackpackItem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
@@ -22,7 +23,11 @@ public class C2SEmptyBackpack {
 	public static void onPacket(PacketContext context, PacketByteBuf byteBuf) {
 		context.getTaskQueue().execute(() -> {
 			PlayerEntity player = context.getPlayer();
-			ItemStack stack = player.getEquippedStack(EquipmentSlot.CHEST);
+
+			ItemStack stack = Curios.getBackpackStack(player);
+			if (stack.isEmpty()) {
+				stack = player.getEquippedStack(EquipmentSlot.CHEST);
+			}
 			if (stack.getItem() instanceof BackpackItem) {
 				BackpackItem.Type type = ((BackpackItem) stack.getItem()).type;
 				player.openHandledScreen(type.createFactory(stack));

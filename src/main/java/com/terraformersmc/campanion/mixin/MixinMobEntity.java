@@ -1,5 +1,6 @@
 package com.terraformersmc.campanion.mixin;
 
+import com.terraformersmc.campanion.integration.Curios;
 import com.terraformersmc.campanion.item.BackpackItem;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
@@ -16,7 +17,7 @@ public class MixinMobEntity {
 	@Inject(method = "getPreferredEquipmentSlot", at = @At("HEAD"), cancellable = true)
 	private static void onGetPreferredEquipmentSlot(ItemStack stack, CallbackInfoReturnable<EquipmentSlot> info) {
 		Item item = stack.getItem();
-		if (item instanceof BackpackItem) {
+		if (!Curios.isEnabled() && item instanceof BackpackItem) {
 			info.setReturnValue(EquipmentSlot.CHEST);
 		}
 	}

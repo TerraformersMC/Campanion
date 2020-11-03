@@ -4,6 +4,7 @@ import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.client.model.entity.backpack.CampingPackEntityModel;
 import com.terraformersmc.campanion.client.model.entity.backpack.DayPackEntityModel;
 import com.terraformersmc.campanion.client.model.entity.backpack.HikingPackEntityModel;
+import com.terraformersmc.campanion.integration.Curios;
 import com.terraformersmc.campanion.item.BackpackItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,7 +35,10 @@ public class BackpackFeatureRenderer<T extends LivingEntity, M extends EntityMod
 
 	@Override
 	public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
-		ItemStack stack = entity.getEquippedStack(EquipmentSlot.CHEST);
+		ItemStack stack = Curios.getBackpackStack(entity);
+		if (stack.isEmpty()) {
+			stack = entity.getEquippedStack(EquipmentSlot.CHEST);
+		}
 		if (stack.getItem() instanceof BackpackItem) {
 			Type type = Type.values()[((BackpackItem) stack.getItem()).type.ordinal()];
 			AnimalModel model = Objects.requireNonNull(type.createModel());
