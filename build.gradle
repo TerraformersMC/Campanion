@@ -23,6 +23,15 @@ repositories {
 	maven {
 		url "https://maven.jamieswhiteshirt.com/libs-release/"
 	}
+	maven {
+		// curios api
+		url = "https://maven.theillusivec4.top/"
+	}
+	maven {
+		// curios api
+		name = "Ladysnake Libs"
+		url = 'https://dl.bintray.com/ladysnake/libs'
+	}
 }
 
 dependencies {
@@ -32,6 +41,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modImplementation "com.terraformersmc:dossier:${project.dossier_version}"
 	modImplementation "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
+	modImplementation "top.theillusivec4.curios:curios-fabric:${project.curios_version}"
 
 	include "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
 
