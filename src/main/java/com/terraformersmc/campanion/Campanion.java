@@ -10,6 +10,7 @@ import com.terraformersmc.campanion.config.CampanionConfigManager;
 import com.terraformersmc.campanion.entity.CampanionEntities;
 import com.terraformersmc.campanion.entity.GrapplingHookUser;
 import com.terraformersmc.campanion.entity.SkippingStoneEntity;
+import com.terraformersmc.campanion.integration.Curios;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.SleepingBagItem;
 import com.terraformersmc.campanion.item.TentBagItem;
@@ -79,6 +80,7 @@ public class Campanion implements ModInitializer {
 
 		CampanionBlockTags.load();
 		CampanionItemTags.load();
+		Curios.register();
 	}
 
 	public static void registerServerboundPackets() {
