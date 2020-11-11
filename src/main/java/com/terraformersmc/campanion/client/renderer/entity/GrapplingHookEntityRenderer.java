@@ -42,7 +42,7 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 			stack.push();
 			stack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(MathHelper.lerp(tickDelta, entity.prevYaw, entity.yaw) - 90.0F));
 			stack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(MathHelper.lerp(tickDelta, entity.prevPitch, entity.pitch) + 90.0F));
-			VertexConsumer vertexConsumer = ItemRenderer.getArmorVertexConsumer(vertexConsumers, model.getLayer(this.getTexture(entity)), false, false);
+			VertexConsumer vertexConsumer = ItemRenderer.getArmorGlintConsumer(vertexConsumers, model.getLayer(this.getTexture(entity)), false, false);
 			this.model.render(stack, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
 			stack.pop();
 

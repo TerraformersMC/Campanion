@@ -35,7 +35,7 @@ public enum SpearItemRenderer {
         }
 
         matrices.scale(2.0F, -2.0F, -2.0F);
-        VertexConsumer spear = ItemRenderer.getArmorVertexConsumer(
+        VertexConsumer spear = ItemRenderer.getArmorGlintConsumer(
             vertexConsumers,
             this.spearEntityModel.getLayer(SpearEntityRenderer.getTexture(((SpearItem)stack.getItem()).getType())),
             false,

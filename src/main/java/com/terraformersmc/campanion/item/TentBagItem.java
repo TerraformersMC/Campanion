@@ -36,7 +36,7 @@ public class TentBagItem extends Item {
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 		ItemStack stack = user.getStackInHand(hand);
-		HitResult result = user.rayTrace(10, 0, true);
+		HitResult result = user.raycast(10, 0, true);
 		if (result instanceof BlockHitResult && result.getType() == HitResult.Type.BLOCK) {
 			BlockPos base = ((BlockHitResult) result).getBlockPos().up();
 			if (!world.isClient && getErrorPosition(world, base, stack).isEmpty()) {

@@ -45,7 +45,7 @@ public class MixinWorldRenderer {
 			if (player != null) {
 				ItemStack stack = player.getMainHandStack();
 				if (TentBagItem.hasBlocks(stack)) {
-					HitResult result = player.rayTrace(10, 0, true);
+					HitResult result = player.raycast(10, 0, true);
 					if (result instanceof BlockHitResult && result.getType() == HitResult.Type.BLOCK) {
 						BlockPos placePos = ((BlockHitResult) result).getBlockPos().offset(((BlockHitResult) result).getSide());
 						Vec3d d = camera.getPos().subtract(Vec3d.of(placePos));

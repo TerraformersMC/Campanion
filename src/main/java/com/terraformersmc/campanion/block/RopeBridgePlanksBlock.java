@@ -115,12 +115,12 @@ public class RopeBridgePlanksBlock extends Block implements BlockEntityProvider 
 	}
 
 	@Override
-	public VoxelShape getRayTraceShape(BlockState state, BlockView view, BlockPos pos) {
+	public VoxelShape getRaycastShape(BlockState state, BlockView view, BlockPos pos) {
 		BlockEntity entity = view.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			return ((RopeBridgePlanksBlockEntity) entity).getRaytraceShape();
 		}
-		return super.getRayTraceShape(state, view, pos);
+		return super.getRaycastShape(state, view, pos);
 	}
 
 	@Override

@@ -60,7 +60,7 @@ public class Campanion implements ModInitializer {
 		CampanionCriteria.loadClass();
 		CampanionStats.loadClass();
 
-		FabricItemGroupBuilder.create(new Identifier(MOD_ID, "items")).icon(() -> CampanionItems.SMORE.asItem().getStackForRender()).appendItems(stacks -> Registry.ITEM.forEach(item -> {
+		FabricItemGroupBuilder.create(new Identifier(MOD_ID, "items")).icon(() -> CampanionItems.SMORE.asItem().getDefaultStack()).appendItems(stacks -> Registry.ITEM.forEach(item -> {
 			if (Registry.ITEM.getId(item).getNamespace().equals(MOD_ID)) {
 				item.appendStacks(item.getGroup(), (DefaultedList<ItemStack>) stacks);
 			}
