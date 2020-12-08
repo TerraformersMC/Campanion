@@ -9,6 +9,7 @@
     "AccessorItemTags",
     "InvokerCriteria",
     "InvokerEntity",
+    "MixinCampfire",
     "MixinEnchantment",
     "MixinEnchantmentHelper",
     "MixinEntity",
@@ -22,6 +23,7 @@
   ],
   "client": [
     "client.MixinCamera",
+    "client.MixinCampfireSmokeParticle",
     "client.MixinItemRenderer",
     "client.MixinPlayerEntityRenderer",
     "client.MixinScreen",

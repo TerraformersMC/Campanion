@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "ingredient": {
+    "tag": "campanion:dyes"
+  },
+  "result": "minecraft:air",
+  "experience": 0.0,
+  "cookingtime": 2000
+}
