@@ -27,6 +27,7 @@ import java.util.Random;
 
 import static net.minecraft.block.AbstractFurnaceBlock.LIT;
 import static net.minecraft.util.math.Direction.*;
+import static net.minecraft.util.math.Direction.WEST;
 
 public class LeatherTanner extends HorizontalFacingBlock {
 
@@ -100,8 +101,7 @@ public class LeatherTanner extends HorizontalFacingBlock {
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-		super.scheduledTick(state, world, pos, random);
+	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
 		if (getAge(state) == 1) {
 
 			int speedMultiplier = 1;
@@ -123,7 +123,7 @@ public class LeatherTanner extends HorizontalFacingBlock {
 
 			for (BlockState currState : blockStates) {
 				if (currState.getBlock() instanceof CampfireBlock && currState.get(LIT)) {
-					speedMultiplier *= 2;
+					speedMultiplier *= 1.5;
 				}
 			}
 
