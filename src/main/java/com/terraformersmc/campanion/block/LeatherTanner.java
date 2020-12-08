@@ -1,10 +1,7 @@
 package com.terraformersmc.campanion.block;
 
 import com.terraformersmc.campanion.item.CampanionItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -25,7 +22,11 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.Random;
+
+import static net.minecraft.block.AbstractFurnaceBlock.LIT;
+import static net.minecraft.util.math.Direction.*;
 
 public class LeatherTanner extends HorizontalFacingBlock {
 
@@ -38,7 +39,7 @@ public class LeatherTanner extends HorizontalFacingBlock {
 
 	public LeatherTanner(Settings settings) {
 		super(settings);
-		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH).with(AGE, 0));
+		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, NORTH).with(AGE, 0));
 	}
 
 	@Override
@@ -102,7 +103,31 @@ public class LeatherTanner extends HorizontalFacingBlock {
 	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
 		super.scheduledTick(state, world, pos, random);
 		if (getAge(state) == 1) {
-			if (random.nextInt(8) == 0) {
+
+			int speedMultiplier = 1;
+			Direction facing = state.get(FACING);
+			ArrayList<BlockState> blockStates = new ArrayList<>();
+
+			//Check if there is a lit campfire within the immediate surrounding blocks and on the flat face of the tanner
+			blockStates.add(world.getBlockState(pos.east().north()));
+			blockStates.add(world.getBlockState(pos.east().south()));
+			blockStates.add(world.getBlockState(pos.west().north()));
+			blockStates.add(world.getBlockState(pos.west().south()));
+			if (facing == NORTH || facing == SOUTH) {
+				blockStates.add(world.getBlockState(pos.south()));
+				blockStates.add(world.getBlockState(pos.north()));
+			} else if (facing == EAST || facing == WEST){
+				blockStates.add(world.getBlockState(pos.west()));
+				blockStates.add(world.getBlockState(pos.east()));
+			}
+
+			for (BlockState currState : blockStates) {
+				if (currState.getBlock() instanceof CampfireBlock && currState.get(LIT)) {
+					speedMultiplier *= 2;
+				}
+			}
+
+			if (random.nextInt(8 / speedMultiplier) == 0) {
 				world.setBlockState(pos, state.with(AGE, 2), 2);
 			}
 		}
@@ -128,7 +153,7 @@ public class LeatherTanner extends HorizontalFacingBlock {
 		VoxelShape shape = createCuboidShape(5, 0, 1, 10, 16, 15);
 
 		EAST_SHAPE = shape;
-		NORTH_SHAPE = rotate(Direction.EAST, Direction.NORTH, shape);
+		NORTH_SHAPE = rotate(Direction.EAST, NORTH, shape);
 		SOUTH_SHAPE = rotate(Direction.EAST, Direction.SOUTH, shape);
 		WEST_SHAPE = rotate(Direction.EAST, Direction.WEST, shape);
 
