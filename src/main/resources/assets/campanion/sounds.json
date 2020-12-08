@@ -18,10 +18,16 @@
 			"campanion:spear/spear_hit_flesh"
 		]
 	},
-	"spear_throw": {
-		"subtitle": "subtitles.campanion.spear_throw",
-		"sounds": [
-			"campanion:spear/spear_throw"
-		]
-	}
+    "spear_throw": {
+        "subtitle": "subtitles.campanion.spear_throw",
+        "sounds": [
+            "campanion:spear/spear_throw"
+        ]
+    },
+    "flare_strike": {
+        "subtitle": "subtitles.campanion.flare_strike",
+        "sounds": [
+            "campanion:flare/flare_strike"
+        ]
+    }
 }

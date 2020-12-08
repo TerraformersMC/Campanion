@@ -9,6 +9,7 @@ import com.terraformersmc.campanion.client.renderer.entity.EmptyRenderer;
 import com.terraformersmc.campanion.client.renderer.entity.GrapplingHookEntityRenderer;
 import com.terraformersmc.campanion.client.renderer.entity.SpearEntityRenderer;
 import com.terraformersmc.campanion.entity.CampanionEntities;
+import com.terraformersmc.campanion.entity.FlareEntity;
 import com.terraformersmc.campanion.entity.GrapplingHookUser;
 import com.terraformersmc.campanion.entity.SkippingStoneEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
@@ -64,11 +65,13 @@ public class CampanionClient implements ClientModInitializer {
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.LAWN_CHAIR, (dispatcher, context) -> new EmptyRenderer<>(dispatcher));
 
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.THROWING_STONE, (dispatcher, context) -> new FlyingItemEntityRenderer<SkippingStoneEntity>(dispatcher, context.getItemRenderer()));
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.FLARE, (dispatcher, context) -> new FlyingItemEntityRenderer<FlareEntity>(dispatcher, context.getItemRenderer()));
 	}
 
 	private static void registerRenderLayers() {
 		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.ROPE_LADDER, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.LEATHER_TANNER, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.FLARE_BLOCK, RenderLayer.getCutout());
 	}
 
 	private static void registerBlockEntityRenderers() {
