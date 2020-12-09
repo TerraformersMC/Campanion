@@ -47,6 +47,8 @@ public class CampanionItems {
 
 	public static final SkippingStoneItem SKIPPING_STONE = add("skipping_stone", new SkippingStoneItem(new Item.Settings().group(ItemGroup.MISC)));
 
+	public static final FlareItem FLARE = add("flare", new FlareItem(new Item.Settings().group(ItemGroup.MISC)));
+
 	public static final GrapplingHookItem GRAPPLING_HOOK = add("grappling_hook", new GrapplingHookItem(new Item.Settings().maxDamage(120).group(ItemGroup.TOOLS)));
 	public static final SleepingBagItem SLEEPING_BAG = add("sleeping_bag", new SleepingBagItem(new Item.Settings().maxDamage(250).group(ItemGroup.TOOLS)));
 	public static final TentBagItem TENT_BAG = add("tent_bag", new TentBagItem(new Item.Settings().group(ItemGroup.TOOLS)));

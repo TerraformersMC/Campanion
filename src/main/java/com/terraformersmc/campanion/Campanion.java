@@ -8,11 +8,9 @@ import com.terraformersmc.campanion.block.CampanionBlocks;
 import com.terraformersmc.campanion.blockentity.CampanionBlockEntities;
 import com.terraformersmc.campanion.config.CampanionConfigManager;
 import com.terraformersmc.campanion.entity.CampanionEntities;
-import com.terraformersmc.campanion.entity.GrapplingHookUser;
+import com.terraformersmc.campanion.entity.FlareEntity;
 import com.terraformersmc.campanion.entity.SkippingStoneEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
-import com.terraformersmc.campanion.item.SleepingBagItem;
-import com.terraformersmc.campanion.item.TentBagItem;
 import com.terraformersmc.campanion.network.C2SEmptyBackpack;
 import com.terraformersmc.campanion.network.C2SRotateHeldItem;
 import com.terraformersmc.campanion.recipe.CampanionRecipeSerializers;
@@ -23,13 +21,10 @@ import com.terraformersmc.campanion.tag.CampanionItemTags;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.collection.DefaultedList;
@@ -73,6 +68,15 @@ public class Campanion implements ModInitializer {
 			protected ProjectileEntity createProjectile(World world, Position position, ItemStack stack) {
 				return Util.make(new SkippingStoneEntity(world, position.getX(), position.getY(), position.getZ()), (snowballEntity) -> {
 					snowballEntity.setItem(stack);
+				});
+			}
+		});
+
+		DispenserBlock.registerBehavior(CampanionItems.FLARE, new ProjectileDispenserBehavior() {
+			@Override
+			protected ProjectileEntity createProjectile(World world, Position position, ItemStack stack) {
+				return Util.make(new FlareEntity(world, position.getX(), position.getY(), position.getZ()), (flareEntity) -> {
+					flareEntity.setItem(stack);
 				});
 			}
 		});

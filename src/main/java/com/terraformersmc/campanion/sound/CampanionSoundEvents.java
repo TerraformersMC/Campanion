@@ -17,6 +17,7 @@ public class CampanionSoundEvents {
 	public static final SoundEvent SPEAR_HIT_GROUND = add("spear_hit_ground");
 	public static final SoundEvent SPEAR_HIT_FLESH = add("spear_hit_flesh");
 	public static final SoundEvent SPEAR_THROW = add("spear_throw");
+	public static final SoundEvent FLARE_STRIKE = add("flare_strike");
 
 	private static SoundEvent add(String id) {
 		Identifier identifier = new Identifier(MOD_ID, id);
