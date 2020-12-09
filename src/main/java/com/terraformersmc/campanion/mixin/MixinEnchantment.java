@@ -13,11 +13,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinEnchantment {
 	@Inject(method = "isAcceptableItem", at = @At("HEAD"), cancellable = true)
 	private void isAcceptableItem(ItemStack stack, CallbackInfoReturnable<Boolean> info) {
-		if (((Object) this == Enchantments.PIERCING || (Object) this == Enchantments.IMPALING) && stack.getItem() instanceof SpearItem) {
-			info.setReturnValue(true);
-		}
-		if((Object) this == Enchantments.LOYALTY) {
-			info.setReturnValue(false);
+		//Note by default, all trident enchantments will be enabled.
+		if(stack.getItem() instanceof SpearItem) {
+			//Non trident enchantments we want to have
+			if (((Object) this == Enchantments.PIERCING)) {
+				info.setReturnValue(true);
+			}
+
+			//Trident enchants we don't want to have
+			if((Object) this == Enchantments.LOYALTY || (Object) this == Enchantments.CHANNELING) {
+				info.setReturnValue(false);
+			}
 		}
 	}
 }
