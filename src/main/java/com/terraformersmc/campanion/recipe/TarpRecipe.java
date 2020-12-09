@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.tag.ItemTags;
@@ -35,8 +36,30 @@ public class TarpRecipe extends SpecialCraftingRecipe {
 	}
 
 	@Override
-	public ItemStack craft(CraftingInventory inv) {
+	public boolean isIgnoredInRecipeBook() {
+		return false;
+	}
+
+	@Override
+	public DefaultedList<Ingredient> getPreviewInputs() {
+		DefaultedList<Ingredient> list = DefaultedList.of();
+
+		list.add(Ingredient.fromTag(ItemTags.WOOL));
+		list.add(Ingredient.fromTag(ItemTags.WOOL));
+		list.add(Ingredient.fromTag(ItemTags.WOOL));
+
+		list.add(Ingredient.fromTag(FabricToolTags.SHEARS));
+		return list;
+	}
+
+	@Override
+	public ItemStack getOutput() {
 		return new ItemStack(CampanionItems.WOOL_TARP);
+	}
+
+	@Override
+	public ItemStack craft(CraftingInventory inv) {
+		return this.getOutput();
 	}
 
 	@Override
