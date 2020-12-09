@@ -27,27 +27,24 @@ public abstract class MixinCampfireSmokeParticle extends SpriteBillboardParticle
 	}
 
 	@Inject(method = "<init>", at = @At(value = "RETURN"))
-	private void campaion$setColor(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, boolean bl, CallbackInfo ci) {
+	private void campanion$setColor(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, boolean bl, CallbackInfo ci) {
 		BlockPos pos = new BlockPos(x, y, z);
-		float[] currColor = new float[3];
+		float[] currColor;
 		Vector3f color = new Vector3f(0, 0, 0);
-		if (world.getBlockState(pos).getBlock() instanceof CampfireBlock) {
-			if (world.getBlockEntity(pos) instanceof CampfireBlockEntity) {
-				CampfireBlockEntity campfireBlockEntity = (CampfireBlockEntity) world.getBlockEntity(pos);
-				for (ItemStack stack : campfireBlockEntity.getItemsBeingCooked()) {
-					if (stack.getItem() instanceof DyeItem) {
-						currColor = ((DyeItem) stack.getItem()).getColor().getColorComponents();
-						color.add(currColor[0], currColor[1], currColor[2]);
-					}
+		boolean recolor = false;
+		if (world.getBlockState(pos).getBlock() instanceof CampfireBlock && world.getBlockEntity(pos) instanceof CampfireBlockEntity) {
+			CampfireBlockEntity campfireBlockEntity = (CampfireBlockEntity) world.getBlockEntity(pos);
+			for (ItemStack stack : campfireBlockEntity.getItemsBeingCooked()) {
+				if (stack.getItem() instanceof DyeItem) {
+					recolor = true;
+					currColor = ((DyeItem) stack.getItem()).getColor().getColorComponents();
+					color.add(currColor[0], currColor[1], currColor[2]);
 				}
 			}
-			color.clamp(0.3f, 1.0f);
-			setColor(color.getX(), color.getY(), color.getZ());
-			this.velocityX = 0;
-			this.velocityY = .07D + (double) (this.random.nextFloat() / 500.0F);
-			this.velocityZ = 0;
-		} else {
-			setColor(158 / 255f, 156 / 255f, 153 / 255f);
+			if (recolor) {
+				color.normalize();
+				setColor(color.getX(), color.getY(), color.getZ());
+			}
 		}
 	}
 }
