@@ -1,7 +1,11 @@
 package com.terraformersmc.campanion.block;
 
 import com.terraformersmc.campanion.item.CampanionItems;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.CampfireBlock;
+import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -27,7 +31,6 @@ import java.util.Random;
 
 import static net.minecraft.block.AbstractFurnaceBlock.LIT;
 import static net.minecraft.util.math.Direction.*;
-import static net.minecraft.util.math.Direction.WEST;
 
 public class LeatherTanner extends HorizontalFacingBlock {
 
@@ -104,7 +107,7 @@ public class LeatherTanner extends HorizontalFacingBlock {
 	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
 		if (getAge(state) == 1) {
 
-			int speedMultiplier = 1;
+			float speedMultiplier = 1;
 			Direction facing = state.get(FACING);
 			ArrayList<BlockState> blockStates = new ArrayList<>();
 
@@ -127,7 +130,7 @@ public class LeatherTanner extends HorizontalFacingBlock {
 				}
 			}
 
-			if (random.nextInt(8 / speedMultiplier) == 0) {
+			if (random.nextFloat() <= speedMultiplier / 8) {
 				world.setBlockState(pos, state.with(AGE, 2), 2);
 			}
 		}
