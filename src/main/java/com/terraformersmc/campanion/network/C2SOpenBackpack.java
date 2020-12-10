@@ -1,6 +1,7 @@
 package com.terraformersmc.campanion.network;
 
 import com.terraformersmc.campanion.Campanion;
+import com.terraformersmc.campanion.backpack.BackpackContainerFactory;
 import com.terraformersmc.campanion.item.BackpackItem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
@@ -12,7 +13,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
-public class C2SEmptyBackpack {
+public class C2SOpenBackpack {
 	public static final Identifier ID = new Identifier(Campanion.MOD_ID, "open_backpack");
 
 	public static Packet<?> createPacket() {
@@ -25,7 +26,7 @@ public class C2SEmptyBackpack {
 			ItemStack stack = player.getEquippedStack(EquipmentSlot.CHEST);
 			if (stack.getItem() instanceof BackpackItem) {
 				BackpackItem.Type type = ((BackpackItem) stack.getItem()).type;
-				player.openHandledScreen(type.createFactory(stack));
+				player.openHandledScreen(new BackpackContainerFactory(type));
 			}
 		});
 	}

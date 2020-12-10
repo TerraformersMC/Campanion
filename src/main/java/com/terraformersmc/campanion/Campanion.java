@@ -11,7 +11,7 @@ import com.terraformersmc.campanion.entity.CampanionEntities;
 import com.terraformersmc.campanion.entity.FlareEntity;
 import com.terraformersmc.campanion.entity.SkippingStoneEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
-import com.terraformersmc.campanion.network.C2SEmptyBackpack;
+import com.terraformersmc.campanion.network.C2SOpenBackpack;
 import com.terraformersmc.campanion.network.C2SRotateHeldItem;
 import com.terraformersmc.campanion.recipe.CampanionRecipeSerializers;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
@@ -86,7 +86,7 @@ public class Campanion implements ModInitializer {
 	}
 
 	public static void registerServerboundPackets() {
-		ServerSidePacketRegistry.INSTANCE.register(C2SEmptyBackpack.ID, C2SEmptyBackpack::onPacket);
+		ServerSidePacketRegistry.INSTANCE.register(C2SOpenBackpack.ID, C2SOpenBackpack::onPacket);
 		ServerSidePacketRegistry.INSTANCE.register(C2SRotateHeldItem.ID, C2SRotateHeldItem::onPacket);
 	}
 }
