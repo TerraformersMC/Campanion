@@ -1,6 +1,10 @@
 package com.terraformersmc.campanion.item;
 
+import com.terraformersmc.campanion.backpack.BackpackStorePlayer;
 import net.minecraft.block.DispenserBlock;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,11 +13,26 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class BackpackItem extends Item {
+
+	private static final Text BACKPACK_HAS_ITEMS1 =
+		new TranslatableText("message.campanion.backpack.hasitems1")
+			.setStyle(Style.EMPTY.withColor(Formatting.RED));
+	private static final Text BACKPACK_HAS_ITEMS2 =
+		new TranslatableText("message.campanion.backpack.hasitems2")
+			.setStyle(Style.EMPTY.withColor(Formatting.RED));
 
 	public final Type type;
 
@@ -35,6 +54,21 @@ public class BackpackItem extends Item {
 		} else {
 			return TypedActionResult.fail(stackInHand);
 		}
+	}
+
+	@Override
+	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+		ClientPlayerEntity player = MinecraftClient.getInstance().player;
+		if(player != null && player.getEquippedStack(EquipmentSlot.CHEST) == stack) {
+			for (ItemStack itemStack : ((BackpackStorePlayer) player).getBackpackStacks()) {
+				if(!itemStack.isEmpty()) {
+					tooltip.add(BACKPACK_HAS_ITEMS1);
+					tooltip.add(BACKPACK_HAS_ITEMS2);
+					break;
+				}
+			}
+		}
+		super.appendTooltip(stack, world, tooltip, context);
 	}
 
 	private static int MAX_SLOTS = 0;

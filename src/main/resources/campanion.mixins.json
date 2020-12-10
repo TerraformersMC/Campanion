@@ -17,6 +17,7 @@
     "MixinPlayerEntity",
     "MixinPlayerInventory",
     "MixinPlayerManager",
+    "MixinServerPlayerEntity",
     "MixinStructure",
     "MixinWolfEntity"
   ],

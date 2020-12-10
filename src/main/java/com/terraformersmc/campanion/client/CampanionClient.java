@@ -15,7 +15,7 @@ import com.terraformersmc.campanion.entity.SkippingStoneEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.SleepingBagItem;
 import com.terraformersmc.campanion.item.TentBagItem;
-import com.terraformersmc.campanion.network.S2CClearBackpackHeldItem;
+import com.terraformersmc.campanion.network.S2CSyncBackpackContents;
 import com.terraformersmc.campanion.network.S2CEntitySpawnPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -85,7 +85,7 @@ public class CampanionClient implements ClientModInitializer {
 
 	public static void registerClientboundPackets() {
 		ClientSidePacketRegistry.INSTANCE.register(S2CEntitySpawnPacket.ID, S2CEntitySpawnPacket::onPacket);
-		ClientSidePacketRegistry.INSTANCE.register(S2CClearBackpackHeldItem.ID, S2CClearBackpackHeldItem::onPacket);
+		ClientSidePacketRegistry.INSTANCE.register(S2CSyncBackpackContents.ID, S2CSyncBackpackContents::onPacket);
 	}
 
 	public static void registerModelPredicateProviders() {

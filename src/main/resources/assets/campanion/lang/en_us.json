@@ -246,6 +246,9 @@
   "message.campanion.rope_bridge.finished": "Bridge Built!",
   "message.campanion.rope_bridge.no_permission": "You dont have permission to place %s blocks.",
 
+  "message.campanion.backpack.hasitems1": "Removing/Unequipping",
+  "message.campanion.backpack.hasitems2": "will drop items!",
+
   "stat.campanion.sleep_in_sleeping_bag": "Times Slept in a Sleeping Bag",
   "stat.campanion.stone_skips": "Stone Skips",
 

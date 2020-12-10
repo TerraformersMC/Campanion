@@ -30,16 +30,18 @@ public class BackpackContainerFactory implements NamedScreenHandlerFactory {
 
 	@Override
 	public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-		DefaultedList<ItemStack> stacks = ((BackpackStorePlayer) player).getBackpackStacks();
+		BackpackStorePlayer storePlayer = (BackpackStorePlayer) player;
+		DefaultedList<ItemStack> stacks = storePlayer.getBackpackStacks();
 		SimpleInventory inventory = new SimpleInventory(this.type.getSlots());
-		for (int i = 0; i < stacks.size(); i++) {
+		for (int i = 0; i < Math.min(inventory.size(), stacks.size()); i++) {
 			inventory.setStack(i, stacks.get(i));
 		}
 		inventory.addListener(sender -> {
 			stacks.clear();
 			for (int i = 0; i < sender.size(); i++) {
-				stacks.set(i, sender.getStack(i));
+				stacks.add(sender.getStack(i));
 			}
+			storePlayer.syncChanges();
 		});
 
 		return new GenericContainerScreenHandler(this.type.getContainerType(), syncId, inv, inventory, this.type.getRows());

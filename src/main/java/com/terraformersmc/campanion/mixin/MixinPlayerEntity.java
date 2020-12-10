@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Packet;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
@@ -36,7 +37,7 @@ import java.util.concurrent.Callable;
 public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoSetSpawnPlayer, GrapplingHookUser, BackpackStorePlayer {
 
 	public GrapplingHookEntity campanion_grapplingHook;
-	private DefaultedList<ItemStack> backpackStacks = DefaultedList.of();
+	private final DefaultedList<ItemStack> backpackStacks = DefaultedList.of();
 
 	protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World world) {
 		super(type, world);
@@ -85,13 +86,15 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 
 	@Inject(method = "readCustomDataFromTag", at = @At("TAIL"))
 	public void readCustomDataFromTag(CompoundTag tag, CallbackInfo info) {
-		this.backpackStacks = DefaultedList.ofSize(tag.getInt("_campanion_backpack_size"), ItemStack.EMPTY);
+		this.backpackStacks.clear();
+		for (int i = 0; i < tag.getInt("_campanion_backpack_size"); i++) {
+			this.backpackStacks.add(ItemStack.EMPTY);
+		}
 		Inventories.fromTag(tag.getCompound("_campanion_backpack"), this.backpackStacks);
 
 		//If there are stacks in the old format, then put them in the new format
 		ItemStack stack = this.getEquippedStack(EquipmentSlot.CHEST);
-		if(stack.getItem() instanceof BackpackItem) {
-			this.backpackStacks = DefaultedList.ofSize(((BackpackItem) stack.getItem()).type.getSlots(), ItemStack.EMPTY);
+		if(stack.getItem() instanceof BackpackItem && stack.getOrCreateTag().contains("Inventory", 10)) {
 			Inventories.fromTag(stack.getOrCreateTag().getCompound("Inventory"), this.backpackStacks);
 			stack.getTag().remove("Inventory");
 		}

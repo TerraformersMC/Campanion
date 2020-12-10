@@ -2,13 +2,9 @@ package com.terraformersmc.campanion.mixin;
 
 import com.terraformersmc.campanion.backpack.BackpackStorePlayer;
 import com.terraformersmc.campanion.item.BackpackItem;
-import com.terraformersmc.campanion.network.S2CClearBackpackHeldItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.collection.DefaultedList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,16 +21,19 @@ public class MixinPlayerInventory {
 
 	@Inject(method = "setStack", at = @At("HEAD"))
 	public void removeInvStack(int slot, ItemStack stack, CallbackInfo info) {
-		ItemStack fromItem = this.getStack(slot);
-		boolean equal = ItemStack.areItemsEqualIgnoreDamage(fromItem, stack) && ItemStack.areTagsEqual(fromItem, stack);
-		if (slot == 38 && !this.player.world.isClient && !equal) {
-			((BackpackStorePlayer) this.player).dropAllStacks();
+		int capacity = this.getStackCapacity(stack);
+		if (slot == 38 && !this.player.world.isClient && this.getStackCapacity(this.getStack(slot)) > this.getStackCapacity(stack)) {
+			((BackpackStorePlayer) this.player).changeBackpackCapacity(capacity);
 		}
+	}
+
+	private int getStackCapacity(ItemStack stack) {
+		return stack.getItem() instanceof BackpackItem ? ((BackpackItem) stack.getItem()).type.getSlots() : 0;
 	}
 
 	@Inject(method = "dropAll", at = @At("HEAD"))
 	public void dropAll(CallbackInfo info) {
-		((BackpackStorePlayer) this.player).dropAllStacks();
+		((BackpackStorePlayer) this.player).changeBackpackCapacity(0);
 	}
 
 	@Shadow
