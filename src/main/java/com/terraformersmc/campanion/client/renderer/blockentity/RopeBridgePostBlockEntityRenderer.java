@@ -3,7 +3,6 @@ package com.terraformersmc.campanion.client.renderer.blockentity;
 import com.terraformersmc.campanion.blockentity.RopeBridgePostBlockEntity;
 import com.terraformersmc.campanion.client.model.block.BridgePlanksBakedModel;
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;
-import net.fabricmc.fabric.impl.client.indigo.renderer.render.BlockRenderContext;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
@@ -22,8 +21,9 @@ import java.util.Random;
 
 public class RopeBridgePostBlockEntityRenderer extends BlockEntityRenderer<RopeBridgePostBlockEntity> {
 
-    private static final ThreadLocal<BlockRenderContext> CONTEXTS = ThreadLocal.withInitial(BlockRenderContext::new);
+    private static final ThreadLocal<BlockModelRenderer> RENDERER = ThreadLocal.withInitial(() -> MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer());
 
+    private static final Random RND = new Random();
     public RopeBridgePostBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
         super(dispatcher);
     }
@@ -31,7 +31,6 @@ public class RopeBridgePostBlockEntityRenderer extends BlockEntityRenderer<RopeB
     @Override
     public void render(RopeBridgePostBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         VertexConsumer buffer = vertexConsumers.getBuffer(RenderLayer.getTranslucent());
-        Random random = new Random();
 
         blockEntity.getGhostPlanks().forEach((pos, pairs) -> {
             for (Pair<BlockPos, List<RopeBridgePlank>> pair : pairs) {
@@ -39,10 +38,7 @@ public class RopeBridgePostBlockEntityRenderer extends BlockEntityRenderer<RopeB
                 matrices.push();
                 matrices.translate(deltaPos.getX(), deltaPos.getY(), deltaPos.getZ());
 
-                CONTEXTS.get().render(
-                    blockEntity.getWorld(), BridgePlanksBakedModel.createStaticModel(pair.getRight()), Blocks.AIR.getDefaultState(), BlockPos.ORIGIN.up(500),
-                    matrices, buffer, random, -1, BlockPos.ORIGIN.equals(deltaPos) ? overlay : OverlayTexture.DEFAULT_UV
-                );
+                RENDERER.get().render(blockEntity.getWorld(), BridgePlanksBakedModel.createStaticModel(pair.getRight()), Blocks.AIR.getDefaultState(), BlockPos.ORIGIN.up(500), matrices, buffer, false, RND, 0, BlockPos.ORIGIN.equals(deltaPos) ? overlay : OverlayTexture.DEFAULT_UV);
                 matrices.pop();
             }
         });
