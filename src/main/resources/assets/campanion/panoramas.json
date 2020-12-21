@@ -1,0 +1,7 @@
+{
+	"Camp": {
+		"name": "camp",
+		"panoramaId": "campanion:textures/gui/panorama/panorama",
+		"musicId": "minecraft:music.menu"
+	}
+}
