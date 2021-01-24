@@ -20,3 +20,10 @@ dependencies {
 
 	includeMod "reach-entity-attributes", "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
 }
+
+repositories {
+	maven {
+		name = 'TerraformersMC'
+		url = 'http://maven.terraformersmc.com/'
+	}
+}
