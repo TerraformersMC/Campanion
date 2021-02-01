@@ -92,7 +92,7 @@ public class BaseTentBlock extends Block implements BlockEntityProvider {
 		int slotIndex = -1;
 		for (int i = 0; i < player.inventory.size(); i++) {
 			ItemStack stack = player.inventory.getStack(i);
-			if (stack.getItem() == CampanionItems.TENT_BAG && !TentBagItem.hasBlocks(stack)) {
+			if (stack.getItem() == CampanionItems.TENT_BAG && TentBagItem.isEmpty(stack)) {
 				slotIndex = i;
 			}
 		}

@@ -12,9 +12,24 @@
     "TerraformersMC"
   ],
   "contact": {
-    "homepage": "https://github.com/TerraformersMC/Campanion",
-    "sources": "https://github.com/TerraformersMC/Campanion"
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/campanion",
+    "sources": "https://github.com/TerraformersMC/Campanion",
+    "issues": "https://github.com/TerraformersMC/Campanion/issues"
   },
+  "contributors": [
+    "Hephaestus-Dev",
+    "PinkGoosik",
+    "Levoment",
+    "jakobhellermann",
+    "2A5F",
+    "SirCaptainCaleb",
+    "Imbarainbow",
+    "DarkKnightComes",
+    "ph0elyx",
+    "The-Fireplace",
+    "20o",
+    "ThisIsSammy"
+  ],
 
   "license": "LGPL-3.0-only",
   "icon": "assets/campanion/icon.png",
@@ -38,8 +53,5 @@
     "fabricloader": ">=0.7.4",
     "fabric": "*",
     "minecraft": ">1.16-"
-  },
-  "suggests": {
-    "flamingo": "*"
   }
 }

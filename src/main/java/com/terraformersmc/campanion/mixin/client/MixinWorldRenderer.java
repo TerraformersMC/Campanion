@@ -2,6 +2,7 @@ package com.terraformersmc.campanion.mixin.client;
 
 import com.terraformersmc.campanion.client.renderer.item.BuiltTentItemRenderer;
 import com.terraformersmc.campanion.client.util.TentPreviewImmediate;
+import com.terraformersmc.campanion.item.PlaceableTentItem;
 import com.terraformersmc.campanion.item.TentBagItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -44,35 +45,38 @@ public class MixinWorldRenderer {
 		for (PlayerEntity player : this.client.world.getPlayers()) {
 			if (player != null) {
 				ItemStack stack = player.getMainHandStack();
-				if (TentBagItem.hasBlocks(stack)) {
-					HitResult result = player.raycast(10, 0, true);
-					if (result instanceof BlockHitResult && result.getType() == HitResult.Type.BLOCK) {
-						BlockPos placePos = ((BlockHitResult) result).getBlockPos().offset(((BlockHitResult) result).getSide());
-						Vec3d d = camera.getPos().subtract(Vec3d.of(placePos));
+				if (stack.getItem() instanceof PlaceableTentItem) {
+					PlaceableTentItem tent = (PlaceableTentItem) stack.getItem();
+					if (tent.hasBlocks(stack)) {
+						HitResult result = player.raycast(10, 0, true);
+						if (result instanceof BlockHitResult && result.getType() == HitResult.Type.BLOCK) {
+							BlockPos placePos = ((BlockHitResult) result).getBlockPos().offset(((BlockHitResult) result).getSide());
+							Vec3d d = camera.getPos().subtract(Vec3d.of(placePos));
 
-						matrices.push();
-						matrices.translate(-d.x, -d.y, -d.z);
-
-						List<BlockPos> list = TentBagItem.getErrorPosition(this.client.world, placePos, stack);
-						TentPreviewImmediate.STORAGE.setApplyModifiers(!list.isEmpty());
-						BuiltTentItemRenderer.INSTANCE.render(stack, matrices, placePos, immediate, -1);
-
-						for (BlockPos pos : list) {
 							matrices.push();
-							matrices.translate(pos.getX() - placePos.getX(), pos.getY() - placePos.getY(), pos.getZ() - placePos.getZ());
-							if (this.client.world.getBlockState(pos).getMaterial() == Material.AIR) {
-								BlockState stone = Blocks.STONE.getDefaultState();
-								MinecraftClient.getInstance().getBlockRenderManager().renderBlock(stone, pos, this.client.world, matrices, immediate.getBuffer(RenderLayers.getBlockLayer(stone)), false, new Random());
-							} else {
-								float scale = 1.03F;
-								matrices.scale(scale, scale, scale);
-								matrices.translate(-0.5 * scale + 0.5, -0.5 * scale + 0.5, -0.5 * scale + 0.5);
-								BuiltTentItemRenderer.renderFakeBlock(this.client.world, pos, BlockPos.ORIGIN, matrices, immediate);
+							matrices.translate(-d.x, -d.y, -d.z);
+
+							List<BlockPos> list = tent.getErrorPosition(this.client.world, placePos, stack);
+							TentPreviewImmediate.STORAGE.setApplyModifiers(!list.isEmpty());
+							BuiltTentItemRenderer.INSTANCE.render(stack, matrices, placePos, immediate, -1);
+
+							for (BlockPos pos : list) {
+								matrices.push();
+								matrices.translate(pos.getX() - placePos.getX(), pos.getY() - placePos.getY(), pos.getZ() - placePos.getZ());
+								if (this.client.world.getBlockState(pos).getMaterial() == Material.AIR) {
+									BlockState stone = Blocks.STONE.getDefaultState();
+									MinecraftClient.getInstance().getBlockRenderManager().renderBlock(stone, pos, this.client.world, matrices, immediate.getBuffer(RenderLayers.getBlockLayer(stone)), false, new Random());
+								} else {
+									float scale = 1.03F;
+									matrices.scale(scale, scale, scale);
+									matrices.translate(-0.5 * scale + 0.5, -0.5 * scale + 0.5, -0.5 * scale + 0.5);
+									BuiltTentItemRenderer.renderFakeBlock(this.client.world, pos, BlockPos.ORIGIN, matrices, immediate);
+								}
+								matrices.pop();
 							}
+
 							matrices.pop();
 						}
-
-						matrices.pop();
 					}
 				}
 			}

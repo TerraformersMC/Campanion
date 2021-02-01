@@ -5,9 +5,10 @@ import com.terraformersmc.campanion.entity.AdditionalSpawnDataEntity;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.network.PacketContext;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -35,26 +36,26 @@ public class S2CEntitySpawnPacket {
 		if (entity instanceof AdditionalSpawnDataEntity) {
 			((AdditionalSpawnDataEntity) entity).writeToBuffer(buf);
 		}
-		return ServerSidePacketRegistry.INSTANCE.toPacket(ID, buf);
+		return ServerPlayNetworking.createS2CPacket(ID, buf);
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void onPacket(PacketContext context, PacketByteBuf byteBuf) {
-		EntityType<?> type = Registry.ENTITY_TYPE.get(byteBuf.readVarInt());
-		UUID entityUUID = byteBuf.readUuid();
-		int entityID = byteBuf.readVarInt();
-		double x = byteBuf.readDouble();
-		double y = byteBuf.readDouble();
-		double z = byteBuf.readDouble();
-		float pitch = (byteBuf.readByte() * 360) / 256.0F;
-		float yaw = (byteBuf.readByte() * 360) / 256.0F;
+	public static void onPacket(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buffer, PacketSender sender) {
+		EntityType<?> type = Registry.ENTITY_TYPE.get(buffer.readVarInt());
+		UUID entityUUID = buffer.readUuid();
+		int entityID = buffer.readVarInt();
+		double x = buffer.readDouble();
+		double y = buffer.readDouble();
+		double z = buffer.readDouble();
+		float pitch = (buffer.readByte() * 360) / 256.0F;
+		float yaw = (buffer.readByte() * 360) / 256.0F;
 		ClientWorld world = MinecraftClient.getInstance().world;
 		Entity entity = type.create(world);
 		if (entity instanceof AdditionalSpawnDataEntity) {
-			((AdditionalSpawnDataEntity) entity).readFromBuffer(byteBuf);
+			((AdditionalSpawnDataEntity) entity).readFromBuffer(buffer);
 		}
-		context.getTaskQueue().execute(() -> {
-			if (entity != null) {
+		client.execute(() -> {
+			if (world != null && entity != null) {
 				entity.updatePosition(x, y, z);
 				entity.updateTrackedPosition(x, y, z);
 				entity.pitch = pitch;

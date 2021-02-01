@@ -15,15 +15,15 @@ import com.terraformersmc.campanion.entity.SkippingStoneEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.SleepingBagItem;
 import com.terraformersmc.campanion.item.TentBagItem;
-import com.terraformersmc.campanion.network.S2CSyncBackpackContents;
 import com.terraformersmc.campanion.network.S2CEntitySpawnPacket;
+import com.terraformersmc.campanion.network.S2CSyncBackpackContents;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.BlockModels;
@@ -84,8 +84,8 @@ public class CampanionClient implements ClientModInitializer {
 	}
 
 	public static void registerClientboundPackets() {
-		ClientSidePacketRegistry.INSTANCE.register(S2CEntitySpawnPacket.ID, S2CEntitySpawnPacket::onPacket);
-		ClientSidePacketRegistry.INSTANCE.register(S2CSyncBackpackContents.ID, S2CSyncBackpackContents::onPacket);
+		ClientPlayNetworking.registerGlobalReceiver(S2CEntitySpawnPacket.ID, S2CEntitySpawnPacket::onPacket);
+		ClientPlayNetworking.registerGlobalReceiver(S2CSyncBackpackContents.ID, S2CSyncBackpackContents::onPacket);
 	}
 
 	public static void registerModelPredicateProviders() {
@@ -100,7 +100,7 @@ public class CampanionClient implements ClientModInitializer {
 			}
 			return 0;
 		});
-		FabricModelPredicateProviderRegistry.register(CampanionItems.TENT_BAG, new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity) -> TentBagItem.hasBlocks(stack) ? 0 : 1);
+		FabricModelPredicateProviderRegistry.register(CampanionItems.TENT_BAG, new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity) -> TentBagItem.isEmpty(stack) ? 1 : 0);
 		FabricModelPredicateProviderRegistry.register(CampanionItems.SLEEPING_BAG, new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity) -> SleepingBagItem.inUse(stack) ? 1 : 0);
 	}
 }

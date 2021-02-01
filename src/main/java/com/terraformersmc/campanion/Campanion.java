@@ -20,7 +20,7 @@ import com.terraformersmc.campanion.tag.CampanionBlockTags;
 import com.terraformersmc.campanion.tag.CampanionItemTags;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -86,7 +86,7 @@ public class Campanion implements ModInitializer {
 	}
 
 	public static void registerServerboundPackets() {
-		ServerSidePacketRegistry.INSTANCE.register(C2SOpenBackpack.ID, C2SOpenBackpack::onPacket);
-		ServerSidePacketRegistry.INSTANCE.register(C2SRotateHeldItem.ID, C2SRotateHeldItem::onPacket);
+		ServerPlayNetworking.registerGlobalReceiver(C2SOpenBackpack.ID, C2SOpenBackpack::onPacket);
+		ServerPlayNetworking.registerGlobalReceiver(C2SRotateHeldItem.ID, C2SRotateHeldItem::onPacket);
 	}
 }

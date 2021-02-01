@@ -3,7 +3,7 @@ package com.terraformersmc.campanion.recipe;
 import com.terraformersmc.campanion.item.AccessorStructure;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.TentBagItem;
-import com.terraformersmc.campanion.item.UnbuiltTent;
+import com.terraformersmc.campanion.item.TentItem;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -37,7 +37,7 @@ public class TentBuildingRecipe extends SpecialCraftingRecipe {
 				foundBag = true;
 			} else if (isTent(stack) && !foundTent) {
 				if (world instanceof ServerWorld) {
-					STRUCTURE_CACHE.set(((ServerWorld) world).getStructureManager().getStructure(((UnbuiltTent) stack.getItem()).getStructure()));
+					STRUCTURE_CACHE.set(((ServerWorld) world).getStructureManager().getStructure(((TentItem) stack.getItem()).getStructure()));
 				}
 				foundTent = true;
 			} else if (!stack.isEmpty()) {
@@ -64,22 +64,8 @@ public class TentBuildingRecipe extends SpecialCraftingRecipe {
 
 			if (isTent(stack)) {
 				if (structure != null) {
-					BlockPos size = structure.getSize();
 					ItemStack out = new ItemStack(CampanionItems.TENT_BAG);
-					ListTag list = new ListTag();
-					for (Structure.StructureBlockInfo info : ((AccessorStructure) structure).getBlocks().get(0).getAll()) {
-						CompoundTag tag = new CompoundTag();
-						tag.put("Pos", NbtHelper.fromBlockPos(info.pos.add(-size.getX() / 2, 0, -size.getZ() / 2)));
-						tag.put("BlockState", NbtHelper.fromBlockState(info.state));
-						if (info.tag != null && !info.tag.isEmpty()) {
-							tag.put("BlockEntityData", info.tag);
-						}
-						list.add(tag);
-					}
-
-					out.getOrCreateTag().put("Blocks", list);
-					out.getOrCreateTag().put("TentSize", NbtHelper.fromBlockPos(size));
-
+					TentItem.initNbt(out, structure);
 					return out;
 				}
 			}
@@ -93,7 +79,7 @@ public class TentBuildingRecipe extends SpecialCraftingRecipe {
 	}
 
 	private static boolean isTent(ItemStack stack) {
-		return stack.getItem() instanceof UnbuiltTent;
+		return stack.getItem() instanceof TentItem;
 	}
 
 	@Override
