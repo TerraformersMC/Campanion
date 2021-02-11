@@ -13,6 +13,8 @@ import net.minecraft.util.math.BlockPos;
 public interface BackpackStorePlayer {
 	DefaultedList<ItemStack> getBackpackStacks();
 
+	void setBackpackStacks(DefaultedList<ItemStack> stacks);
+
 	default void syncChanges() {
 		PlayerEntity player = (PlayerEntity) this;
 		if(!player.world.isClient) {

@@ -37,7 +37,7 @@ import java.util.concurrent.Callable;
 public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoSetSpawnPlayer, GrapplingHookUser, BackpackStorePlayer {
 
 	public GrapplingHookEntity campanion_grapplingHook;
-	private final DefaultedList<ItemStack> backpackStacks = DefaultedList.of();
+	private DefaultedList<ItemStack> backpackStacks = DefaultedList.of();
 
 	protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World world) {
 		super(type, world);
@@ -59,6 +59,11 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 	@Override
 	public DefaultedList<ItemStack> getBackpackStacks() {
 		return this.backpackStacks;
+	}
+
+	@Override
+	public void setBackpackStacks(DefaultedList<ItemStack> stacks) {
+		this.backpackStacks = stacks;
 	}
 
 	@Inject(method = "isBlockBreakingRestricted(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/GameMode;)Z", at = @At("HEAD"), cancellable = true)
