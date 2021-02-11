@@ -13,6 +13,7 @@ import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class FlareEntity extends ThrownItemEntity {
@@ -57,7 +58,10 @@ public class FlareEntity extends ThrownItemEntity {
 	public void onCollision(HitResult hitResult) {
 		if (hitResult.getType().equals(HitResult.Type.BLOCK)) {
 			if (!getLandingBlockState().isAir()) {
-				world.setBlockState(getLandingPos().up(), CampanionBlocks.FLARE_BLOCK.getDefaultState());
+				BlockPos pos = getLandingPos().up();
+				if (world.getBlockState(pos).isAir()) {
+					world.setBlockState(pos, CampanionBlocks.FLARE_BLOCK.getDefaultState());
+				}
 				if (!this.world.isClient) {
 					this.remove();
 					this.world.sendEntityStatus(this, (byte) 3);
