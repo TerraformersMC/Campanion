@@ -1,7 +1,7 @@
 package com.terraformersmc.campanion.backpack;
 
+import com.terraformersmc.campanion.item.BackpackItem;
 import com.terraformersmc.campanion.mixin.InvokerEntity;
-import com.terraformersmc.campanion.network.C2SOpenBackpack;
 import com.terraformersmc.campanion.network.S2CSyncBackpackContents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -11,6 +11,10 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
 public interface BackpackStorePlayer {
+	static int getStackCapacity(ItemStack stack) {
+		return stack.getItem() instanceof BackpackItem ? ((BackpackItem) stack.getItem()).type.getSlots() : 0;
+	}
+
 	DefaultedList<ItemStack> getBackpackStacks();
 
 	void setBackpackStacks(DefaultedList<ItemStack> stacks);

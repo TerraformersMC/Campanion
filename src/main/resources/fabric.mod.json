@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "campanion",
   "version": "${version}",
-
   "name": "Campanion",
   "description": "A camping companion that adds items and utilities to improve your life away from home.",
   "authors": [
@@ -44,6 +43,9 @@
     ],
     "dossier": [
       "com.terraformersmc.campanion.data.CampanionData"
+    ],
+    "gravestones": [
+      "com.terraformersmc.campanion.compat.CampanionGravestonesCompat"
     ]
   },
   "mixins": [

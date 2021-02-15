@@ -17,8 +17,22 @@ dependencies {
 	mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
 	mod "fabric-api", "net.fabricmc.fabric-api:fabric-api:$project.fabric_version"
 	mod "dossier", "com.terraformersmc:dossier:${project.dossier_version}"
+	modNotTransitive "gravestones", "net.guavy:Gravestones:${project.gravestones_version}"
 
 	includeMod "reach-entity-attributes", "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
+}
+
+def modNotTransitive(String localOverrideKey, Object dep) {
+	File file = file("../.${localOverrideKey}-local");
+	if (file.exists()) {
+		dependencies.implementation(dep) {
+			transitive = false
+		}
+	} else {
+		dependencies.modImplementation(dep) {
+			transitive = false
+		}
+	}
 }
 
 repositories {
