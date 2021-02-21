@@ -24,9 +24,9 @@ public class FakeWorld extends ClientWorld {
 	public final Map<BlockPos, BlockEntity> blockEntityMap = new HashMap<>();
 	public final Map<BlockPos, CompoundTag> blockEntityTagMap = new HashMap<>();
 
-	private final BlockPos basePos;
-	private final int blockLight;
-	private final int skyLight;
+	private BlockPos basePos;
+	private int blockLight;
+	private int skyLight;
 
 	public FakeWorld(BlockPos basePos, int lightOverride) {
 		super(CLIENT.player.networkHandler,
@@ -34,6 +34,10 @@ public class FakeWorld extends ClientWorld {
 				CLIENT.world.getRegistryKey(), CLIENT.world.getDimension(), 3, CLIENT::getProfiler,
 				CLIENT.worldRenderer, CLIENT.world.isDebugWorld(),
 				((AccessorBiomeAccess) CLIENT.world.getBiomeAccess()).getSeed());
+		updatePositioning(basePos, lightOverride);
+	}
+
+	public void updatePositioning(BlockPos basePos, int lightOverride) {
 		this.basePos = basePos;
 		this.blockLight = lightOverride == -1 ? -1 : LightmapTextureManager.getBlockLightCoordinates(lightOverride);
 		this.skyLight = lightOverride == -1 ? -1 : LightmapTextureManager.getSkyLightCoordinates(lightOverride);

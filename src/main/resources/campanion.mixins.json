@@ -25,6 +25,7 @@
     "client.MixinCamera",
     "client.MixinCampfireSmokeParticle",
     "client.MixinItemRenderer",
+    "client.MixinItemStack",
     "client.MixinPlayerEntityRenderer",
     "client.MixinScreen",
     "client.MixinWolfEntityModel",
