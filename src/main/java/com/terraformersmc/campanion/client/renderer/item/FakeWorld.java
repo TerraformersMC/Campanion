@@ -1,5 +1,6 @@
 package com.terraformersmc.campanion.client.renderer.item;
 
+import com.terraformersmc.campanion.item.PlaceableTentItem;
 import com.terraformersmc.campanion.mixin.AccessorBiomeAccess;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -9,6 +10,7 @@ import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
@@ -24,16 +26,27 @@ public class FakeWorld extends ClientWorld {
 	public final Map<BlockPos, BlockEntity> blockEntityMap = new HashMap<>();
 	public final Map<BlockPos, CompoundTag> blockEntityTagMap = new HashMap<>();
 
-	private final BlockPos basePos;
-	private final int blockLight;
-	private final int skyLight;
+	private BlockPos basePos;
+	private int blockLight;
+	private int skyLight;
 
-	public FakeWorld(BlockPos basePos, int lightOverride) {
+	public FakeWorld(ItemStack stack, BlockPos basePos, int lightOverride) {
 		super(CLIENT.player.networkHandler,
 				new ClientWorld.Properties(CLIENT.world.getLevelProperties().getDifficulty(), CLIENT.world.getLevelProperties().isDifficultyLocked(), CLIENT.world.getLevelProperties().isHardcore()),
 				CLIENT.world.getRegistryKey(), CLIENT.world.getDimension(), 3, CLIENT::getProfiler,
 				CLIENT.worldRenderer, CLIENT.world.isDebugWorld(),
 				((AccessorBiomeAccess) CLIENT.world.getBiomeAccess()).getSeed());
+		updatePositioning(basePos, lightOverride);
+		PlaceableTentItem tent = (PlaceableTentItem) stack.getItem();
+		tent.traverseBlocks(stack, (pos, state, tag) -> {
+			this.blockStateMap.put(pos, state);
+			if (!tag.isEmpty()) {
+				this.blockEntityTagMap.put(pos, tag);
+			}
+		});
+	}
+
+	public void updatePositioning(BlockPos basePos, int lightOverride) {
 		this.basePos = basePos;
 		this.blockLight = lightOverride == -1 ? -1 : LightmapTextureManager.getBlockLightCoordinates(lightOverride);
 		this.skyLight = lightOverride == -1 ? -1 : LightmapTextureManager.getSkyLightCoordinates(lightOverride);

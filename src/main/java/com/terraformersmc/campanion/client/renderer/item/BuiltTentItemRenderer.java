@@ -1,5 +1,6 @@
 package com.terraformersmc.campanion.client.renderer.item;
 
+import com.terraformersmc.campanion.item.CampanionRenderWorldStasher;
 import com.terraformersmc.campanion.item.PlaceableTentItem;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -26,14 +27,7 @@ public enum BuiltTentItemRenderer {
 		if (!stack.hasTag() || !stack.getOrCreateTag().contains("Blocks")) {
 			return false;
 		}
-		FakeWorld fakeWorld = new FakeWorld(basePos, lightOverride);
-		PlaceableTentItem tent = (PlaceableTentItem) stack.getItem();
-		tent.traverseBlocks(stack, (pos, state, tag) -> {
-			fakeWorld.blockStateMap.put(pos, state);
-			if (!tag.isEmpty()) {
-				fakeWorld.blockEntityTagMap.put(pos, tag);
-			}
-		});
+		FakeWorld fakeWorld = ((CampanionRenderWorldStasher)(Object) stack).getCampanionRenderWorld(stack, basePos, lightOverride);
 		fakeWorld.blockStateMap.forEach((pos, state) -> {
 			matrices.push();
 			matrices.translate(pos.getX(), pos.getY(), pos.getZ());
