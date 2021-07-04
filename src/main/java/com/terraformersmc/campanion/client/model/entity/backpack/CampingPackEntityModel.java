@@ -22,7 +22,7 @@ public class CampingPackEntityModel<T extends LivingEntity> extends TorsoParente
 		ModelData modelData = TorsoParentedModel.getModelData();
 		ModelPartData root = modelData.getRoot();
 
-		ModelPartBuilder base = ModelPartBuilder.create().uv(16, 16).cuboid(-3.5F, 0.1F, -1.0F, 8, 10, 4, new Dilation(0.0F));
+		ModelPartBuilder base = ModelPartBuilder.create().uv(0, 0).cuboid(-3.5F, 0.1F, -1.0F, 8, 10, 4, new Dilation(0.0F));
 		ModelPartBuilder bottomThing = ModelPartBuilder.create().uv(0, 16).cuboid(-3.0F, -0.3F, -1.5F, 6, 3, 3, new Dilation(0.0F));
 
 		root.getChild("body").addChild("base", base, ModelTransform.pivot(0.0F, 0.0F, 3.0F))
