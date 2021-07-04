@@ -12,6 +12,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.BlockModelRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,13 +20,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.List;
 import java.util.Random;
 
-public class RopeBridgePostBlockEntityRenderer extends BlockEntityRenderer<RopeBridgePostBlockEntity> {
+public class RopeBridgePostBlockEntityRenderer implements BlockEntityRenderer<RopeBridgePostBlockEntity> {
 
     private static final ThreadLocal<BlockModelRenderer> RENDERER = ThreadLocal.withInitial(() -> MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer());
 
     private static final Random RND = new Random();
-    public RopeBridgePostBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
-        super(dispatcher);
+    public RopeBridgePostBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
     }
 
     @Override

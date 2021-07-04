@@ -88,7 +88,7 @@ public class SpearItem extends TridentItem {
 			return 15.0F;
 		} else {
 			Material material = state.getMaterial();
-			return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.UNUSED_PLANT && !state.isIn(BlockTags.LEAVES) && material != Material.GOURD ? 1.0F : 1.5F;
+			return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.MOSS_BLOCK && !state.isIn(BlockTags.LEAVES) && material != Material.GOURD ? 1.0F : 1.5F;
 		}
 	}
 
@@ -121,15 +121,15 @@ public class SpearItem extends TridentItem {
 				if (!world.isClient) {
 					stack.damage(1, playerEntity, entity -> entity.sendToolBreakStatus(user.getActiveHand()));
 					SpearEntity spearEntity = new SpearEntity(world, playerEntity, this, stack);
-					spearEntity.setProperties(playerEntity, playerEntity.pitch, playerEntity.yaw, 0.0F, 2.5F, 1.0F);
-					if (playerEntity.abilities.creativeMode) {
+					spearEntity.setProperties(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F, 1.0F);
+					if (playerEntity.getAbilities().creativeMode) {
 						spearEntity.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
 					}
 
 					world.spawnEntity(spearEntity);
 					world.playSoundFromEntity(null, spearEntity, CampanionSoundEvents.SPEAR_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
-					if (!playerEntity.abilities.creativeMode) {
-						playerEntity.inventory.removeOne(stack);
+					if (!playerEntity.getAbilities().creativeMode) {
+						playerEntity.getInventory().removeOne(stack);
 					}
 				}
 

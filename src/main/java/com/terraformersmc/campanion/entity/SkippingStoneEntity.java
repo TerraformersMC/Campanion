@@ -73,7 +73,7 @@ public class SkippingStoneEntity extends ThrownItemEntity {
 
 			this.world.sendEntityStatus(this, (byte) 3);
 			if (vel.getY() * vel.getY() > squaredHorizontalVelocity || this.random.nextInt(3) == 0) {
-				this.remove();
+				this.remove(RemovalReason.DISCARDED);
 			} else {
 				this.dataTracker.set(NUMBER_OF_SKIPS, this.dataTracker.get(NUMBER_OF_SKIPS) + 1);
 				if (getOwner() instanceof PlayerEntity) {
@@ -96,16 +96,16 @@ public class SkippingStoneEntity extends ThrownItemEntity {
 		}
 
 		if (!this.world.isClient) {
-			this.remove();
+			this.remove(RemovalReason.DISCARDED);
 			this.world.sendEntityStatus(this, (byte) 3);
 		}
 	}
 
 	@Override
-	public void remove() {
+	public void remove(RemovalReason reason) {
 		if (getOwner() instanceof ServerPlayerEntity) {
 			CampanionCriteria.STONE_SKIPS.trigger((ServerPlayerEntity) getOwner(), this.dataTracker.get(NUMBER_OF_SKIPS));
 		}
-		super.remove();
+		super.remove(reason);
 	}
 }

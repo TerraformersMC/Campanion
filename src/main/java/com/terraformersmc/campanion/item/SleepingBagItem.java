@@ -12,7 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeableItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
@@ -42,7 +42,7 @@ public class SleepingBagItem extends Item implements DyeableItem {
 
 	@Override
 	public int getColor(ItemStack stack) {
-		CompoundTag compoundTag = stack.getSubTag("display");
+		NbtCompound compoundTag = stack.getSubTag("display");
 		return compoundTag != null && compoundTag.contains("color", 99) ? compoundTag.getInt("color") : 0xffffff;
 	}
 

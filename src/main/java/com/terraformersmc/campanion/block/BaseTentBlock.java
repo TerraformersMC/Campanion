@@ -11,9 +11,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
@@ -90,8 +90,8 @@ public class BaseTentBlock extends Block implements BlockEntityProvider {
 	@Override
 	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
 		int slotIndex = -1;
-		for (int i = 0; i < player.inventory.size(); i++) {
-			ItemStack stack = player.inventory.getStack(i);
+		for (int i = 0; i < player.getInventory().size(); i++) {
+			ItemStack stack = player.getInventory().getStack(i);
 			if (stack.getItem() == CampanionItems.TENT_BAG && TentBagItem.isEmpty(stack)) {
 				slotIndex = i;
 			}
@@ -103,7 +103,7 @@ public class BaseTentBlock extends Block implements BlockEntityProvider {
 			Vec3d changeSize = Vec3d.of(tentPart.getSize()).add(-1, -1, -1).multiply(1 / 2F);
 
 			ItemStack out = new ItemStack(CampanionItems.TENT_BAG);
-			ListTag list = new ListTag();
+			NbtList list = new NbtList();
 			for (int x = MathHelper.floor(-changeSize.x); x <= MathHelper.floor(changeSize.x); x++) {
 				for (int y = 0; y <= 2 * changeSize.getY(); y++) {
 					for (int z = MathHelper.floor(-changeSize.z); z <= MathHelper.floor(changeSize.z); z++) {
@@ -111,12 +111,12 @@ public class BaseTentBlock extends Block implements BlockEntityProvider {
 						if (world.isAir(off)) {
 							continue;
 						}
-						CompoundTag tag = new CompoundTag();
+						NbtCompound tag = new NbtCompound();
 						tag.put("Pos", NbtHelper.fromBlockPos(new BlockPos(x, y, z)));
 						tag.put("BlockState", NbtHelper.fromBlockState(world.getBlockState(off)));
 						BlockEntity entity = world.getBlockEntity(off);
 						if (entity != null) {
-							tag.put("BlockEntityData", entity.toTag(new CompoundTag()));
+							tag.put("BlockEntityData", entity.writeNbt(new NbtCompound()));
 						}
 						list.add(tag);
 						world.removeBlockEntity(off);//If we wan't block entities to drop items, remove this line
@@ -128,7 +128,7 @@ public class BaseTentBlock extends Block implements BlockEntityProvider {
 			out.getOrCreateTag().put("TentSize", NbtHelper.fromBlockPos(tentPart.getSize()));
 
 
-			player.inventory.setStack(slotIndex, out);
+			player.getInventory().setStack(slotIndex, out);
 		}
 
 		super.onBreak(world, pos, state, player);
@@ -136,8 +136,8 @@ public class BaseTentBlock extends Block implements BlockEntityProvider {
 
 
 	@Override
-	public BlockEntity createBlockEntity(BlockView view) {
-		return new TentPartBlockEntity();
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+		return new TentPartBlockEntity(pos, state);
 	}
 
 	public static VoxelShape createDiagonals(int heightStart, int lengthStart, boolean bothSides) {

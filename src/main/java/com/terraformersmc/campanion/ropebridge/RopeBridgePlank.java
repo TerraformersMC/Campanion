@@ -7,13 +7,12 @@ import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.client.util.math.Vector4f;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-
+import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.Vector4f;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -88,7 +87,7 @@ public class RopeBridgePlank {
         return to;
     }
 
-    public static RopeBridgePlank deserialize(CompoundTag tag) {
+    public static RopeBridgePlank deserialize(NbtCompound tag) {
         RopeBridgePlank plank = new RopeBridgePlank(
             BlockPos.fromLong(tag.getLong("FromPos")),
             BlockPos.fromLong(tag.getLong("ToPos")),
@@ -107,8 +106,8 @@ public class RopeBridgePlank {
         return plank;
     }
 
-    public static CompoundTag serialize(RopeBridgePlank plank) {
-        CompoundTag tag = new CompoundTag();
+    public static NbtCompound serialize(RopeBridgePlank plank) {
+        NbtCompound tag = new NbtCompound();
         tag.putLong("FromPos", plank.from.asLong());
         tag.putLong("ToPos", plank.to.asLong());
         tag.putDouble("DeltaPosX", plank.deltaPosition.x);
@@ -143,7 +142,7 @@ public class RopeBridgePlank {
         MatrixStack stack = new MatrixStack();
         stack.push();
         stack.translate(this.deltaPosition.getX(), this.deltaPosition.getY(), this.deltaPosition.z);
-        stack.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion(-this.yAngle));
+        stack.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(-this.yAngle));
 
         this.renderPlank(emitter, stack, material, random, translucent);
 
@@ -154,7 +153,7 @@ public class RopeBridgePlank {
     private void renderPlank(QuadEmitter emitter, MatrixStack stack, RenderMaterial material, Random random, boolean translucent) {
         stack.push();
         if(!this.flat) {
-            stack.multiply(Vector3f.POSITIVE_Z.getRadialQuaternion(this.tiltAngle));
+            stack.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(this.tiltAngle));
         }
         Sprite sprite = BridgePlanksBakedModel.PLANKS[random.nextInt(RopeBridge.PLANK_VARIANT_TEXTURES)].getSprite();
         double vStart = random.nextInt((int) (1F / RopeBridge.PLANK_WIDTH))*RopeBridge.PLANK_WIDTH;
@@ -190,12 +189,12 @@ public class RopeBridgePlank {
             if(this.ropes) {
             	//Rotate it a tiny bit as to not make the knots axis aligned. See: https://imgur.com/iCGrpn9
 				stack.push();
-				stack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(0.5F));
-				stack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(0.5F));
+				stack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(0.5F));
+				stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(0.5F));
                 this.drawKnot(emitter, stack, material, rope, random, translucent);
             	stack.pop();
             }
-            stack.multiply(Vector3f.POSITIVE_Z.getRadialQuaternion(this.tiltAngle));
+            stack.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(this.tiltAngle));
             this.drawConnectingRope(emitter, stack, material, rope, random, translucent, modifier);
             stack.pop();
         }
@@ -205,7 +204,7 @@ public class RopeBridgePlank {
     private void drawBottomRopes(QuadEmitter emitter, MatrixStack stack, RenderMaterial material, Sprite rope, Random random, boolean translucent, int modifier) {
         stack.push();
         stack.translate(0, -0.025, modifier * (RopeBridge.PLANK_LENGTH/2F - RopeBridge.UNDER_ROPE_DIST_FROM_EDGE/16F));
-        stack.multiply(Vector3f.POSITIVE_Z.getRadialQuaternion(this.tiltAngle));
+        stack.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(this.tiltAngle));
 
         float ropeStart = random.nextFloat()*(16F - this.distToPrevious*16F);
         float minU = rope.getFrameU(ropeStart);
@@ -362,7 +361,7 @@ public class RopeBridgePlank {
         Vector4f pos = new Vector4f(x, y, z, 1.0F);
         pos.transform(stack.peek().getModel());
 
-        Vector3f normal = new Vector3f(nx, ny, nz);
+        Vec3f normal = new Vec3f(nx, ny, nz);
         normal.transform(stack.peek().getNormal());
 
         emitter

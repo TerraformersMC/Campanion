@@ -54,7 +54,7 @@ public enum BuiltTentItemRenderer {
 	}
 
 	private static <E extends BlockEntity> void renderBlockEntity(E entity, MatrixStack matrices, VertexConsumerProvider provider, int light) {
-		BlockEntityRenderer<E> blockEntityRenderer = BlockEntityRenderDispatcher.INSTANCE.get(entity);
+		BlockEntityRenderer<E> blockEntityRenderer = MinecraftClient.getInstance().getBlockEntityRenderDispatcher().get(entity);
 		if (blockEntityRenderer != null) {
 			try {
 				blockEntityRenderer.render(entity, MinecraftClient.getInstance().getTickDelta(), matrices, provider, light, OverlayTexture.DEFAULT_UV);

@@ -13,7 +13,6 @@
     "MixinEnchantmentHelper",
     "MixinEntity",
     "MixinLivingEntity",
-    "MixinMobEntity",
     "MixinPlayerEntity",
     "MixinPlayerInventory",
     "MixinPlayerManager",

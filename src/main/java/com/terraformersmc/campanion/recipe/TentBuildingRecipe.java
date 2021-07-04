@@ -6,8 +6,6 @@ import com.terraformersmc.campanion.item.TentBagItem;
 import com.terraformersmc.campanion.item.TentItem;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
@@ -37,7 +35,7 @@ public class TentBuildingRecipe extends SpecialCraftingRecipe {
 				foundBag = true;
 			} else if (isTent(stack) && !foundTent) {
 				if (world instanceof ServerWorld) {
-					STRUCTURE_CACHE.set(((ServerWorld) world).getStructureManager().getStructure(((TentItem) stack.getItem()).getStructure()));
+					STRUCTURE_CACHE.set(((ServerWorld) world).getStructureManager().getStructure(((TentItem) stack.getItem()).getStructure()).orElseThrow());
 				}
 				foundTent = true;
 			} else if (!stack.isEmpty()) {

@@ -9,9 +9,9 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.Vec3f;
 
 public enum SpearItemRenderer {
     INSTANCE;
@@ -28,7 +28,7 @@ public enum SpearItemRenderer {
         model.getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
 
         if(entity != null && entity.isUsingItem() && entity.getActiveItem() == stack && (renderMode == ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND || renderMode == ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND)) {
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(180));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(180));
             matrices.translate(0, 2.1, 0);
         } else {
             matrices.translate(0, 0.85, 0);

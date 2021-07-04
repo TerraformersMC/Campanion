@@ -10,7 +10,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -38,8 +38,8 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 	}
 
 	@Override
-	public BlockEntity createBlockEntity(BlockView view) {
-		return new RopeBridgePostBlockEntity();
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+		return new RopeBridgePostBlockEntity(pos, state);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 			ItemStack stack = player.getStackInHand(hand);
 			if (!world.isClient) {
 				if (stack.getItem() == CampanionItems.ROPE) {
-					CompoundTag tag = stack.getOrCreateTag();
+					NbtCompound tag = stack.getOrCreateTag();
 					if (tag.contains(CLICKED_POSITION_KEY, 4)) {
 						BlockPos clickedPos = BlockPos.fromLong(tag.getLong(CLICKED_POSITION_KEY));
 						tag.remove(CLICKED_POSITION_KEY);
@@ -116,7 +116,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 						tag.putLong(CLICKED_POSITION_KEY, pos.asLong());
 					}
 				}
-				if (stack.getItem().isIn(ItemTags.PLANKS) && this.incrementBridge(world, player, be, pos, true) && !player.isCreative()) {
+				if (ItemTags.PLANKS.contains(stack.getItem()) && this.incrementBridge(world, player, be, pos, true) && !player.isCreative()) {
 					stack.decrement(1);
 				}
 			}

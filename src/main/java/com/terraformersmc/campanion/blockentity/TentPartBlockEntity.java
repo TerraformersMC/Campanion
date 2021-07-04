@@ -2,7 +2,7 @@ package com.terraformersmc.campanion.blockentity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
 
@@ -11,8 +11,8 @@ public class TentPartBlockEntity extends BlockEntity {
 	private BlockPos linkedPos = BlockPos.ORIGIN;
 	private BlockPos size = BlockPos.ORIGIN;
 
-	public TentPartBlockEntity() {
-		super(CampanionBlockEntities.TENT_PART);
+	public TentPartBlockEntity(BlockPos pos, BlockState state) {
+		super(CampanionBlockEntities.TENT_PART, pos, state);
 	}
 
 	public BlockPos getLinkedPos() {
@@ -32,16 +32,16 @@ public class TentPartBlockEntity extends BlockEntity {
 	}
 
 	@Override
-	public CompoundTag toTag(CompoundTag tag) {
+	public NbtCompound writeNbt(NbtCompound tag) {
 		tag.put("LinkedPos", NbtHelper.fromBlockPos(this.linkedPos));
 		tag.put("Size", NbtHelper.fromBlockPos(this.size));
-		return super.toTag(tag);
+		return super.writeNbt(tag);
 	}
 
 	@Override
-	public void fromTag(BlockState state, CompoundTag tag) {
+	public void readNbt(NbtCompound tag) {
 		this.linkedPos = NbtHelper.toBlockPos(tag.getCompound("LinkedPos"));
 		this.size = NbtHelper.toBlockPos(tag.getCompound("Size"));
-		super.fromTag(state, tag);
+		super.readNbt(tag);
 	}
 }

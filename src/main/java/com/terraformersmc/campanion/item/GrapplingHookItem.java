@@ -12,10 +12,13 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 public class GrapplingHookItem extends Item {
 	public GrapplingHookItem(Item.Settings settings) {
 		super(settings);
 	}
+	protected final Random RANDOM = new Random();
 
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {

@@ -18,12 +18,14 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.loot.UniformLootTableRange;
 import net.minecraft.loot.function.SetCountLootFunction;
+import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.util.registry.Registry;
 
 import java.util.function.Consumer;
+
+import static net.minecraft.block.MapColor.COLORS;
 
 public class CampanionData implements DossierProvider {
 	@Override
@@ -245,7 +247,7 @@ public class CampanionData implements DossierProvider {
 		}
 
 		public void addTentPartDrop(Block block) {
-			this.drops(block, BlockLootTableCreator.drops(Items.STRING).apply(SetCountLootFunction.builder(UniformLootTableRange.between(5F, 5F))));
+			this.drops(block, BlockLootTableCreator.drops(Items.STRING).apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(5F, 5F))));
 		}
 	}
 }

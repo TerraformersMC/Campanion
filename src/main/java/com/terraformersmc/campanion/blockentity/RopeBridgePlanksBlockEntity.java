@@ -11,10 +11,12 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.block.entity.FurnaceBlockEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.function.BooleanBiFunction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
@@ -32,12 +34,12 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
 
 	private Mesh mesh;
 
-	public RopeBridgePlanksBlockEntity(BlockEntityType<?> type) {
-		super(type);
+	public RopeBridgePlanksBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
-	public RopeBridgePlanksBlockEntity() {
-		super(CampanionBlockEntities.ROPE_BRIDGE_PLANK);
+	public RopeBridgePlanksBlockEntity(BlockPos pos, BlockState state) {
+		super(CampanionBlockEntities.ROPE_BRIDGE_PLANK, pos, state);
 	}
 
 	public List<RopeBridgePlank> getPlanks() {
@@ -149,18 +151,18 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
 	}
 
 	@Override
-	public void fromTag(BlockState state, CompoundTag tag) {
+	public void readNbt(NbtCompound tag) {
 		this.fromClientTag(tag);
-		super.fromTag(state, tag);
+		super.readNbt(tag);
 	}
 
 	@Override
-	public CompoundTag toTag(CompoundTag tag) {
-		return this.toClientTag(super.toTag(tag));
+	public NbtCompound writeNbt(NbtCompound tag) {
+		return this.toClientTag(super.writeNbt(tag));
 	}
 
 	@Override
-	public void fromClientTag(CompoundTag tag) {
+	public void fromClientTag(NbtCompound tag) {
 		this.planks.clear();
 		this.planks.addAll(this.getFrom(tag.getList("Planks", 10)));
 		this.clearPlankCache();
@@ -171,21 +173,21 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
 	}
 
 	@Override
-	public CompoundTag toClientTag(CompoundTag tag) {
+	public NbtCompound toClientTag(NbtCompound tag) {
 		tag.put("Planks", writeTo(this.planks));
 		return tag;
 	}
 
-	protected List<RopeBridgePlank> getFrom(ListTag list) {
+	protected List<RopeBridgePlank> getFrom(NbtList list) {
 		List<RopeBridgePlank> out = new ArrayList<>();
-		for (Tag nbt : list) {
-			out.add(RopeBridgePlank.deserialize((CompoundTag) nbt));
+		for (NbtElement nbt : list) {
+			out.add(RopeBridgePlank.deserialize((NbtCompound) nbt));
 		}
 		return out;
 	}
 
-	protected ListTag writeTo(List<RopeBridgePlank> planks) {
-		ListTag list = new ListTag();
+	protected NbtList writeTo(List<RopeBridgePlank> planks) {
+		NbtList list = new NbtList();
 		for (RopeBridgePlank plank : planks) {
 			list.add(RopeBridgePlank.serialize(plank));
 		}

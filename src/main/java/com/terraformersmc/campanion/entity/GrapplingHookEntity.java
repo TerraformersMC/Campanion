@@ -12,7 +12,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.hit.HitResult;
@@ -41,18 +41,18 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	public GrapplingHookEntity(PlayerEntity player, World world) {
 		this(world);
 		this.player = player;
-		float playerPitch = this.player.pitch;
-		float playerYaw = this.player.yaw;
+		float playerPitch = this.player.getPitch();
+		float playerYaw = this.player.getYaw();
 
 		float velX = -MathHelper.sin(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
 		float velY = -MathHelper.sin(playerPitch * 0.017453292F);
 		float velZ = MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
 		this.setVelocity(new Vec3d(velX, velY, velZ).multiply(1.5F));
 
-		this.prevYaw = this.yaw;
-		this.prevPitch = this.pitch;
+		this.prevYaw = this.getYaw();
+		this.prevPitch = this.getPitch();
 
-		this.refreshPositionAndAngles(this.player.getX(), this.player.getEyeY() - 0.1, this.player.getZ(), this.yaw, this.pitch);
+		this.refreshPositionAndAngles(this.player.getX(), this.player.getEyeY() - 0.1, this.player.getZ(), this.getYaw(), this.getPitch());
 	}
 
 	@Override
@@ -72,15 +72,15 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 
 		Vec3d vec3d = this.getVelocity();
 		if (!this.dataTracker.get(IS_IN_BLOCK) && this.prevPitch == 0.0F && this.prevYaw == 0.0F) {
-			float f = MathHelper.sqrt(squaredHorizontalLength(vec3d));
-			this.yaw = (float) (MathHelper.atan2(vec3d.x, vec3d.z) * 57.2957763671875D);
-			this.pitch = (float) (MathHelper.atan2(vec3d.y, (double) f) * 57.2957763671875D);
-			this.prevYaw = this.yaw;
-			this.prevPitch = this.pitch;
+			float f = MathHelper.sqrt((float) vec3d.horizontalLengthSquared());
+			this.setYaw((float) (MathHelper.atan2(vec3d.x, vec3d.z) * 57.2957763671875D));
+			this.setPitch((float) (MathHelper.atan2(vec3d.y, (double) f) * 57.2957763671875D));
+			this.prevYaw = this.getYaw();
+			this.prevPitch = this.getPitch();
 		}
 
 		if (this.player == null) {
-			this.remove();
+			this.remove(RemovalReason.DISCARDED);
 		} else if (this.world.isClient || this.removeIfInvalid()) {
 			if (!this.world.isClient) {
 				this.checkForCollision();
@@ -107,27 +107,27 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 		double e = vec3d.y;
 		double g = vec3d.z;
 
-		float l = MathHelper.sqrt(squaredHorizontalLength(vec3d));
+		float l = MathHelper.sqrt((float) vec3d.horizontalLengthSquared());
 
-		this.yaw = (float) (MathHelper.atan2(d, g) * 57.2957763671875D);
+		this.setYaw((float) (MathHelper.atan2(d, g) * 57.2957763671875D));
 
-		for (this.pitch = (float) (MathHelper.atan2(e, (double) l) * 57.2957763671875D); this.pitch - this.prevPitch < -180.0F; this.prevPitch -= 360.0F) {
+		for (this.setPitch((float) (MathHelper.atan2(e, (double) l) * 57.2957763671875D)); this.getPitch() - this.prevPitch < -180.0F; this.prevPitch -= 360.0F) {
 		}
 
-		while (this.pitch - this.prevPitch >= 180.0F) {
+		while (this.getPitch() - this.prevPitch >= 180.0F) {
 			this.prevPitch += 360.0F;
 		}
 
-		while (this.yaw - this.prevYaw < -180.0F) {
+		while (this.getYaw() - this.prevYaw < -180.0F) {
 			this.prevYaw -= 360.0F;
 		}
 
-		while (this.yaw - this.prevYaw >= 180.0F) {
+		while (this.getYaw() - this.prevYaw >= 180.0F) {
 			this.prevYaw += 360.0F;
 		}
 
-		this.pitch = MathHelper.lerp(0.2F, this.prevPitch, this.pitch);
-		this.yaw = MathHelper.lerp(0.2F, this.prevYaw, this.yaw);
+		this.setPitch(MathHelper.lerp(0.2F, this.prevPitch, this.getPitch()));
+		this.setYaw(MathHelper.lerp(0.2F, this.prevYaw, this.getYaw()));
 	}
 
 	private boolean removeIfInvalid() {
@@ -138,10 +138,10 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 		boolean isHookedEntity = ((GrapplingHookUser) this.player).getGrapplingHook() == this;
 		double dist = this.squaredDistanceTo(this.player);
 		if (
-				this.player.removed || !this.player.isAlive() || !isHookedEntity
+				this.player.isRemoved() || !this.player.isAlive() || !isHookedEntity
 						|| (!inMainHand && !inOffHand) || dist > 16384 ||
 						(this.dataTracker.get(IS_IN_BLOCK) && dist < 2)) {
-			this.remove();
+			this.setRemoved(RemovalReason.DISCARDED);
 			return false;
 		} else {
 			return true;
@@ -163,19 +163,19 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+	public void remove(RemovalReason reason) {
+		super.setRemoved(RemovalReason.DISCARDED);
 		if (this.player != null) {
 			((GrapplingHookUser) this.player).setGrapplingHook(null);
 		}
 	}
 
 	@Override
-	public void writeCustomDataToTag(CompoundTag tag) {
+	public void writeCustomDataToNbt(NbtCompound tag) {
 	}
 
 	@Override
-	public void readCustomDataFromTag(CompoundTag tag) {
+	public void readCustomDataFromNbt(NbtCompound tag) {
 	}
 
 
@@ -184,7 +184,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 			double dx = this.getX() - this.player.getX();
 			double dy = this.getY() - this.player.getY() + 1;
 			double dz = this.getZ() - this.player.getZ();
-			double xzDist = (double) MathHelper.sqrt(dx * dx + dz * dz);
+			double xzDist = (double) MathHelper.sqrt((float) (dx * dx + dz * dz));
 
 			double theta = Math.atan2(dy, xzDist);
 			double xzTheta = Math.atan2(dz, dx);
@@ -220,7 +220,6 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 		}
 	}
 
-	@Override
 	protected boolean canClimb() {
 		return false;
 	}
@@ -239,7 +238,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	public void writeToBuffer(PacketByteBuf buffer) {
 		if (this.player != null) {
 			buffer.writeBoolean(true);
-			buffer.writeInt(this.player.getEntityId());
+			buffer.writeInt(this.player.getId());
 		} else {
 			buffer.writeBoolean(false);
 		}

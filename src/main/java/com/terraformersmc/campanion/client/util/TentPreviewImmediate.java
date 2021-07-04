@@ -37,14 +37,14 @@ public class TentPreviewImmediate extends VertexConsumerProvider.Immediate {
 			boolean bl = Objects.equals(this.currentLayer, layer.asOptional());
 			if ((bl || buffer != this.fallbackBuffer) && this.activeConsumers.remove(buffer)) {
 				if (buffer.isBuilding()) {
-					buffer.sortQuads(0, 0, 0);
+					buffer.setCameraPosition(0, 0, 0);
 
 					buffer.end();
 					layer.startDrawing();
 
 					RenderSystem.enableBlend();
 					RenderSystem.defaultBlendFunc();
-					RenderSystem.defaultAlphaFunc();
+//					RenderSystem.defaultAlphaFunc(); may require shader change
 
 					BufferRenderer.draw(buffer);
 

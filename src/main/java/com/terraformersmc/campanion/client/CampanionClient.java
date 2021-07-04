@@ -54,18 +54,18 @@ public class CampanionClient implements ClientModInitializer {
 	}
 
 	private static void registerEntityRenderers() {
-		EntityRendererRegistry.INSTANCE.register(CampanionEntities.WOODEN_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
-		EntityRendererRegistry.INSTANCE.register(CampanionEntities.STONE_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
-		EntityRendererRegistry.INSTANCE.register(CampanionEntities.IRON_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
-		EntityRendererRegistry.INSTANCE.register(CampanionEntities.GOLDEN_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
-		EntityRendererRegistry.INSTANCE.register(CampanionEntities.DIAMOND_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
-		EntityRendererRegistry.INSTANCE.register(CampanionEntities.NETHERITE_SPEAR, (dispatcher, context) -> new SpearEntityRenderer(dispatcher));
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.WOODEN_SPEAR, SpearEntityRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.STONE_SPEAR, SpearEntityRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.IRON_SPEAR, SpearEntityRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.GOLDEN_SPEAR, SpearEntityRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.DIAMOND_SPEAR, SpearEntityRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.NETHERITE_SPEAR, SpearEntityRenderer::new);
 
-		EntityRendererRegistry.INSTANCE.register(CampanionEntities.GRAPPLING_HOOK, (dispatcher, context) -> new GrapplingHookEntityRenderer(dispatcher));
-		EntityRendererRegistry.INSTANCE.register(CampanionEntities.LAWN_CHAIR, (dispatcher, context) -> new EmptyRenderer<>(dispatcher));
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.GRAPPLING_HOOK, GrapplingHookEntityRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.LAWN_CHAIR, EmptyRenderer::new);
 
-		EntityRendererRegistry.INSTANCE.register(CampanionEntities.THROWING_STONE, (dispatcher, context) -> new FlyingItemEntityRenderer<SkippingStoneEntity>(dispatcher, context.getItemRenderer()));
-		EntityRendererRegistry.INSTANCE.register(CampanionEntities.FLARE, (dispatcher, context) -> new FlyingItemEntityRenderer<FlareEntity>(dispatcher, context.getItemRenderer()));
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.THROWING_STONE, FlyingItemEntityRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.FLARE, FlyingItemEntityRenderer::new);
 	}
 
 	private static void registerRenderLayers() {
@@ -89,7 +89,7 @@ public class CampanionClient implements ClientModInitializer {
 	}
 
 	public static void registerModelPredicateProviders() {
-		FabricModelPredicateProviderRegistry.register(CampanionItems.GRAPPLING_HOOK, new Identifier(Campanion.MOD_ID, "deployed"), (stack, world, entity) -> {
+		FabricModelPredicateProviderRegistry.register(CampanionItems.GRAPPLING_HOOK, new Identifier(Campanion.MOD_ID, "deployed"), (stack, world, entity, seed) -> {
 			if (entity instanceof PlayerEntity) {
 				for (Hand value : Hand.values()) {
 					ItemStack heldStack = entity.getStackInHand(value);
@@ -100,7 +100,7 @@ public class CampanionClient implements ClientModInitializer {
 			}
 			return 0;
 		});
-		FabricModelPredicateProviderRegistry.register(CampanionItems.TENT_BAG, new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity) -> TentBagItem.isEmpty(stack) ? 1 : 0);
-		FabricModelPredicateProviderRegistry.register(CampanionItems.SLEEPING_BAG, new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity) -> SleepingBagItem.inUse(stack) ? 1 : 0);
+		FabricModelPredicateProviderRegistry.register(CampanionItems.TENT_BAG, new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity, seed) -> TentBagItem.isEmpty(stack) ? 1 : 0);
+		FabricModelPredicateProviderRegistry.register(CampanionItems.SLEEPING_BAG, new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity, seed) -> SleepingBagItem.inUse(stack) ? 1 : 0);
 	}
 }

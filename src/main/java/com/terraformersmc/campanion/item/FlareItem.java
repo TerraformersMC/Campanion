@@ -11,11 +11,14 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 public class FlareItem extends Item {
 
 	public FlareItem(Settings settings) {
 		super(settings);
 	}
+	protected final Random RANDOM = new Random();
 
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
@@ -25,12 +28,12 @@ public class FlareItem extends Item {
 		if (!world.isClient) {
 			FlareEntity flare = new FlareEntity(world, user);
 			flare.setItem(itemStack);
-			flare.setProperties(user, user.pitch, user.yaw, 0.0F, 0.8F, 0.6F);
+			flare.setProperties(user, user.getPitch(), user.getYaw(), 0.0F, 0.8F, 0.6F);
 			world.spawnEntity(flare);
 		}
 		user.incrementStat(Stats.USED.getOrCreateStat(this));
 
-		if (!user.abilities.creativeMode) {
+		if (!user.getAbilities().creativeMode) {
 			itemStack.decrement(1);
 		}
 

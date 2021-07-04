@@ -11,11 +11,14 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 public class SkippingStoneItem extends Item {
 
 	public SkippingStoneItem(Settings settings) {
 		super(settings);
 	}
+	protected final Random RANDOM = new Random();
 
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
@@ -24,12 +27,12 @@ public class SkippingStoneItem extends Item {
 		if (!world.isClient) {
 			SkippingStoneEntity stoneEntity = new SkippingStoneEntity(world, user);
 			stoneEntity.setItem(itemStack);
-			stoneEntity.setProperties(user, user.pitch, user.yaw, 0.0F, 1.5F, 1.0F);
+			stoneEntity.setProperties(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F, 1.0F);
 			world.spawnEntity(stoneEntity);
 		}
 		user.incrementStat(Stats.USED.getOrCreateStat(this));
 
-		if (!user.abilities.creativeMode) {
+		if (!user.getAbilities().creativeMode) {
 			itemStack.decrement(1);
 		}
 

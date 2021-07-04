@@ -1,9 +1,10 @@
 package com.terraformersmc.campanion.blockentity;
 
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -14,8 +15,8 @@ public class RopeBridgePostBlockEntity extends RopeBridgePlanksBlockEntity {
     private final Map<BlockPos, List<Pair<BlockPos, List<RopeBridgePlank>>>> ghostPlanks = new HashMap<>();
     private final List<BlockPos> linkedPositions = new ArrayList<>();
 
-    public RopeBridgePostBlockEntity() {
-        super(CampanionBlockEntities.ROPE_BRIDGE_POST);
+    public RopeBridgePostBlockEntity(BlockPos pos, BlockState state) {
+        super(CampanionBlockEntities.ROPE_BRIDGE_POST, pos, state);
     }
 
     public Map<BlockPos, List<Pair<BlockPos, List<RopeBridgePlank>>>> getGhostPlanks() {
@@ -33,14 +34,14 @@ public class RopeBridgePostBlockEntity extends RopeBridgePlanksBlockEntity {
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
+    public void fromClientTag(NbtCompound tag) {
         super.fromClientTag(tag);
         this.ghostPlanks.clear();
-        for (Tag nbtRaw : tag.getList("GhostPlankMap", 10)) {
-            BlockPos pos = BlockPos.fromLong(((CompoundTag) nbtRaw).getLong("Position"));
+        for (NbtElement nbtRaw : tag.getList("GhostPlankMap", 10)) {
+            BlockPos pos = BlockPos.fromLong(((NbtCompound) nbtRaw).getLong("Position"));
             List<Pair<BlockPos, List<RopeBridgePlank>>> list = new LinkedList<>();
-            for (Tag nbtRawGhostPlanks : ((CompoundTag) nbtRaw).getList("GhostPlanks", 10)) {
-                CompoundTag nbt = (CompoundTag) nbtRawGhostPlanks;
+            for (NbtElement nbtRawGhostPlanks : ((NbtCompound) nbtRaw).getList("GhostPlanks", 10)) {
+                NbtCompound nbt = (NbtCompound) nbtRawGhostPlanks;
                 list.add(Pair.of(BlockPos.fromLong(nbt.getLong("Pos")), this.getFrom(nbt.getList("Planks", 10))));
             }
             this.ghostPlanks.put(pos, list);
@@ -51,16 +52,16 @@ public class RopeBridgePostBlockEntity extends RopeBridgePlanksBlockEntity {
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
+    public NbtCompound toClientTag(NbtCompound tag) {
         tag = super.toClientTag(tag);
-        ListTag list = new ListTag();
+        NbtList list = new NbtList();
         this.ghostPlanks.forEach((plankPos, pairs) -> {
-            CompoundTag nbt = new CompoundTag();
+            NbtCompound nbt = new NbtCompound();
             nbt.putLong("Position", plankPos.asLong());
 
-            ListTag ghostPlanksTags = new ListTag();
+            NbtList ghostPlanksTags = new NbtList();
             for (Pair<BlockPos, List<RopeBridgePlank>> plank : pairs) {
-                CompoundTag t = new CompoundTag();
+                NbtCompound t = new NbtCompound();
                 t.putLong("Pos", plank.getLeft().asLong());
                 t.put("Planks", this.writeTo(plank.getRight()));
                 ghostPlanksTags.add(t);

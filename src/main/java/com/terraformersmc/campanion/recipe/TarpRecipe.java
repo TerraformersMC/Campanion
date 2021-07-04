@@ -26,9 +26,9 @@ public class TarpRecipe extends SpecialCraftingRecipe {
 		int shearAmount = 0;
 		for (int i = 0; i < inv.size(); i++) {
 			ItemStack stack = inv.getStack(i);
-			if(stack.getItem().isIn(FabricToolTags.SHEARS)) {
+			if(FabricToolTags.SHEARS.contains(stack.getItem())) {
 				shearAmount++;
-			} else if(stack.getItem().isIn(ItemTags.WOOL)) {
+			} else if(ItemTags.WOOL.contains(stack.getItem())) {
 				woolAmount++;
 			}
 		}
@@ -41,7 +41,7 @@ public class TarpRecipe extends SpecialCraftingRecipe {
 	}
 
 	@Override
-	public DefaultedList<Ingredient> getPreviewInputs() {
+	public DefaultedList<Ingredient> getIngredients() {
 		DefaultedList<Ingredient> list = DefaultedList.of();
 
 		list.add(Ingredient.fromTag(ItemTags.WOOL));
@@ -73,7 +73,7 @@ public class TarpRecipe extends SpecialCraftingRecipe {
 	}
 
 	@Override
-	public DefaultedList<ItemStack> getRemainingStacks(CraftingInventory inventory) {
+	public DefaultedList<ItemStack> getRemainder(CraftingInventory inventory) {
 		DefaultedList<ItemStack> defaultedList = DefaultedList.ofSize(inventory.size(), ItemStack.EMPTY);
 
 		for(int i = 0; i < defaultedList.size(); ++i) {
@@ -81,7 +81,7 @@ public class TarpRecipe extends SpecialCraftingRecipe {
 			if (item.hasRecipeRemainder()) {
 				defaultedList.set(i, new ItemStack(item.getRecipeRemainder()));
 			}
-			if(item.isIn(FabricToolTags.SHEARS)) {
+			if(FabricToolTags.SHEARS.contains(item)) {
 				ItemStack stack = inventory.getStack(i).copy();
 				if (!stack.damage(1, new Random(), null)) {
 					defaultedList.set(i, stack);

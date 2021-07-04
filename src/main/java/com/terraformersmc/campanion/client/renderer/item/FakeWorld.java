@@ -11,7 +11,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 
@@ -24,7 +24,7 @@ public class FakeWorld extends ClientWorld {
 
 	public final Map<BlockPos, BlockState> blockStateMap = new HashMap<>();
 	public final Map<BlockPos, BlockEntity> blockEntityMap = new HashMap<>();
-	public final Map<BlockPos, CompoundTag> blockEntityTagMap = new HashMap<>();
+	public final Map<BlockPos, NbtCompound> blockEntityTagMap = new HashMap<>();
 
 	private BlockPos basePos;
 	private int blockLight;
@@ -72,11 +72,8 @@ public class FakeWorld extends ClientWorld {
 	public BlockEntity getBlockEntity(BlockPos pos) {
 		return this.blockEntityMap.computeIfAbsent(pos, p -> {
 			if (this.blockEntityTagMap.containsKey(p)) {
-				BlockEntity entity = BlockEntity.createFromTag(getBlockState(pos), this.blockEntityTagMap.get(p));
-				if (entity != null) {
-					entity.setLocation(this, pos);
-					return entity;
-				}
+				BlockEntity entity = BlockEntity.createFromNbt(pos ,getBlockState(pos), this.blockEntityTagMap.get(p));
+				return entity;
 			}
 			return null;
 		});

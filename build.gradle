@@ -1,12 +1,16 @@
 plugins {
-	id 'fabric-loom' version '0.5-SNAPSHOT'
+	id 'fabric-loom' version '0.8-SNAPSHOT'
 }
 
-apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.0/ferry.gradle'
+apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.1/ferry.gradle'
 
 repositories {
 	maven {
 		url "https://maven.jamieswhiteshirt.com/libs-release/"
+	}
+
+	flatDir {
+		dirs 'lib'
 	}
 }
 
@@ -14,12 +18,16 @@ dependencies {
 	minecraft "com.mojang:minecraft:$project.minecraft_version"
 	mappings "net.fabricmc:yarn:$project.yarn_mappings:v2"
 
-	mod "fabric-loader", "net.fabricmc:fabric-loader:$project.loader_version"
-	mod "fabric-api", "net.fabricmc.fabric-api:fabric-api:$project.fabric_version"
-	mod "dossier", "com.terraformersmc:dossier:${project.dossier_version}"
-	modNotTransitive "gravestones", "net.guavy:Gravestones:${project.gravestones_version}"
+	modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
+	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+	modImplementation name: "dossier"
+//	modNotTransitive("gravestones", "net.guavy:Gravestones:${project.gravestones_version}")
 
-	includeMod "reach-entity-attributes", "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
+	modImplementation("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}")
+}
+
+minecraft {
+	accessWidener =  file("src/main/resources/campanion.accesswidener")
 }
 
 def modNotTransitive(String localOverrideKey, Object dep) {

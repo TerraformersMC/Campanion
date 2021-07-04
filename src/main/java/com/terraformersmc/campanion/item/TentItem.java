@@ -3,13 +3,14 @@ package com.terraformersmc.campanion.item;
 import com.terraformersmc.campanion.Campanion;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.Structure;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 import java.util.Objects;
@@ -35,25 +36,25 @@ public class TentItem extends PlaceableTentItem {
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
 		if (!hasBlocks(stack) && world instanceof ServerWorld) {
-			initNbt(stack, Objects.requireNonNull(((ServerWorld) world).getStructureManager().getStructure(((TentItem) stack.getItem()).getStructure())));
+			initNbt(stack, Objects.requireNonNull(((ServerWorld) world).getStructureManager().getStructure(((TentItem) stack.getItem()).getStructure()).orElseThrow()));
 		}
 		super.inventoryTick(stack, world, entity, slot, selected);
 	}
 
 	public static void initNbt(ItemStack stack, Structure structure) {
-		BlockPos size = structure.getSize();
-		ListTag list = new ListTag();
+		Vec3i size = structure.getSize();
+		NbtList list = new NbtList();
 		for (Structure.StructureBlockInfo info : ((AccessorStructure) structure).getBlocks().get(0).getAll()) {
-			CompoundTag tag = new CompoundTag();
+			NbtCompound tag = new NbtCompound();
 			tag.put("Pos", NbtHelper.fromBlockPos(info.pos.add(-size.getX() / 2, 0, -size.getZ() / 2)));
 			tag.put("BlockState", NbtHelper.fromBlockState(info.state));
-			if (info.tag != null && !info.tag.isEmpty()) {
-				tag.put("BlockEntityData", info.tag);
+			if (info.nbt != null && !info.nbt.isEmpty()) {
+				tag.put("BlockEntityData", info.nbt);
 			}
 			list.add(tag);
 		}
 
 		stack.getOrCreateTag().put("Blocks", list);
-		stack.getOrCreateTag().put("TentSize", NbtHelper.fromBlockPos(size));
+		stack.getOrCreateTag().put("TentSize", NbtHelper.fromBlockPos(new BlockPos(size)));
 	}
 }

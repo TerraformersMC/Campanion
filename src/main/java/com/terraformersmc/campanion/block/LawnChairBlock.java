@@ -78,8 +78,8 @@ public class LawnChairBlock extends HorizontalFacingBlock implements BlockEntity
 	}
 
 	@Override
-	public BlockEntity createBlockEntity(BlockView view) {
-		return new LawnChairBlockEntity();
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+		return new LawnChairBlockEntity(pos, state);
 	}
 
 	static {

@@ -5,16 +5,16 @@ import com.terraformersmc.campanion.client.model.entity.GrapplingHookEntityModel
 import com.terraformersmc.campanion.entity.GrapplingHookEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.Perspective;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
@@ -22,6 +22,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 
 public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEntity> {
 
@@ -29,8 +30,8 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 
 	private final GrapplingHookEntityModel model = new GrapplingHookEntityModel();
 
-	public GrapplingHookEntityRenderer(EntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public GrapplingHookEntityRenderer(EntityRendererFactory.Context factoryCtx) {
+		super(factoryCtx);
 	}
 
 	@Override
@@ -40,8 +41,8 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 			stack.push();
 
 			stack.push();
-			stack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(MathHelper.lerp(tickDelta, entity.prevYaw, entity.yaw) - 90.0F));
-			stack.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(MathHelper.lerp(tickDelta, entity.prevPitch, entity.pitch) + 90.0F));
+			stack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(MathHelper.lerp(tickDelta, entity.prevYaw, entity.getYaw()) - 90.0F));
+			stack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(MathHelper.lerp(tickDelta, entity.prevPitch, entity.getPitch()) + 90.0F));
 			VertexConsumer vertexConsumer = ItemRenderer.getArmorGlintConsumer(vertexConsumers, model.getLayer(this.getTexture(entity)), false, false);
 			this.model.render(stack, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
 			stack.pop();
@@ -61,11 +62,11 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 			double playerY;
 			double playerZ;
 			float playerEye;
-			if (this.getRenderManager().gameOptions != null && this.getRenderManager().gameOptions.getPerspective() != Perspective.FIRST_PERSON && player == MinecraftClient.getInstance().player) {
-				double x = this.getRenderManager().gameOptions.fov / 100.0D;
+			if (this.dispatcher.gameOptions != null && this.dispatcher.gameOptions.getPerspective() != Perspective.FIRST_PERSON && player == MinecraftClient.getInstance().player) {
+				double x = this.dispatcher.gameOptions.fov / 100.0D;
 				Vec3d vec3d = new Vec3d((double) armOffset * -0.36D * x, -0.045D * x, 0.4D);
-				vec3d = vec3d.rotateX(-MathHelper.lerp(tickDelta, player.prevPitch, player.pitch) * 0.017453292F);
-				vec3d = vec3d.rotateY(-MathHelper.lerp(tickDelta, player.prevYaw, player.yaw) * 0.017453292F);
+				vec3d = vec3d.rotateX(-MathHelper.lerp(tickDelta, player.prevPitch, player.getPitch()) * 0.017453292F);
+				vec3d = vec3d.rotateY(-MathHelper.lerp(tickDelta, player.prevYaw, player.getYaw()) * 0.017453292F);
 				vec3d = vec3d.rotateY(k * 0.5F);
 				vec3d = vec3d.rotateX(-k * 0.7F);
 				playerX = MathHelper.lerp(tickDelta, player.prevX, player.getX()) + vec3d.x;

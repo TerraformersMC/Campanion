@@ -5,7 +5,8 @@ import com.terraformersmc.campanion.entity.LawnChairEntity;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
 import java.util.List;
@@ -17,8 +18,8 @@ public class LawnChairBlockEntity extends BlockEntity implements BlockEntityClie
 
 	private LawnChairEntity cachedEntity;
 
-	public LawnChairBlockEntity() {
-		super(CampanionBlockEntities.LAWN_CHAIR);
+	public LawnChairBlockEntity(BlockPos pos, BlockState state) {
+		super(CampanionBlockEntities.LAWN_CHAIR, pos, state);
 	}
 
 	public LawnChairEntity findOrCreateEntity() {
@@ -39,24 +40,24 @@ public class LawnChairBlockEntity extends BlockEntity implements BlockEntityClie
 	}
 
 	@Override
-	public CompoundTag toTag(CompoundTag tag) {
-		return super.toTag(this.toClientTag(tag));
+	public NbtCompound writeNbt(NbtCompound tag) {
+		return super.writeNbt(this.toClientTag(tag));
 	}
 
 	@Override
-	public void fromTag(BlockState state, CompoundTag tag) {
+	public void readNbt(NbtCompound tag) {
 		this.fromClientTag(tag);
-		super.fromTag(state, tag);
+		super.readNbt(tag);
 	}
 
 	@Override
-	public void fromClientTag(CompoundTag tag) {
+	public void fromClientTag(NbtCompound tag) {
 		this.entityUUID = tag.getUuid("EntityUUID");
 		this.cachedEntity = null;
 	}
 
 	@Override
-	public CompoundTag toClientTag(CompoundTag tag) {
+	public NbtCompound toClientTag(NbtCompound tag) {
 		tag.putUuid("EntityUUID", this.entityUUID);
 		return tag;
 	}

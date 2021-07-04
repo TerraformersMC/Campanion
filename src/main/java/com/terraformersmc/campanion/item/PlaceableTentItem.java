@@ -6,10 +6,10 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -38,7 +38,7 @@ public abstract class PlaceableTentItem extends Item {
 		return NbtHelper.toBlockPos(stack.getOrCreateTag().getCompound("TentSize"));
 	}
 
-	public ListTag getBlocks(ItemStack stack) {
+	public NbtList getBlocks(ItemStack stack) {
 		return stack.getOrCreateTag().getList("Blocks", 10);
 	}
 
@@ -61,7 +61,7 @@ public abstract class PlaceableTentItem extends Item {
 						tag.putInt("x", off.getX());
 						tag.putInt("y", off.getY());
 						tag.putInt("z", off.getZ());
-						entity.fromTag(state, tag);
+						entity.readNbt(tag);
 						entity.markDirty();
 					}
 					if (entity instanceof TentPartBlockEntity) {
@@ -98,13 +98,13 @@ public abstract class PlaceableTentItem extends Item {
 		return list;
 	}
 
-	public void traverseBlocks(ItemStack stack, TriConsumer<BlockPos, BlockState, CompoundTag> consumer) {
+	public void traverseBlocks(ItemStack stack, TriConsumer<BlockPos, BlockState, NbtCompound> consumer) {
 		if (hasBlocks(stack)) {
-			for (Tag block : getBlocks(stack)) {
-				CompoundTag tag = (CompoundTag) block;
+			for (NbtElement block : getBlocks(stack)) {
+				NbtCompound tag = (NbtCompound) block;
 				BlockPos off = NbtHelper.toBlockPos(tag.getCompound("Pos"));
 				BlockState state = NbtHelper.toBlockState(tag.getCompound("BlockState"));
-				CompoundTag data = tag.getCompound("BlockEntityData");
+				NbtCompound data = tag.getCompound("BlockEntityData");
 				data.remove("x");
 				data.remove("y");
 				data.remove("z");

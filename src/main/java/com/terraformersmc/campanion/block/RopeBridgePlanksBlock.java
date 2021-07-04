@@ -23,8 +23,8 @@ public class RopeBridgePlanksBlock extends Block implements BlockEntityProvider 
 	}
 
 	@Override
-	public BlockEntity createBlockEntity(BlockView view) {
-		return new RopeBridgePlanksBlockEntity();
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+		return new RopeBridgePlanksBlockEntity(pos, state);
 	}
 
 	@Override

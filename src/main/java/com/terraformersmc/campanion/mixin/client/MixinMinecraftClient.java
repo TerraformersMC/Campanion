@@ -4,7 +4,7 @@ import com.terraformersmc.campanion.item.PlaceableTentItem;
 import com.terraformersmc.campanion.network.C2SRotateHeldItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,9 +1,12 @@
 package com.terraformersmc.campanion.mixin;
 
+import com.terraformersmc.campanion.item.BackpackItem;
 import com.terraformersmc.campanion.item.SleepingBagItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -38,6 +41,14 @@ public abstract class MixinLivingEntity extends Entity {
 				item.damage(1, (LivingEntity) (Object) this, e -> e.sendToolBreakStatus(value));
 				SleepingBagItem.setInUse(item, false);
 			}
+		}
+	}
+
+	@Inject(method = "getPreferredEquipmentSlot", at = @At("HEAD"), cancellable = true)
+	private static void onGetPreferredEquipmentSlot(ItemStack stack, CallbackInfoReturnable<EquipmentSlot> info) {
+		Item item = stack.getItem();
+		if (item instanceof BackpackItem) {
+			info.setReturnValue(EquipmentSlot.CHEST);
 		}
 	}
 

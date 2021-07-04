@@ -14,7 +14,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stat;
@@ -71,8 +71,8 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 		if(world.getBlockState(pos).getBlock() instanceof BaseTentBlock) {
 			int slotIndex = -1;
 			PlayerEntity player = (PlayerEntity) (Object) this;
-			for (int i = 0; i < player.inventory.size(); i++) {
-				ItemStack stack = player.inventory.getStack(i);
+			for (int i = 0; i < player.getInventory().size(); i++) {
+				ItemStack stack = player.getInventory().getStack(i);
 				if (stack.getItem() == CampanionItems.TENT_BAG && TentBagItem.isEmpty(stack)) {
 					slotIndex = i;
 				}
@@ -83,24 +83,24 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 		}
 	}
 
-	@Inject(method = "writeCustomDataToTag", at = @At("TAIL"))
-	public void writeCustomDataToTag(CompoundTag tag, CallbackInfo info) {
-		tag.put("_campanion_backpack", Inventories.toTag(new CompoundTag(), this.backpackStacks));
+	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+	public void writeCustomDataToNbt(NbtCompound tag, CallbackInfo info) {
+		tag.put("_campanion_backpack", Inventories.writeNbt(new NbtCompound(), this.backpackStacks));
 		tag.putInt("_campanion_backpack_size", this.backpackStacks.size());
 	}
 
-	@Inject(method = "readCustomDataFromTag", at = @At("TAIL"))
-	public void readCustomDataFromTag(CompoundTag tag, CallbackInfo info) {
+	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+	public void readCustomDataFromNbt(NbtCompound tag, CallbackInfo info) {
 		this.backpackStacks.clear();
 		for (int i = 0; i < tag.getInt("_campanion_backpack_size"); i++) {
 			this.backpackStacks.add(ItemStack.EMPTY);
 		}
-		Inventories.fromTag(tag.getCompound("_campanion_backpack"), this.backpackStacks);
+		Inventories.readNbt(tag.getCompound("_campanion_backpack"), this.backpackStacks);
 
 		//If there are stacks in the old format, then put them in the new format
 		ItemStack stack = this.getEquippedStack(EquipmentSlot.CHEST);
 		if(stack.getItem() instanceof BackpackItem && stack.getOrCreateTag().contains("Inventory", 10)) {
-			Inventories.fromTag(stack.getOrCreateTag().getCompound("Inventory"), this.backpackStacks);
+			Inventories.readNbt(stack.getOrCreateTag().getCompound("Inventory"), this.backpackStacks);
 			stack.getTag().remove("Inventory");
 		}
 	}

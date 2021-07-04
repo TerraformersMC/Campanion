@@ -1,6 +1,7 @@
 package com.terraformersmc.campanion.client.model.entity.backpack;
 
-import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.model.*;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;
 
 /**
@@ -9,29 +10,28 @@ import net.minecraft.entity.LivingEntity;
  */
 public class HikingPackEntityModel<T extends LivingEntity> extends TorsoParentedModel<T> {
 
+	public HikingPackEntityModel(ModelPart root) {
+		super(root);
+	}
+
 	public HikingPackEntityModel() {
-		super(32, 48);
+		this(getTexturedModelData().createModel());
+	}
 
-		ModelPart leftThing = new ModelPart(this, 14, 26);
-		leftThing.setPivot(4.0F, 0.6F, 0.0F);
-		leftThing.addCuboid(0.0F, 0.0F, 0.0F, 3, 8, 3, -0.2F);
+	public static TexturedModelData getTexturedModelData() {
+		ModelData modelData = TorsoParentedModel.getModelData();
+		ModelPartData root = modelData.getRoot();
 
-		ModelPart bottomThing = new ModelPart(this, 0, 17);
-		bottomThing.setPivot(0.0F, 10.0F, -0.4F);
-		bottomThing.addCuboid(-4.5F, -1.0F, 0.0F, 9, 4, 4, -0.4F);
+		ModelPartBuilder base = ModelPartBuilder.create().uv(0, 0).cuboid(-4.5F, -1.1F, -1.0F, 9, 11, 5, new Dilation(0.0F));
+		ModelPartBuilder bottomThing = ModelPartBuilder.create().uv(0, 17).cuboid(-4.5F, -1.0F, 0.0F, 9, 4, 4, new Dilation(-0.4F));
+		ModelPartBuilder leftThing = ModelPartBuilder.create().uv(14, 26).cuboid(0.0F, 0.0F, 0.0F, 3, 8, 3, new Dilation(-0.2F));
+		ModelPartBuilder rightThing = ModelPartBuilder.create().uv(0, 26).cuboid(-3.0F, 0.0F, 0.0F, 3, 8, 3, new Dilation(-0.2F));
 
-		ModelPart base = new ModelPart(this, 0, 0);
-		base.setPivot(0.0F, 0.0F, 3.0F);
-		base.addCuboid(-4.5F, -1.1F, -1.0F, 9, 11, 5, 0.0F);
+		ModelPartData baseData = root.getChild("body").addChild("base", base, ModelTransform.pivot(0.0F, 0.0F, 3.0F));
+		baseData.addChild("bottom_thing", bottomThing, ModelTransform.pivot(0.0F, 10.0F, -0.4F));
+		baseData.addChild("left_thing", leftThing, ModelTransform.pivot(4.0F, 0.6F, 0.0F));
+		baseData.addChild("right_thing", rightThing, ModelTransform.pivot(-4.0F, 0.6F, 0.0F));
 
-		ModelPart rightThing = new ModelPart(this, 0, 26);
-		rightThing.setPivot(-4.0F, 0.6F, 0.0F);
-		rightThing.addCuboid(-3.0F, 0.0F, 0.0F, 3, 8, 3, -0.2F);
-
-		this.torso.addChild(base);
-
-		base.addChild(leftThing);
-		base.addChild(bottomThing);
-		base.addChild(rightThing);
+		return TexturedModelData.of(modelData, 32, 48);
 	}
 }

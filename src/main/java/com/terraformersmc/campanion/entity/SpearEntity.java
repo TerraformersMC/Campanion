@@ -19,9 +19,9 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.Packet;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.hit.EntityHitResult;
@@ -132,29 +132,29 @@ public class SpearEntity extends PersistentProjectileEntity {
 	}
 
 	@Override
-	public void readCustomDataFromTag(CompoundTag tag) {
-		super.readCustomDataFromTag(tag);
+	public void readCustomDataFromNbt(NbtCompound tag) {
+		super.readCustomDataFromNbt(tag);
 		if (tag.contains("Item", 10)) {
-			this.spearStack = ItemStack.fromTag(tag.getCompound("Item"));
+			this.spearStack = ItemStack.fromNbt(tag.getCompound("Item"));
 			this.dataTracker.set(ENCHANTMENT_GLINT, this.spearStack.hasGlint());
 		}
 
 		this.piercedEntities.clear();
 		if (tag.contains("HitEntities", 9)) {
-			for (Tag hitEntity : tag.getList("HitEntities", 10)) {
-				this.piercedEntities.add(((CompoundTag) hitEntity).getUuid("UUID"));
+			for (NbtElement hitEntity : tag.getList("HitEntities", 10)) {
+				this.piercedEntities.add(((NbtCompound) hitEntity).getUuid("UUID"));
 			}
 		}
 	}
 
 	@Override
-	public void writeCustomDataToTag(CompoundTag tag) {
-		super.writeCustomDataToTag(tag);
-		tag.put("Item", this.spearStack.toTag(new CompoundTag()));
+	public void writeCustomDataToNbt(NbtCompound tag) {
+		super.writeCustomDataToNbt(tag);
+		tag.put("Item", this.spearStack.writeNbt(new NbtCompound()));
 
-		ListTag tags = new ListTag();
+		NbtList tags = new NbtList();
 		for (UUID uuid : this.piercedEntities) {
-			CompoundTag c = new CompoundTag();
+			NbtCompound c = new NbtCompound();
 			c.putUuid("UUID", uuid);
 			tags.add(c);
 		}

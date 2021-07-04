@@ -8,9 +8,9 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -33,11 +33,11 @@ public class C2SRotateHeldItem {
 		server.execute(() -> {
 			ItemStack stack = player.getMainHandStack();
 			if (stack.getItem() instanceof PlaceableTentItem && stack.getOrCreateTag().contains("Blocks", 9)) {
-				for (Tag block : stack.getOrCreateTag().getList("Blocks", 10)) {
-					CompoundTag tag = (CompoundTag) block;
+				for (NbtElement block : stack.getOrCreateTag().getList("Blocks", 10)) {
+					NbtCompound tag = (NbtCompound) block;
 					BlockPos off = NbtHelper.toBlockPos(tag.getCompound("Pos"));
 					BlockState state = NbtHelper.toBlockState(tag.getCompound("BlockState"));
-					CompoundTag data = tag.getCompound("BlockEntityData");
+					NbtCompound data = tag.getCompound("BlockEntityData");
 
 					BlockPos rotatedPos = Structure.transformAround(off, BlockMirror.NONE, BlockRotation.CLOCKWISE_90, BlockPos.ORIGIN);
 					tag.put("Pos", NbtHelper.fromBlockPos(rotatedPos));
@@ -46,10 +46,11 @@ public class C2SRotateHeldItem {
 					tag.put("BlockState", NbtHelper.fromBlockState(rotatedState));
 
 					if (!data.isEmpty()) {
-						BlockEntity be = BlockEntity.createFromTag(state, data);
+						BlockEntity be = BlockEntity.createFromNbt(rotatedPos, state, data);
 						if (be != null) {
-							be.applyRotation(BlockRotation.CLOCKWISE_90);
-							tag.put("BlockEntityData", be.toTag(new CompoundTag()));
+							// TODO - Can't find equivilent
+//							be.applyRotation(BlockRotation.CLOCKWISE_90);
+							tag.put("BlockEntityData", be.writeNbt(new NbtCompound()));
 						}
 					}
 				}

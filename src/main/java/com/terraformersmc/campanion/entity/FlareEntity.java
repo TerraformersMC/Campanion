@@ -63,7 +63,7 @@ public class FlareEntity extends ThrownItemEntity {
 					world.setBlockState(pos, CampanionBlocks.FLARE_BLOCK.getDefaultState());
 				}
 				if (!this.world.isClient) {
-					this.remove();
+					this.remove(RemovalReason.DISCARDED);
 					this.world.sendEntityStatus(this, (byte) 3);
 				}
 			} else {

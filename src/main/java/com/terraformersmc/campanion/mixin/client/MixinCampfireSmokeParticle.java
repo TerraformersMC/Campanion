@@ -4,11 +4,11 @@ import net.minecraft.block.CampfireBlock;
 import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.client.particle.CampfireSmokeParticle;
 import net.minecraft.client.particle.SpriteBillboardParticle;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,7 +30,7 @@ public abstract class MixinCampfireSmokeParticle extends SpriteBillboardParticle
 	private void campanion$setColor(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, boolean bl, CallbackInfo ci) {
 		BlockPos pos = new BlockPos(x, y, z);
 		float[] currColor;
-		Vector3f color = new Vector3f(0, 0, 0);
+		Vec3f color = new Vec3f(0, 0, 0);
 		boolean recolor = false;
 		if (world.getBlockState(pos).getBlock() instanceof CampfireBlock && world.getBlockEntity(pos) instanceof CampfireBlockEntity) {
 			CampfireBlockEntity campfireBlockEntity = (CampfireBlockEntity) world.getBlockEntity(pos);

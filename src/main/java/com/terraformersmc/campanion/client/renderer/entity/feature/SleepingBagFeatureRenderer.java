@@ -5,15 +5,17 @@ import com.terraformersmc.campanion.client.model.entity.SleepingBagModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.model.Dilation;
+import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.OtherClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3f;
 
 @Environment(EnvType.CLIENT)
 public enum SleepingBagFeatureRenderer {
@@ -22,7 +24,7 @@ public enum SleepingBagFeatureRenderer {
 	private static final Identifier TEXTURE = new Identifier(Campanion.MOD_ID, "textures/entity/sleeping_bag.png");
 
 	private final SleepingBagModel<PlayerEntity> model = new SleepingBagModel<>();
-	private final BipedEntityModel<PlayerEntity> bipedModel = new BipedEntityModel<>(RenderLayer::getEntityCutoutNoCull,1/16F, 0.0F, 64, 64);
+	private final BipedEntityModel<PlayerEntity> bipedModel = new BipedEntityModel<>(TexturedModelData.of(BipedEntityModel.getModelData(new Dilation(1/16F), 0), 64, 64).createModel(), RenderLayer::getEntityCutoutNoCull);
 
 	SleepingBagFeatureRenderer() {
 		this.bipedModel.setVisible(false);
@@ -39,9 +41,9 @@ public enum SleepingBagFeatureRenderer {
 		double theta = Math.toRadians(entity.getYaw(tickDelta));
 		matrices.translate(size*-Math.sin(theta), entity instanceof OtherClientPlayerEntity ? -0.55D : 0.15D, size*Math.cos(theta));
 
-		matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(270 - entity.getYaw(tickDelta)));
-		matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(90.0F));
-		matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(270.0F));
+		matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(270 - entity.getYaw(tickDelta)));
+		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(90.0F));
+		matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(270.0F));
 
 		matrices.scale(-1.0F, -1.0F, 1.0F);
 		matrices.scale(0.9375F, 0.9375F, 0.9375F);

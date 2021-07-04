@@ -27,7 +27,8 @@
     "ph0elyx",
     "The-Fireplace",
     "20o",
-    "ThisIsSammy"
+    "ThisIsSammy",
+    "jhbuchanan45"
   ],
 
   "license": "LGPL-3.0-only",
@@ -43,17 +44,16 @@
     ],
     "dossier": [
       "com.terraformersmc.campanion.data.CampanionData"
-    ],
-    "gravestones": [
-      "com.terraformersmc.campanion.compat.CampanionGravestonesCompat"
     ]
   },
   "mixins": [
     "campanion.mixins.json"
   ],
+  "accessWidener": "campanion.accesswidener",
   "depends": {
-    "fabricloader": ">=0.7.4",
-    "fabric": "*",
-    "minecraft": ">1.16-"
+    "fabricloader": ">=0.11.3",
+    "fabric": ">=0.28.0",
+    "java": ">=16",
+    "minecraft": ">=1.17"
   }
 }

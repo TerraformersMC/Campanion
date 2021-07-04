@@ -2,9 +2,12 @@ package com.terraformersmc.campanion.mixin.client;
 
 import com.terraformersmc.campanion.item.SleepingBagItem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.SleepingChatScreen;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,10 +20,12 @@ public abstract class MixinScreen {
 	@Shadow
 	public abstract void init(MinecraftClient client, int width, int height);
 
-	@Inject(method = "addButton", at = @At("HEAD"))
-	private <T extends AbstractButtonWidget> void onAddButton(T button, CallbackInfoReturnable<T> info) {
+	@Inject(method = "addDrawableChild", at = @At("HEAD"))
+	private <T extends Element & Drawable & Selectable> void onAddDrawableChild(T button, CallbackInfoReturnable<T> info) {
 		if ((Object) this instanceof SleepingChatScreen && SleepingBagItem.getUsingStack(MinecraftClient.getInstance().player).isPresent()) {
-			button.setMessage(new TranslatableText("item.campanion.sleeping_bag.stop_sleeping"));
+			if (button instanceof ClickableWidget) {
+				((ClickableWidget) button).setMessage(new TranslatableText("item.campanion.sleeping_bag.stop_sleeping"));
+			}
 		}
 	}
 }

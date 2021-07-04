@@ -39,8 +39,8 @@ public class CampanionBlockEntities {
 		BLUE_FLAT_TENT_TOP, BROWN_FLAT_TENT_TOP, GREEN_FLAT_TENT_TOP, RED_FLAT_TENT_TOP, BLACK_FLAT_TENT_TOP
 	);
 
-	private static <T extends BlockEntity> BlockEntityType<T> add(String name, Supplier<? extends T> supplier, Block... blocks) {
-		return add(name, BlockEntityType.Builder.create(supplier, blocks));
+	private static <T extends BlockEntity> BlockEntityType<T> add(String name, BlockEntityType.BlockEntityFactory<? extends T> factory, Block... blocks) {
+		return add(name, BlockEntityType.Builder.create(factory, blocks));
 	}
 
 	private static <T extends BlockEntity> BlockEntityType<T> add(String name, BlockEntityType.Builder<T> builder) {
