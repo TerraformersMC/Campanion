@@ -102,7 +102,7 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 	}
 
 	private static void drawLineVertex(float x, float y, float z, VertexConsumer buffer, Matrix4f mat, float t, float a) {
-		buffer.vertex(mat, (float) (x * t + a * Math.sin(t * 2F * Math.PI)), y * t + 0.25F, z * t).color(0, 0, 0, 255).next();
+		buffer.vertex(mat, (float) (x * t + a * Math.sin(t * 2F * Math.PI)), y * t + 0.25F, z * t).color(0, 0, 0, 255).normal(0,0,0).next();
 	}
 
 	@Override
