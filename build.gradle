@@ -6,7 +6,10 @@ apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.1/
 
 repositories {
 	maven {
-		url "https://maven.jamieswhiteshirt.com/libs-release/"
+		url "https://maven.jamieswhiteshirt.com/libs-release"
+		content {
+			includeGroup "com.jamieswhiteshirt"
+		}
 	}
 
 	flatDir {
@@ -20,14 +23,18 @@ dependencies {
 
 	modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
-	modImplementation name: "dossier"
+	modImplementation(name: "dossier")
 //	modNotTransitive("gravestones", "net.guavy:Gravestones:${project.gravestones_version}")
 
-	modImplementation("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}")
+	include modImplementation("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}")
 }
 
 minecraft {
 	accessWidener =  file("src/main/resources/campanion.accesswidener")
+}
+
+subprojects.each {
+	remapJar.dependsOn("${it.path}:remapJar")
 }
 
 def modNotTransitive(String localOverrideKey, Object dep) {
@@ -41,6 +48,12 @@ def modNotTransitive(String localOverrideKey, Object dep) {
 			transitive = false
 		}
 	}
+}
+
+
+
+java {
+	withSourcesJar()
 }
 
 repositories {
