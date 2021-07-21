@@ -91,9 +91,9 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 
 			float amplitude = MathHelper.clamp((15F - entity.age - tickDelta) / 15F, 0F, 1F);
 
-			for (int p = 0; p < 128; ++p) {
-				drawLineVertex(changeX, changeY, changeZ, vertexConsumer2, modelMatrix, p / 128F, amplitude);
-				drawLineVertex(changeX, changeY, changeZ, vertexConsumer2, modelMatrix, (p + 1) / 128F, amplitude);
+			for (int p = 0; p < 256; ++p) {
+				drawLineVertex(changeX, changeY, changeZ, vertexConsumer2, modelMatrix, p / 256F, amplitude);
+				drawLineVertex(changeX, changeY, changeZ, vertexConsumer2, modelMatrix, (p + 1) / 256F, amplitude);
 			}
 
 			stack.pop();
@@ -102,7 +102,8 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 	}
 
 	private static void drawLineVertex(float x, float y, float z, VertexConsumer buffer, Matrix4f mat, float t, float a) {
-		buffer.vertex(mat, (float) (x * t + a * Math.sin(t * 2F * Math.PI)), y * t + 0.25F, z * t).color(0, 0, 0, 255).normal(0,0,0).next();
+		int normalConst = 0;
+		buffer.vertex(mat, (float) (x * t + a * Math.sin(t * 2F * Math.PI)), y * t + 0.25F, z * t).color(0, 0, 0, 255).normal(normalConst, normalConst, normalConst).next();
 	}
 
 	@Override

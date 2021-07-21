@@ -93,7 +93,7 @@ public class CampanionClient implements ClientModInitializer {
 			if (entity instanceof PlayerEntity) {
 				for (Hand value : Hand.values()) {
 					ItemStack heldStack = entity.getStackInHand(value);
-					if (heldStack == stack && ((GrapplingHookUser) entity).getGrapplingHook() != null) {
+					if (heldStack == stack && (((GrapplingHookUser) entity).getGrapplingHook() != null && !((GrapplingHookUser) entity).getGrapplingHook().isRemoved())) {
 						return 1;
 					}
 				}

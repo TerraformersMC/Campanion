@@ -80,7 +80,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 		}
 
 		if (this.player == null) {
-			this.remove(RemovalReason.KILLED);
+			this.remove(RemovalReason.DISCARDED);
 		} else if (this.world.isClient || this.removeIfInvalid()) {
 			if (!this.world.isClient) {
 				this.checkForCollision();
@@ -141,7 +141,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 				this.player.isRemoved() || !this.player.isAlive() || !isHookedEntity
 						|| (!inMainHand && !inOffHand) || dist > 16384 ||
 						(this.dataTracker.get(IS_IN_BLOCK) && dist < 2)) {
-			this.remove(RemovalReason.KILLED);
+			this.remove(RemovalReason.DISCARDED);
 			return false;
 		} else {
 			return true;
@@ -167,7 +167,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 		if (this.player != null) {
 			((GrapplingHookUser) this.player).setGrapplingHook(null);
 		}
-		super.remove(RemovalReason.KILLED);
+		super.remove(RemovalReason.DISCARDED);
 	}
 
 	@Override
