@@ -99,9 +99,9 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 
 		//If there are stacks in the old format, then put them in the new format
 		ItemStack stack = this.getEquippedStack(EquipmentSlot.CHEST);
-		if(stack.getItem() instanceof BackpackItem && stack.getOrCreateTag().contains("Inventory", 10)) {
-			Inventories.readNbt(stack.getOrCreateTag().getCompound("Inventory"), this.backpackStacks);
-			stack.getTag().remove("Inventory");
+		if(stack.getItem() instanceof BackpackItem && stack.getOrCreateNbt().contains("Inventory", 10)) {
+			Inventories.readNbt(stack.getOrCreateNbt().getCompound("Inventory"), this.backpackStacks);
+			stack.getNbt().remove("Inventory");
 		}
 	}
 

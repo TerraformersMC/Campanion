@@ -31,15 +31,15 @@ public abstract class PlaceableTentItem extends Item {
 	}
 
 	public boolean hasBlocks(ItemStack stack) {
-		return stack.hasTag() && stack.getOrCreateTag().contains("Blocks", 9);
+		return stack.hasNbt() && stack.getOrCreateNbt().contains("Blocks", 9);
 	}
 
 	public BlockPos getSize(ItemStack stack) {
-		return NbtHelper.toBlockPos(stack.getOrCreateTag().getCompound("TentSize"));
+		return NbtHelper.toBlockPos(stack.getOrCreateNbt().getCompound("TentSize"));
 	}
 
 	public NbtList getBlocks(ItemStack stack) {
-		return stack.getOrCreateTag().getList("Blocks", 10);
+		return stack.getOrCreateNbt().getList("Blocks", 10);
 	}
 
 	public abstract void onPlaceTent(ItemStack stack);
@@ -83,7 +83,7 @@ public abstract class PlaceableTentItem extends Item {
 	public List<BlockPos> getErrorPosition(WorldView world, BlockPos pos, ItemStack stack) {
 		List<BlockPos> list = new ArrayList<>();
 		if (hasBlocks(stack)) {
-			Vec3d changeSize = Vec3d.of(NbtHelper.toBlockPos(stack.getOrCreateTag().getCompound("TentSize"))).add(-1, -1, -1).multiply(1 / 2F);
+			Vec3d changeSize = Vec3d.of(NbtHelper.toBlockPos(stack.getOrCreateNbt().getCompound("TentSize"))).add(-1, -1, -1).multiply(1 / 2F);
 			for (int x = MathHelper.floor(-changeSize.x); x <= MathHelper.floor(changeSize.x); x++) {
 				for (int y = -1; y <= 2 * changeSize.getY(); y++) {
 					for (int z = MathHelper.floor(-changeSize.z); z <= MathHelper.floor(changeSize.z); z++) {

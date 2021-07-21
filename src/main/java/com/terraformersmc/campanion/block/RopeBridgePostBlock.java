@@ -50,7 +50,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 			ItemStack stack = player.getStackInHand(hand);
 			if (!world.isClient) {
 				if (stack.getItem() == CampanionItems.ROPE) {
-					NbtCompound tag = stack.getOrCreateTag();
+					NbtCompound tag = stack.getOrCreateNbt();
 					if (tag.contains(CLICKED_POSITION_KEY, 4)) {
 						BlockPos clickedPos = BlockPos.fromLong(tag.getLong(CLICKED_POSITION_KEY));
 						tag.remove(CLICKED_POSITION_KEY);

@@ -24,7 +24,7 @@ public enum BuiltTentItemRenderer {
 	INSTANCE;
 
 	public boolean render(ItemStack stack, MatrixStack matrices, BlockPos basePos, VertexConsumerProvider provider, int lightOverride) {
-		if (!stack.hasTag() || !stack.getOrCreateTag().contains("Blocks")) {
+		if (!stack.hasNbt() || !stack.getOrCreateNbt().contains("Blocks")) {
 			return false;
 		}
 		FakeWorld fakeWorld = ((CampanionRenderWorldStasher)(Object) stack).getCampanionRenderWorld(stack, basePos, lightOverride);

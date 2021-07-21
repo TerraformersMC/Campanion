@@ -42,7 +42,7 @@ public class SleepingBagItem extends Item implements DyeableItem {
 
 	@Override
 	public int getColor(ItemStack stack) {
-		NbtCompound compoundTag = stack.getSubTag("display");
+		NbtCompound compoundTag = stack.getSubNbt("display");
 		return compoundTag != null && compoundTag.contains("color", 99) ? compoundTag.getInt("color") : 0xffffff;
 	}
 
@@ -109,10 +109,10 @@ public class SleepingBagItem extends Item implements DyeableItem {
 	}
 
 	public static boolean inUse(ItemStack stack) {
-		return stack.getItem() == CampanionItems.SLEEPING_BAG && stack.getOrCreateTag().getBoolean("IsInUse");
+		return stack.getItem() == CampanionItems.SLEEPING_BAG && stack.getOrCreateNbt().getBoolean("IsInUse");
 	}
 
 	public static void setInUse(ItemStack stack, boolean inUse) {
-		stack.getOrCreateTag().putBoolean("IsInUse", inUse);
+		stack.getOrCreateNbt().putBoolean("IsInUse", inUse);
 	}
 }

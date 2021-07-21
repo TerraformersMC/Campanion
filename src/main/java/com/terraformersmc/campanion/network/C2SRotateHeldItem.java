@@ -32,8 +32,8 @@ public class C2SRotateHeldItem {
 	public static void onPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler networkHandler, PacketByteBuf buffer, PacketSender sender) {
 		server.execute(() -> {
 			ItemStack stack = player.getMainHandStack();
-			if (stack.getItem() instanceof PlaceableTentItem && stack.getOrCreateTag().contains("Blocks", 9)) {
-				for (NbtElement block : stack.getOrCreateTag().getList("Blocks", 10)) {
+			if (stack.getItem() instanceof PlaceableTentItem && stack.getOrCreateNbt().contains("Blocks", 9)) {
+				for (NbtElement block : stack.getOrCreateNbt().getList("Blocks", 10)) {
 					NbtCompound tag = (NbtCompound) block;
 					BlockPos off = NbtHelper.toBlockPos(tag.getCompound("Pos"));
 					BlockState state = NbtHelper.toBlockState(tag.getCompound("BlockState"));

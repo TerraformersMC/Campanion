@@ -9,10 +9,10 @@ public class TentBagItem extends PlaceableTentItem {
 
 	@Override
 	public void onPlaceTent(ItemStack stack) {
-		stack.getOrCreateTag().remove("Blocks");
+		stack.getOrCreateNbt().remove("Blocks");
 	}
 
 	public static boolean isEmpty(ItemStack stack) {
-		return !(stack.getItem() == CampanionItems.TENT_BAG && stack.hasTag() && stack.getOrCreateTag().contains("Blocks", 9));
+		return !(stack.getItem() == CampanionItems.TENT_BAG && stack.hasNbt() && stack.getOrCreateNbt().contains("Blocks", 9));
 	}
 }

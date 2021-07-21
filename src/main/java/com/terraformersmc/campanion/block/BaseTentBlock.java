@@ -124,8 +124,8 @@ public class BaseTentBlock extends Block implements BlockEntityProvider {
 					}
 				}
 			}
-			out.getOrCreateTag().put("Blocks", list);
-			out.getOrCreateTag().put("TentSize", NbtHelper.fromBlockPos(tentPart.getSize()));
+			out.getOrCreateNbt().put("Blocks", list);
+			out.getOrCreateNbt().put("TentSize", NbtHelper.fromBlockPos(tentPart.getSize()));
 
 
 			player.getInventory().setStack(slotIndex, out);

@@ -73,7 +73,7 @@ public class TentBuildingRecipe extends SpecialCraftingRecipe {
 	}
 
 	private static boolean isBag(ItemStack stack) {
-		return stack.getItem() instanceof TentBagItem && (!stack.hasTag() || !stack.getOrCreateTag().contains("Blocks", 9));
+		return stack.getItem() instanceof TentBagItem && (!stack.hasNbt() || !stack.getOrCreateNbt().contains("Blocks", 9));
 	}
 
 	private static boolean isTent(ItemStack stack) {

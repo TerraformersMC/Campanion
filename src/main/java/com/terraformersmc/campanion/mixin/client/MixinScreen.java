@@ -2,15 +2,12 @@ package com.terraformersmc.campanion.mixin.client;
 
 import com.terraformersmc.campanion.item.SleepingBagItem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.SleepingChatScreen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;

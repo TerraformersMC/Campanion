@@ -54,7 +54,7 @@ public class TentItem extends PlaceableTentItem {
 			list.add(tag);
 		}
 
-		stack.getOrCreateTag().put("Blocks", list);
-		stack.getOrCreateTag().put("TentSize", NbtHelper.fromBlockPos(new BlockPos(size)));
+		stack.getOrCreateNbt().put("Blocks", list);
+		stack.getOrCreateNbt().put("TentSize", NbtHelper.fromBlockPos(new BlockPos(size)));
 	}
 }
