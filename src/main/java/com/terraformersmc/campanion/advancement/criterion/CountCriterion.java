@@ -23,7 +23,7 @@ public class CountCriterion extends AbstractCriterion<CountCriterion.Conditions>
 	}
 
 	public void trigger(ServerPlayerEntity player, int count) {
-		this.test(player, (conditions) -> conditions.matches(count));
+		this.trigger(player, (conditions) -> conditions.matches(count));
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class C2SRotateHeldItem {
 					if (!data.isEmpty()) {
 						BlockEntity be = BlockEntity.createFromNbt(rotatedPos, state, data);
 						if (be != null) {
-							// TODO - Can't find equivilent
+							// TODO - Can't find equivalent
 //							be.applyRotation(BlockRotation.CLOCKWISE_90);
 							tag.put("BlockEntityData", be.writeNbt(new NbtCompound()));
 						}

@@ -21,7 +21,7 @@ public class KilledWithStoneCriterion extends AbstractCriterion<KilledWithStoneC
 	}
 
 	public void trigger(ServerPlayerEntity player, Entity entity, int count) {
-		this.test(player, (conditions) -> conditions.matches(player, entity, count));
+		this.trigger(player, (conditions) -> conditions.matches(player, entity, count));
 	}
 
 	@Override

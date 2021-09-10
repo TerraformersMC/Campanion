@@ -85,8 +85,8 @@ public class BridgePlanksBakedModel implements FabricBakedModel, BakedModel {
 	}
 
 	@Override
-	public Sprite getSprite() {
-		return MinecraftClient.getInstance().getBlockRenderManager().getModel(Blocks.OAK_PLANKS.getDefaultState()).getSprite();
+	public Sprite getParticleSprite() {
+		return MinecraftClient.getInstance().getBlockRenderManager().getModel(Blocks.OAK_PLANKS.getDefaultState()).getParticleSprite();
 	}
 
 	@Override
