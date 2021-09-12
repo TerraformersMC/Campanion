@@ -32,6 +32,13 @@ public abstract class MixinCampfireSmokeParticle extends SpriteBillboardParticle
 		float[] currColor;
 		Vec3f color = new Vec3f(0, 0, 0);
 		boolean recolor = false;
+
+		//The y position can be up to 2 blocks too high (almost never exactly two), so we do this twice just to be sure we're at the campfire.
+		if(!(world.getBlockState(pos).getBlock() instanceof CampfireBlock)) {
+			pos = pos.down();
+		}
+
+
 		if (world.getBlockState(pos).getBlock() instanceof CampfireBlock && world.getBlockEntity(pos) instanceof CampfireBlockEntity) {
 			CampfireBlockEntity campfireBlockEntity = (CampfireBlockEntity) world.getBlockEntity(pos);
 			for (ItemStack stack : campfireBlockEntity.getItemsBeingCooked()) {
