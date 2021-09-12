@@ -5,12 +5,10 @@ import com.terraformersmc.campanion.client.model.entity.GrapplingHookEntityModel
 import com.terraformersmc.campanion.entity.GrapplingHookEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.Perspective;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -20,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 
@@ -58,15 +55,15 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 			float l = MathHelper.lerp(tickDelta, player.prevBodyYaw, player.bodyYaw) * 0.017453292F;
 			double sinYaw = MathHelper.sin(l);
 			double cosYaw = MathHelper.cos(l);
+			double arm = (double)armOffset * 0.35D;
 			double playerX;
 			double playerY;
 			double playerZ;
 			float playerEye;
-			if (this.dispatcher.gameOptions != null && this.dispatcher.gameOptions.getPerspective() != Perspective.FIRST_PERSON && player == MinecraftClient.getInstance().player) {
-				double x = this.dispatcher.gameOptions.fov / 100.0D;
-				Vec3d vec3d = new Vec3d((double) armOffset * -0.36D * x, -0.045D * x, 0.4D);
-				vec3d = vec3d.rotateX(-MathHelper.lerp(tickDelta, player.prevPitch, player.getPitch()) * 0.017453292F);
-				vec3d = vec3d.rotateY(-MathHelper.lerp(tickDelta, player.prevYaw, player.getYaw()) * 0.017453292F);
+			if ((this.dispatcher.gameOptions == null || this.dispatcher.gameOptions.getPerspective().isFirstPerson()) && player == MinecraftClient.getInstance().player) {
+				double x = 960.0D / this.dispatcher.gameOptions.fov;
+				Vec3d vec3d = this.dispatcher.camera.getProjection().getPosition((float)armOffset * 0.525F, -0.1F);
+				vec3d = vec3d.multiply(x);
 				vec3d = vec3d.rotateY(k * 0.5F);
 				vec3d = vec3d.rotateX(-k * 0.7F);
 				playerX = MathHelper.lerp(tickDelta, player.prevX, player.getX()) + vec3d.x;
@@ -74,9 +71,9 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 				playerZ = MathHelper.lerp(tickDelta, player.prevZ, player.getZ()) + vec3d.z;
 				playerEye = player.getStandingEyeHeight();
 			} else {
-				playerX = MathHelper.lerp(tickDelta, player.prevX, player.getX()) - cosYaw * armOffset * 0.35D - sinYaw * 0.8D;
-				playerY = player.prevY + (double) player.getStandingEyeHeight() + (player.getY() - player.prevY) * (double) tickDelta - 0.45D;
-				playerZ = MathHelper.lerp(tickDelta, player.prevZ, player.getZ()) - sinYaw * armOffset * 0.35D + cosYaw * 0.8D;
+				playerX = MathHelper.lerp(tickDelta, player.prevX, player.getX()) - cosYaw * arm - sinYaw * 0.8D;
+				playerY = player.prevY + player.getStandingEyeHeight() + (player.getY() - player.prevY) * (double)tickDelta - 0.45D;
+				playerZ = MathHelper.lerp(tickDelta, player.prevZ, player.getZ()) - sinYaw * arm + cosYaw * 0.8D;
 				playerEye = player.isInSneakingPose() ? -0.1875F : 0.0F;
 			}
 
@@ -86,14 +83,13 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 			float changeX = (float) (playerX - x);
 			float changeY = (float) (playerY + playerEye - y);
 			float changeZ = (float) (playerZ - z);
-			VertexConsumer vertexConsumer2 = vertexConsumers.getBuffer(RenderLayer.getLines());
-			Matrix4f modelMatrix = stack.peek().getModel();
+			VertexConsumer vertexConsumer2 = vertexConsumers.getBuffer(RenderLayer.getLineStrip());
+			MatrixStack.Entry entry = stack.peek();
 
 			float amplitude = MathHelper.clamp((15F - entity.age - tickDelta) / 15F, 0F, 1F);
 
 			for (int p = 0; p < 256; ++p) {
-				drawLineVertex(changeX, changeY, changeZ, vertexConsumer2, modelMatrix, p / 256F, amplitude);
-				drawLineVertex(changeX, changeY, changeZ, vertexConsumer2, modelMatrix, (p + 1) / 256F, amplitude);
+				drawLineVertex(changeX, changeY, changeZ, vertexConsumer2, entry, p / 256F, (p + 1) / 256F, amplitude);
 			}
 
 			stack.pop();
@@ -101,10 +97,20 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 		}
 	}
 
-	private static void drawLineVertex(float x, float y, float z, VertexConsumer buffer, Matrix4f mat, float t, float a) {
-		int normalConst = 0;
-		buffer.vertex(mat, (float) (x * t + a * Math.sin(t * 2F * Math.PI)), y * t + 0.25F, z * t).color(0, 0, 0, 255).normal(normalConst, normalConst, normalConst).next();
+	private static void drawLineVertex(float x, float y, float z, VertexConsumer buffer, MatrixStack.Entry normal, float t, float t1, float a) {
+		float px = (float) (x * t + a * Math.sin(t * 2F * Math.PI));
+		float py = y * t + 0.25F;
+		float pz = z * t;
+		float nx = (float) (x * t1 + a * Math.sin(t1 * 2F * Math.PI)) - px;
+		float ny = y * t1 + 0.25F - py;
+		float nz = z * t1 - pz;
+		float s = MathHelper.sqrt(nx * nx + ny * ny + nz * nz);
+		nx /= s;
+		ny /= s;
+		nz /= s;
+		buffer.vertex(normal.getModel(), px, py, pz).color(0, 0, 0, 255).normal(normal.getNormal(), nx, ny, nz).next();
 	}
+
 
 	@Override
 	public Identifier getTexture(GrapplingHookEntity hook) {
