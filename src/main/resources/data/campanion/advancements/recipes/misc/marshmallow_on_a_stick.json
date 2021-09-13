@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "campanion:marshmallow"
+            "items": [ "campanion:marshmallow" ]
           }
         ]
       }

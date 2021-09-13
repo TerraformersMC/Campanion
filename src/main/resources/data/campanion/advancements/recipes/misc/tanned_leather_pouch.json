@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "item": "campanion:tanned_leather"
+            "items": [ "campanion:tanned_leather" ]
           }
         ]
       }

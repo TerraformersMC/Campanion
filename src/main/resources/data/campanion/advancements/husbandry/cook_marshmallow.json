@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "campanion:cooked_marshmallow"
+            "items": [ "campanion:cooked_marshmallow" ]
           }
         ]
       }
