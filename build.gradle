@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.9.+'
+	id 'fabric-loom' version '0.9.9'
 }
 
 apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.1/ferry.gradle'
@@ -46,8 +46,6 @@ def modNotTransitive(String localOverrideKey, Object dep) {
 		}
 	}
 }
-
-
 
 java {
 	withSourcesJar()
