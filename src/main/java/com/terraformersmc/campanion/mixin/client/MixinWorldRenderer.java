@@ -2,8 +2,8 @@ package com.terraformersmc.campanion.mixin.client;
 
 import com.terraformersmc.campanion.client.renderer.item.BuiltTentItemRenderer;
 import com.terraformersmc.campanion.client.util.TentPreviewImmediate;
+import com.terraformersmc.campanion.config.CampanionConfigManager;
 import com.terraformersmc.campanion.item.PlaceableTentItem;
-import com.terraformersmc.campanion.item.TentBagItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
@@ -58,7 +58,9 @@ public class MixinWorldRenderer {
 
 							List<BlockPos> list = tent.getErrorPosition(this.client.world, placePos, stack);
 							TentPreviewImmediate.STORAGE.setApplyModifiers(!list.isEmpty());
-							BuiltTentItemRenderer.INSTANCE.render(stack, matrices, placePos, immediate, -1);
+							if (CampanionConfigManager.getConfig().renderTentPlacement) {
+								BuiltTentItemRenderer.INSTANCE.render(stack, matrices, placePos, immediate, -1);
+							}
 
 							for (BlockPos pos : list) {
 								matrices.push();

@@ -2,6 +2,7 @@ package com.terraformersmc.campanion.mixin.client;
 
 import com.terraformersmc.campanion.client.renderer.item.BuiltTentItemRenderer;
 import com.terraformersmc.campanion.client.renderer.item.SpearItemRenderer;
+import com.terraformersmc.campanion.config.CampanionConfigManager;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.SpearItem;
 import net.minecraft.block.Blocks;
@@ -29,16 +30,16 @@ public class MixinItemRenderer {
         if(stack.getItem() instanceof SpearItem && SpearItemRenderer.INSTANCE.render(entity, stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model)) {
             info.cancel();
         }
-        if(stack.getItem() == CampanionItems.TENT_BAG && renderMode != ModelTransformation.Mode.GUI) {
-            matrices.push();
-            matrices.scale(1/4F, 1/4F, 1/4F);
-            MinecraftClient.getInstance().getBlockRenderManager().getModel(Blocks.STONE.getDefaultState()).getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
-            boolean ret = BuiltTentItemRenderer.INSTANCE.render(stack, matrices, BlockPos.ORIGIN.up(500), vertexConsumers, light);
-            matrices.pop();
-            if(ret) {
-                info.cancel();
-            }
-        }
+		if(CampanionConfigManager.getConfig().renderTentContents && stack.getItem() == CampanionItems.TENT_BAG && renderMode != ModelTransformation.Mode.GUI) {
+			matrices.push();
+			matrices.scale(1/4F, 1/4F, 1/4F);
+			MinecraftClient.getInstance().getBlockRenderManager().getModel(Blocks.STONE.getDefaultState()).getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
+			boolean ret = BuiltTentItemRenderer.INSTANCE.render(stack, matrices, BlockPos.ORIGIN.up(500), vertexConsumers, light);
+			matrices.pop();
+			if(ret) {
+				info.cancel();
+			}
+		}
     }
 
 }
