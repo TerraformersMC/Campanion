@@ -359,10 +359,10 @@ public class RopeBridgePlank {
 
     private static void add(QuadEmitter emitter, int index, MatrixStack stack, boolean translucent, float x, float y, float z, float u, float v, float nx, float ny, float nz) {
         Vector4f pos = new Vector4f(x, y, z, 1.0F);
-        pos.transform(stack.peek().getModel());
+        pos.transform(stack.peek().getPositionMatrix());
 
         Vec3f normal = new Vec3f(nx, ny, nz);
-        normal.transform(stack.peek().getNormal());
+        normal.transform(stack.peek().getNormalMatrix());
 
         emitter
             .pos(index, pos.getX(), pos.getY(), pos.getZ())

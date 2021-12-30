@@ -98,7 +98,7 @@ public class RopeBridgePlanksBlock extends Block implements BlockEntityProvider 
 		}
 
 		for (BlockPos neighbour : neighbours) {
-			world.getBlockTickScheduler().schedule(neighbour, world.getBlockState(neighbour).getBlock(), 1);
+			world.createAndScheduleBlockTick(neighbour, world.getBlockState(neighbour).getBlock(), 1);
 		}
 	}
 

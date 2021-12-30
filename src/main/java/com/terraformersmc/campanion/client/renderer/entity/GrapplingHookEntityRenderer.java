@@ -108,7 +108,7 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 		nx /= s;
 		ny /= s;
 		nz /= s;
-		buffer.vertex(normal.getModel(), px, py, pz).color(0, 0, 0, 255).normal(normal.getNormal(), nx, ny, nz).next();
+		buffer.vertex(normal.getPositionMatrix(), px, py, pz).color(0, 0, 0, 255).normal(normal.getNormalMatrix(), nx, ny, nz).next();
 	}
 
 

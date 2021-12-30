@@ -28,7 +28,7 @@ public class FlareItem extends Item {
 		if (!world.isClient) {
 			FlareEntity flare = new FlareEntity(world, user);
 			flare.setItem(itemStack);
-			flare.setProperties(user, user.getPitch(), user.getYaw(), 0.0F, 0.8F, 0.6F);
+			flare.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 0.8F, 0.6F);
 			world.spawnEntity(flare);
 		}
 		user.incrementStat(Stats.USED.getOrCreateStat(this));

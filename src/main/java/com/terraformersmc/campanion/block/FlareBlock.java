@@ -26,7 +26,7 @@ public class FlareBlock extends Block {
 
 	@Override
 	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-		world.getBlockTickScheduler().schedule(pos, this, new Random().nextInt(150) + 100);
+		world.createAndScheduleBlockTick(pos, this, new Random().nextInt(150) + 100);
 	}
 
 	@Override

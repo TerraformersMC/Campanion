@@ -1,16 +1,20 @@
 plugins {
-	id 'fabric-loom' version '0.9.9'
+	id 'fabric-loom' version '0.10-SNAPSHOT'
 }
 
 apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.1/ferry.gradle'
 
 repositories {
-	// mavenLocal()
+//	mavenLocal()
 	maven {
 		url "https://maven.jamieswhiteshirt.com/libs-release"
 		content {
 			includeGroup "com.jamieswhiteshirt"
 		}
+	}
+	maven {
+		name = "Ladysnake Libs"
+		url = "https://ladysnake.jfrog.io/artifactory/mods"
 	}
 }
 
@@ -22,6 +26,7 @@ dependencies {
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 	modImplementation("com.terraformersmc:dossier:${project.dossier_version}")
 //	modNotTransitive("gravestones", "net.guavy:Gravestones:${project.gravestones_version}")
+	modImplementation "dev.emi:trinkets:${trinkets_version}"
 
 	include modImplementation("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}")
 }

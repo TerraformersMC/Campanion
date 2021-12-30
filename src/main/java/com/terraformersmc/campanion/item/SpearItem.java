@@ -121,7 +121,7 @@ public class SpearItem extends TridentItem {
 				if (!world.isClient) {
 					stack.damage(1, playerEntity, entity -> entity.sendToolBreakStatus(user.getActiveHand()));
 					SpearEntity spearEntity = new SpearEntity(world, playerEntity, this, stack);
-					spearEntity.setProperties(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F, 1.0F);
+					spearEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F, 1.0F);
 					if (playerEntity.getAbilities().creativeMode) {
 						spearEntity.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
 					}

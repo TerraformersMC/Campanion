@@ -50,7 +50,7 @@ public class C2SRotateHeldItem {
 						if (be != null) {
 							// TODO - Can't find equivalent
 //							be.applyRotation(BlockRotation.CLOCKWISE_90);
-							tag.put("BlockEntityData", be.writeNbt(new NbtCompound()));
+							tag.put("BlockEntityData", be.createNbt());
 						}
 					}
 				}

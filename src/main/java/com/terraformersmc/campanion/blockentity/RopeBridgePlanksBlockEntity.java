@@ -2,16 +2,14 @@ package com.terraformersmc.campanion.blockentity;
 
 import com.terraformersmc.campanion.ropebridge.RopeBridge;
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -24,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+public class RopeBridgePlanksBlockEntity extends SerializableBlockEntity {
 
 	private final List<RopeBridgePlank> planks = new ArrayList<>();
 
@@ -150,32 +148,28 @@ public class RopeBridgePlanksBlockEntity extends BlockEntity implements BlockEnt
 		return false;
 	}
 
-	@Override
-	public void readNbt(NbtCompound tag) {
-		this.fromClientTag(tag);
-		super.readNbt(tag);
-	}
 
-	@Override
-	public NbtCompound writeNbt(NbtCompound tag) {
-		return this.toClientTag(super.writeNbt(tag));
-	}
-
-	@Override
 	public void fromClientTag(NbtCompound tag) {
-		this.planks.clear();
-		this.planks.addAll(this.getFrom(tag.getList("Planks", 10)));
-		this.clearPlankCache();
+		fromTag(tag);
 
-		if (this.world != null && this.world.isClient) {
-			this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState(), 11);
-		}
+		assert this.world != null;
+		this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState(), 11);
+	}
+
+	public void toClientTag(NbtCompound tag) {
+		toTag(tag);
 	}
 
 	@Override
-	public NbtCompound toClientTag(NbtCompound tag) {
+	public void toTag(NbtCompound tag) {
 		tag.put("Planks", writeTo(this.planks));
-		return tag;
+	}
+
+	@Override
+	public void fromTag(NbtCompound tag) {
+		this.planks.clear();
+		this.planks.addAll(this.getFrom(tag.getList("Planks", NbtElement.COMPOUND_TYPE)));
+		this.clearPlankCache();
 	}
 
 	protected List<RopeBridgePlank> getFrom(NbtList list) {
