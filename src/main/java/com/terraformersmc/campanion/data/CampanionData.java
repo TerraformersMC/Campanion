@@ -16,15 +16,11 @@ import com.terraformersmc.dossier.util.BlockLootTableCreator;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.*;
-import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.util.registry.Registry;
-
 import java.util.function.Consumer;
-
 import static net.minecraft.block.MapColor.COLORS;
 
 public class CampanionData implements DossierProvider {

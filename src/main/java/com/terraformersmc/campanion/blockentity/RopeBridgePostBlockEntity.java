@@ -52,8 +52,8 @@ public class RopeBridgePostBlockEntity extends RopeBridgePlanksBlockEntity {
     }
 
     @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        tag = super.toClientTag(tag);
+    public void toClientTag(NbtCompound tag) {
+        super.toClientTag(tag);
         NbtList list = new NbtList();
         this.ghostPlanks.forEach((plankPos, pairs) -> {
             NbtCompound nbt = new NbtCompound();
@@ -72,6 +72,5 @@ public class RopeBridgePostBlockEntity extends RopeBridgePlanksBlockEntity {
         tag.put("GhostPlankMap", list);
 
         tag.putLongArray("LinkedPositions", this.linkedPositions.stream().mapToLong(BlockPos::asLong).toArray());
-        return tag;
     }
 }

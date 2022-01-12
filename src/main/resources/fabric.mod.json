@@ -55,5 +55,8 @@
     "fabric": ">=0.37.0",
     "java": ">=16",
     "minecraft": ">=1.17"
+  },
+  "suggests": {
+    "trinkets": ">=3.1.0"
   }
 }

@@ -27,7 +27,7 @@ public class SkippingStoneItem extends Item {
 		if (!world.isClient) {
 			SkippingStoneEntity stoneEntity = new SkippingStoneEntity(world, user);
 			stoneEntity.setItem(itemStack);
-			stoneEntity.setProperties(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F, 1.0F);
+			stoneEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F, 1.0F);
 			world.spawnEntity(stoneEntity);
 		}
 		user.incrementStat(Stats.USED.getOrCreateStat(this));

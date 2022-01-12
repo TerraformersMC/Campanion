@@ -31,8 +31,8 @@ import java.util.Optional;
 
 public class SleepingBagItem extends Item implements DyeableItem {
 
-	public static final Text CANT_SLEEP_DAY = PlayerEntity.SleepFailureReason.NOT_POSSIBLE_NOW.toText();
-	public static final Text NOT_SAFE = PlayerEntity.SleepFailureReason.NOT_SAFE.toText();
+	public static final Text CANT_SLEEP_DAY = PlayerEntity.SleepFailureReason.NOT_POSSIBLE_NOW.getMessage();
+	public static final Text NOT_SAFE = PlayerEntity.SleepFailureReason.NOT_SAFE.getMessage();
 	public static final Text NOT_ON_GROUND = new TranslatableText("item.campanion.sleeping_bag.not_on_ground");
 	public static final Text TOO_WET = new TranslatableText("item.campanion.sleeping_bag.too_wet");
 

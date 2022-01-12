@@ -196,7 +196,7 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 			boolean zCollide = false;
 
 			Box box = this.player.getBoundingBox().stretch(movement.normalize().x, 0, movement.normalize().z);
-			for (VoxelShape shape : this.world.getBlockCollisions(this.player, box).collect(Collectors.toList())) {
+			for (VoxelShape shape : this.world.getBlockCollisions(this.player, box)) {
 				xCollide |= box.contains(shape.getMax(Direction.Axis.X), box.minY, box.minZ) || box.contains(shape.getMax(Direction.Axis.X), box.minY, box.minZ);
 				zCollide |= box.contains(box.minX, box.minY, shape.getMin(Direction.Axis.Z)) || box.contains(box.minX, box.minY, shape.getMax(Direction.Axis.Z));
 			}
