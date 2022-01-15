@@ -74,8 +74,9 @@ public class FakeWorld extends ClientWorld {
 			if (this.blockEntityTagMap.containsKey(p)) {
 				BlockEntity entity = BlockEntity.createFromNbt(pos, getBlockState(pos), this.blockEntityTagMap.get(p));
 
-				assert entity != null;
-				entity.setWorld(this);
+				if (entity != null) {
+					entity.setWorld(this);
+				}
 
 				return entity;
 			}
