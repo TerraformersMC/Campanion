@@ -34,11 +34,11 @@
   "item.campanion.sleeping_bag.too_wet": "O chão está muito molhado, procure cobertura.",
 
   "item.campanion.wooden_spear": "Lança de madeira",
-  "item.campanion.stone_spear": "Lança rudimentar",
-  "item.campanion.iron_spear": "Lança enferrujada",
-  "item.campanion.golden_spear": "Lança decorativa",
-  "item.campanion.diamond_spear": "Lança",
-  "item.campanion.netherite_spear": "Lança reforçada",
+  "item.campanion.stone_spear": "Lança de pedra",
+  "item.campanion.iron_spear": "Lança de ferro",
+  "item.campanion.golden_spear": "Lança de ouro",
+  "item.campanion.diamond_spear": "Lança de diamante",
+  "item.campanion.netherite_spear": "Lança de netherita",
 
   "item.campanion.grappling_hook": "Gancho de escalada",
 
@@ -136,9 +136,9 @@
 
   "item.campanion.flare" : "Sinalizador",
 
-  "block.campanion.rope_ladder": "Escada de corda de linho",
+  "block.campanion.rope_ladder": "Escada de corda",
   "block.campanion.rope_bridge_post": "Poste de ponte suspensa",
-  "block.campanion.rope_bridge_planks": "Tábuas de pote suspensa",
+  "block.campanion.rope_bridge_planks": "Tábuas de ponte suspensa",
 
   "block.campanion.rope_bridge_anchor": "Âncora de ponte suspensa",
   "block.campanion.leather_tanner": "Cavalete de curtume",
