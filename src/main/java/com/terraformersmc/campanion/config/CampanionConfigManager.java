@@ -50,7 +50,7 @@ public class CampanionConfigManager {
 			if (FabricLoader.getInstance().isModLoaded("trinkets")) {
 				TrinketsApi.registerTrinketPredicate(new Identifier("campanion", "backpacks"), (stack, ref, entity) -> {
 					if (!config.isTrinketsBackpacksEnabled()) {
-						return TriState.FALSE;
+						return TriState.DEFAULT;
 					}
 
 					SlotType slot = ref.inventory().getSlotType();
