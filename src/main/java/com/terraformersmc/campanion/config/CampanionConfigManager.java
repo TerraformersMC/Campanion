@@ -49,14 +49,10 @@ public class CampanionConfigManager {
 
 			if (FabricLoader.getInstance().isModLoaded("trinkets")) {
 				TrinketsApi.registerTrinketPredicate(new Identifier("campanion", "backpacks"), (stack, ref, entity) -> {
-					if (!config.isTrinketsBackpacksEnabled()) {
-						return TriState.DEFAULT;
-					}
-
 					SlotType slot = ref.inventory().getSlotType();
 					Tag<Item> tag = ItemTags.getTagGroup().getTagOrEmpty(new Identifier("campanion", "backpacks"));
 					if (tag.contains(stack.getItem())) {
-						return TriState.TRUE;
+						return config.isTrinketsBackpacksEnabled() ? TriState.TRUE : TriState.FALSE;
 					}
 					return TriState.DEFAULT;
 				});
