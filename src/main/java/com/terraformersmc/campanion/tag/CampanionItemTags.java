@@ -26,6 +26,8 @@ public class CampanionItemTags {
 	public static final TagKey<Item> VEGETABLES = get("vegetables");
 	public static final TagKey<Item> MRE_COMPONENTS = get("mre_components");
 
+	public static final TagKey<Item> SHEARS = TagKey.of(Registry.ITEM_KEY, new Identifier("c", "shears"));
+
 	private static TagKey<Item> get(String id) {
 		return Registry.ITEM
 			.streamTags()

@@ -2,6 +2,9 @@ package com.terraformersmc.campanion.client.renderer.item;
 
 import com.terraformersmc.campanion.item.PlaceableTentItem;
 import com.terraformersmc.campanion.mixin.AccessorBiomeAccess;
+
+import net.fabricmc.fabric.impl.registry.sync.FabricRegistry;
+import net.fabricmc.fabric.impl.registry.sync.FabricRegistryInit;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -13,7 +16,10 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.LightType;
+import net.minecraft.world.dimension.DimensionType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +39,7 @@ public class FakeWorld extends ClientWorld {
 	public FakeWorld(ItemStack stack, BlockPos basePos, int lightOverride) {
 		super(CLIENT.player.networkHandler,
 				new ClientWorld.Properties(CLIENT.world.getLevelProperties().getDifficulty(), CLIENT.world.getLevelProperties().isDifficultyLocked(), CLIENT.world.getLevelProperties().isHardcore()),
-				CLIENT.world.getRegistryKey(), CLIENT.world.getDimension(), 3, 3, CLIENT::getProfiler,
+				CLIENT.world.getRegistryKey(), RegistryEntry.of(CLIENT.world.getDimension()), 3, 3, CLIENT::getProfiler,
 				CLIENT.worldRenderer, CLIENT.world.isDebugWorld(),
 				((AccessorBiomeAccess) CLIENT.world.getBiomeAccess()).getSeed());
 		updatePositioning(basePos, lightOverride);
