@@ -37,7 +37,7 @@ public class TentPreviewImmediate extends VertexConsumerProvider.Immediate {
 			boolean bl = Objects.equals(this.currentLayer, layer.asOptional());
 			if ((bl || buffer != this.fallbackBuffer) && this.activeConsumers.remove(buffer)) {
 				if (buffer.isBuilding()) {
-					buffer.setCameraPosition(0, 0, 0);
+					buffer.sortFrom(0, 0, 0);
 
 					buffer.end();
 					layer.startDrawing();

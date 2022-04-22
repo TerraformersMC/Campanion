@@ -1,7 +1,7 @@
 package com.terraformersmc.campanion.recipe;
 
 import com.terraformersmc.campanion.item.CampanionItems;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,9 +26,9 @@ public class TarpRecipe extends SpecialCraftingRecipe {
 		int shearAmount = 0;
 		for (int i = 0; i < inv.size(); i++) {
 			ItemStack stack = inv.getStack(i);
-			if(FabricToolTags.SHEARS.contains(stack.getItem())) {
+			if(stack.isIn(ConventionalItemTags.SHEARS)) {
 				shearAmount++;
-			} else if(ItemTags.WOOL.contains(stack.getItem())) {
+			} else if(stack.isIn(ItemTags.WOOL)) {
 				woolAmount++;
 			}
 		}
@@ -48,7 +48,7 @@ public class TarpRecipe extends SpecialCraftingRecipe {
 		list.add(Ingredient.fromTag(ItemTags.WOOL));
 		list.add(Ingredient.fromTag(ItemTags.WOOL));
 
-		list.add(Ingredient.fromTag(FabricToolTags.SHEARS));
+		list.add(Ingredient.fromTag(ConventionalItemTags.SHEARS));
 		return list;
 	}
 
@@ -77,14 +77,15 @@ public class TarpRecipe extends SpecialCraftingRecipe {
 		DefaultedList<ItemStack> defaultedList = DefaultedList.ofSize(inventory.size(), ItemStack.EMPTY);
 
 		for(int i = 0; i < defaultedList.size(); ++i) {
-			Item item = inventory.getStack(i).getItem();
+			ItemStack stack = inventory.getStack(i);
+			Item item = stack.getItem();
 			if (item.hasRecipeRemainder()) {
 				defaultedList.set(i, new ItemStack(item.getRecipeRemainder()));
 			}
-			if(FabricToolTags.SHEARS.contains(item)) {
-				ItemStack stack = inventory.getStack(i).copy();
-				if (!stack.damage(1, new Random(), null)) {
-					defaultedList.set(i, stack);
+			if(stack.isIn(ConventionalItemTags.SHEARS)) {
+				ItemStack copy = stack.copy();
+				if (!copy.damage(1, new Random(), null)) {
+					defaultedList.set(i, copy);
 				}
 			}
 		}

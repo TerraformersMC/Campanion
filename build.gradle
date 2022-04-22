@@ -5,7 +5,7 @@ plugins {
 apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.1/ferry.gradle'
 
 repositories {
-//	mavenLocal()
+	mavenLocal()
 	maven {
 		url "https://maven.jamieswhiteshirt.com/libs-release"
 		content {
@@ -31,8 +31,8 @@ dependencies {
 	include modImplementation("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}")
 }
 
-minecraft {
-	accessWidener =  file("src/main/resources/campanion.accesswidener")
+loom {
+	accessWidenerPath =  file("src/main/resources/campanion.accesswidener")
 }
 
 subprojects.each {

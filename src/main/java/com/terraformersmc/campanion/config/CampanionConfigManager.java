@@ -1,6 +1,8 @@
 package com.terraformersmc.campanion.config;
 
 import com.terraformersmc.campanion.Campanion;
+import com.terraformersmc.campanion.item.CampanionItems;
+import com.terraformersmc.campanion.tag.CampanionItemTags;
 import dev.emi.trinkets.api.SlotType;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.util.TriState;
@@ -49,9 +51,7 @@ public class CampanionConfigManager {
 
 			if (FabricLoader.getInstance().isModLoaded("trinkets")) {
 				TrinketsApi.registerTrinketPredicate(new Identifier("campanion", "backpacks"), (stack, ref, entity) -> {
-					SlotType slot = ref.inventory().getSlotType();
-					Tag<Item> tag = ItemTags.getTagGroup().getTagOrEmpty(new Identifier("campanion", "backpacks"));
-					if (tag.contains(stack.getItem())) {
+					if (stack.isIn(CampanionItemTags.BACKPACKS)) {
 						return config.isTrinketsBackpacksEnabled() ? TriState.TRUE : TriState.FALSE;
 					}
 					return TriState.DEFAULT;

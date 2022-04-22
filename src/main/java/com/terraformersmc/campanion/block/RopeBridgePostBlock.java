@@ -116,7 +116,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 						tag.putLong(CLICKED_POSITION_KEY, pos.asLong());
 					}
 				}
-				if (ItemTags.PLANKS.contains(stack.getItem()) && this.incrementBridge(world, player, be, pos, true) && !player.isCreative()) {
+				if (stack.isIn(ItemTags.PLANKS) && this.incrementBridge(world, player, be, pos, true) && !player.isCreative()) {
 					stack.decrement(1);
 				}
 			}
