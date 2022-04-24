@@ -25,10 +25,10 @@ public class MixinMinecraftClient {
 
 	@Inject(method = "handleInputEvents", at = @At("HEAD"), cancellable = true)
 	public void handleInputEvents(CallbackInfo info) {
-		if (this.player != null && this.options.keyAttack.isPressed()) {
+		if (this.player != null && this.options.attackKey.isPressed()) {
 			ItemStack stack = this.player.getMainHandStack();
 			if (stack.getItem() instanceof PlaceableTentItem && ((PlaceableTentItem) stack.getItem()).hasBlocks(stack)) {
-				if (this.options.keyAttack.wasPressed()) {
+				if (this.options.attackKey.wasPressed()) {
 					this.player.networkHandler.sendPacket(C2SRotateHeldItem.createPacket());
 				}
 				info.cancel();
