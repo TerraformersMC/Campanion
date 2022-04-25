@@ -34,7 +34,6 @@ public class TentPartBlockEntity extends SerializableBlockEntity {
 
 	@Override
 	public void toTag(NbtCompound tag) {
-		((InvokerBlockEntity) this).callWriteIdentifyingData(tag);
 		tag.put("LinkedPos", NbtHelper.fromBlockPos(this.linkedPos));
 		tag.put("Size", NbtHelper.fromBlockPos(this.size));
 	}
