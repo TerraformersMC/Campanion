@@ -6,7 +6,6 @@
   "mixins": [
     "AccessorBiomeAccess",
     "InvokerCriteria",
-    "InvokerBlockEntity",
     "InvokerEntity",
     "MixinEnchantment",
     "MixinEnchantmentHelper",
