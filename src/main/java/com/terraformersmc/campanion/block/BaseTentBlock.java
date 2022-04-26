@@ -116,7 +116,7 @@ public class BaseTentBlock extends Block implements BlockEntityProvider {
 						tag.put("BlockState", NbtHelper.fromBlockState(world.getBlockState(off)));
 						BlockEntity entity = world.getBlockEntity(off);
 						if (entity != null) {
-							tag.put("BlockEntityData", entity.createNbt());
+							tag.put("BlockEntityData", entity.createNbtWithId());
 						}
 						list.add(tag);
 						world.removeBlockEntity(off); // if we want block entities to drop items, remove this line

@@ -1,8 +1,6 @@
 package com.terraformersmc.campanion.blockentity;
 
-import com.terraformersmc.campanion.mixin.InvokerBlockEntity;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.util.math.BlockPos;
@@ -34,7 +32,6 @@ public class TentPartBlockEntity extends SerializableBlockEntity {
 
 	@Override
 	public void toTag(NbtCompound tag) {
-		((InvokerBlockEntity) this).callWriteIdentifyingData(tag);
 		tag.put("LinkedPos", NbtHelper.fromBlockPos(this.linkedPos));
 		tag.put("Size", NbtHelper.fromBlockPos(this.size));
 	}
