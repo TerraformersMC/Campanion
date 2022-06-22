@@ -1,13 +1,22 @@
 package com.terraformersmc.campanion.blockentity;
 
+import com.mojang.datafixers.types.Type;
+import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.block.CampanionBlocks;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
+import com.terraformersmc.campanion.platform.Services;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 import static com.terraformersmc.campanion.block.CampanionBlocks.*;
 
@@ -36,13 +45,12 @@ public class CampanionBlockEntities {
 		BLUE_FLAT_TENT_TOP, BROWN_FLAT_TENT_TOP, GREEN_FLAT_TENT_TOP, RED_FLAT_TENT_TOP, BLACK_FLAT_TENT_TOP
 	);
 
-	private static <T extends BlockEntity> BlockEntityType<T> add(String name, BlockEntityType.BlockEntitySupplier<? extends T> factory, Block... blocks) {
-		return add(name, BlockEntityType.Builder.of(factory, blocks));
+	private static <T extends BlockEntity> BlockEntityType<T> add(String name, BiFunction<BlockPos, BlockState, T> factory, Block... blocks) {
+		var creator = Services.PLATFORM.createBlockEntity(factory, blocks);
+		Type<?> type = Util.fetchChoiceType(References.BLOCK_ENTITY, name);
+		return add(name, creator.apply(type));
 	}
 
-	private static <T extends BlockEntity> BlockEntityType<T> add(String name, BlockEntityType.Builder<T> builder) {
-		return add(name, builder.build(null));
-	}
 
 	private static <T extends BlockEntity> BlockEntityType<T> add(String name, BlockEntityType<T> blockEntityType) {
 		BLOCK_ENTITY_TYPES.put(new ResourceLocation(Campanion.MOD_ID, name), blockEntityType);

@@ -201,7 +201,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 						planks.remove(plank);
 						planksBlockEntity.setChanged();
 						planksBlockEntity.sync();
-						if (plank.isMaster()) {
+						if (plank.master()) {
 							i++;
 						} else {
 							j--;
@@ -229,7 +229,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 			}
 			player.displayClientMessage(Component.translatable("message.campanion.rope_bridge.finished"), false);
 		} else {
-			double counted = list.stream().flatMap(p -> p.getRight().stream()).filter(RopeBridgePlank::isMaster).count();
+			double counted = list.stream().flatMap(p -> p.getRight().stream()).filter(RopeBridgePlank::master).count();
 			player.displayClientMessage(Component.translatable("message.campanion.rope_bridge.constructed", Math.round(counted / RopeBridge.PLANKS_PER_ITEM) + 1), true);
 		}
 		return true;

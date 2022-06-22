@@ -1,12 +1,11 @@
 package com.terraformersmc.campanion.blockentity;
 
+import com.terraformersmc.campanion.client.renderer.RopeBridgePlankRenderer;
+import com.terraformersmc.campanion.platform.Services;
+import com.terraformersmc.campanion.platform.services.rendering.BlockModelCreatedData;
+import com.terraformersmc.campanion.platform.services.rendering.BlockModelPartCreator;
 import com.terraformersmc.campanion.ropebridge.RopeBridge;
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;
-import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -16,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +28,6 @@ public class RopeBridgePlanksBlockEntity extends SerializableBlockEntity {
 	private VoxelShape cutPlankShape;
 	private VoxelShape slimPlankShape;
 
-	private Mesh mesh;
 
 	public RopeBridgePlanksBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
@@ -43,27 +42,21 @@ public class RopeBridgePlanksBlockEntity extends SerializableBlockEntity {
 	}
 
 	private void clearPlankCache() {
-		this.mesh = null;
 		this.fullPlankShape = null;
 		this.cutPlankShape = null;
 		this.slimPlankShape = null;
 	}
 
-	public Mesh getMesh() {
-		if(this.mesh != null) {
-			return this.mesh;
-		}
-		Renderer renderer = RendererAccess.INSTANCE.getRenderer();
-		MeshBuilder builder = renderer.meshBuilder();
-		QuadEmitter emitter = builder.getEmitter();
+	public BlockModelCreatedData getModelCreatedData() {
+		BlockModelPartCreator creator = Services.PLATFORM.blockModelCreator();
 
 		if(this.planks.isEmpty() || this.forceRenderStopper()) {
-			RopeBridgePlank.generateDefaultStoppers(emitter);
+			RopeBridgePlankRenderer.generateDefaultStoppers(creator);
 		}
 		for (RopeBridgePlank plank : this.planks) {
-			plank.generateMesh(false, emitter);
+			RopeBridgePlankRenderer.emitAllQuads(plank, false, creator);
 		}
-		return this.mesh = builder.build();
+		return creator.created();
 	}
 
 	public void addPlank(RopeBridgePlank plank) {
@@ -73,7 +66,7 @@ public class RopeBridgePlanksBlockEntity extends SerializableBlockEntity {
 	}
 
 	public boolean removeBroken() {
-		boolean ret = this.planks.removeIf(RopeBridgePlank::isBroken);
+		boolean ret = this.planks.removeIf(RopeBridgePlank::broken);
 		this.clearPlankCache();
 		this.setChanged();
 		if (this.level != null && !this.level.isClientSide) {
@@ -116,27 +109,27 @@ public class RopeBridgePlanksBlockEntity extends SerializableBlockEntity {
 			shape = Shapes.or(shape, this.generateStopperShape(full, 0.5F, 0, 0.5F, 0, RopeBridge.PLANK_LENGTH / 2));
 		}
 		for (RopeBridgePlank plank : this.planks) {
-			double sin = RopeBridge.PLANK_LENGTH / 2 * Math.sin(plank.getyAngle());
-			double cos = RopeBridge.PLANK_LENGTH / 2 * Math.cos(plank.getyAngle());
+			double sin = RopeBridge.PLANK_LENGTH / 2 * Math.sin(plank.yAngle());
+			double cos = RopeBridge.PLANK_LENGTH / 2 * Math.cos(plank.yAngle());
 
 			double xRange = 1.5 / 16F + Math.abs(sin);
-			double yRange = Math.abs(Math.sin(plank.getTiltAngle())) * RopeBridge.PLANK_WIDTH / 2 + 1.5 / 16F;
+			double yRange = Math.abs(Math.sin(plank.tiltAngle())) * RopeBridge.PLANK_WIDTH / 2 + 1.5 / 16F;
 			double zRange = 1.5 / 16F + Math.abs(cos);
 
-			double minY = plank.getDeltaPosition().y - yRange;
-			double maxY = plank.getDeltaPosition().y + yRange;
+			double minY = plank.deltaPosition().y - yRange;
+			double maxY = plank.deltaPosition().y + yRange;
 
-			double minX = plank.getDeltaPosition().x - xRange;
-			double maxX = plank.getDeltaPosition().x + xRange;
+			double minX = plank.deltaPosition().x - xRange;
+			double maxX = plank.deltaPosition().x + xRange;
 
-			double minZ = plank.getDeltaPosition().z - zRange;
-			double maxZ = plank.getDeltaPosition().z + zRange;
+			double minZ = plank.deltaPosition().z - zRange;
+			double maxZ = plank.deltaPosition().z + zRange;
 
 			shape = Shapes.or(shape, Shapes.box(minX, minY, minZ, maxX, maxY, maxZ));
 
-			if (plank.isStopper()) {
-				shape = Shapes.or(shape, this.generateStopperShape(full, (float) plank.getDeltaPosition().x, (float) plank.getDeltaPosition().y, (float) plank.getDeltaPosition().z, -sin, -cos));
-				shape = Shapes.or(shape, this.generateStopperShape(full, (float) plank.getDeltaPosition().x, (float) plank.getDeltaPosition().y, (float) plank.getDeltaPosition().z, sin, cos));
+			if (plank.stopper()) {
+				shape = Shapes.or(shape, this.generateStopperShape(full, (float) plank.deltaPosition().x, (float) plank.deltaPosition().y, (float) plank.deltaPosition().z, -sin, -cos));
+				shape = Shapes.or(shape, this.generateStopperShape(full, (float) plank.deltaPosition().x, (float) plank.deltaPosition().y, (float) plank.deltaPosition().z, sin, cos));
 			}
 		}
 		return shape;

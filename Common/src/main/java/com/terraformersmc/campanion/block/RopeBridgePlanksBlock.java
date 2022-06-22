@@ -54,7 +54,7 @@ public class RopeBridgePlanksBlock extends Block implements EntityBlock {
 			RopeBridgePlanksBlockEntity be = (RopeBridgePlanksBlockEntity) entity;
 
 			this.scheduleRemoved(world, pos);
-			boolean hasMaster = be.getPlanks().stream().anyMatch(RopeBridgePlank::isMaster);
+			boolean hasMaster = be.getPlanks().stream().anyMatch(RopeBridgePlank::master);
 			boolean removed = be.removeBroken();
 			boolean deleted = be.getPlanks().isEmpty() && this.canBeCompletelyRemoved();
 			if (removed && hasMaster) {
@@ -75,8 +75,8 @@ public class RopeBridgePlanksBlock extends Block implements EntityBlock {
 		BlockEntity entity = world.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			for (RopeBridgePlank plank : ((RopeBridgePlanksBlockEntity) entity).getPlanks()) {
-				if (plank.isBroken()) {
-					brokenLines.add(Pair.of(plank.getFrom(), plank.getTo()));
+				if (plank.broken()) {
+					brokenLines.add(Pair.of(plank.from(), plank.to()));
 				}
 			}
 		}
@@ -91,7 +91,7 @@ public class RopeBridgePlanksBlock extends Block implements EntityBlock {
 						if (be instanceof RopeBridgePlanksBlockEntity) {
 							((RopeBridgePlanksBlockEntity) be).getPlanks()
 									.stream()
-									.filter(plank -> brokenLines.contains(Pair.of(plank.getFrom(), plank.getTo())))
+									.filter(plank -> brokenLines.contains(Pair.of(plank.from(), plank.to())))
 									.forEach(plank -> {
 										plank.setBroken();
 										neighbours.add(off);

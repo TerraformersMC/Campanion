@@ -2,7 +2,9 @@ package com.terraformersmc.campanion.platform;
 
 import com.mojang.datafixers.types.Type;
 import com.terraformersmc.campanion.Campanion;
+import com.terraformersmc.campanion.platform.rendering.FabricBlockModelPartCreator;
 import com.terraformersmc.campanion.platform.services.IPlatformHelper;
+import com.terraformersmc.campanion.platform.services.rendering.BlockModelPartCreator;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.loader.api.FabricLoader;
@@ -47,4 +49,5 @@ public class FabricPlatformHelper implements IPlatformHelper {
 	public CreativeModeTab createItemGroup(String name, Supplier<ItemStack> stack) {
 		return FabricItemGroupBuilder.build(new ResourceLocation(Campanion.MOD_ID, name), stack);
 	}
+
 }

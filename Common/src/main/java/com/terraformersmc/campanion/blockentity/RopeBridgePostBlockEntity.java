@@ -29,8 +29,8 @@ public class RopeBridgePostBlockEntity extends RopeBridgePlanksBlockEntity {
 
     @Override
     public boolean forceRenderStopper() {
-        return this.getPlanks().stream().noneMatch(RopeBridgePlank::isStopper)
-            && this.ghostPlanks.values().stream().flatMap(Collection::stream).map(Pair::getRight).flatMap(Collection::stream).anyMatch(RopeBridgePlank::isStopper);
+        return this.getPlanks().stream().noneMatch(RopeBridgePlank::stopper)
+            && this.ghostPlanks.values().stream().flatMap(Collection::stream).map(Pair::getRight).flatMap(Collection::stream).anyMatch(RopeBridgePlank::stopper);
     }
 
     @Override
