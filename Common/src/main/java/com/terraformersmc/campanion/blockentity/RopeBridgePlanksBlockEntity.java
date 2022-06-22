@@ -48,7 +48,7 @@ public class RopeBridgePlanksBlockEntity extends SerializableBlockEntity {
 	}
 
 	public BlockModelCreatedData getModelCreatedData() {
-		BlockModelPartCreator creator = Services.PLATFORM.blockModelCreator();
+		BlockModelPartCreator creator = Services.CLIENT_PLATFORM.blockModelCreator();
 
 		if(this.planks.isEmpty() || this.forceRenderStopper()) {
 			RopeBridgePlankRenderer.generateDefaultStoppers(creator);
