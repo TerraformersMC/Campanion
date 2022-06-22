@@ -1,64 +1,63 @@
-plugins {
-	id 'fabric-loom' version '0.12-SNAPSHOT'
-}
+subprojects {
+    
+    apply plugin: 'java'
+    
+    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+    java.withSourcesJar()
+    java.withJavadocJar()
+        
+    jar {
+        from(rootProject.file("LICENSE")) {
+            rename { "${it}_${mod_name}" }
+        }
+        manifest {
+            attributes([
+                'Specification-Title'     : mod_name,
+                'Specification-Vendor'    : mod_author,
+                'Specification-Version'   : project.jar.archiveVersion,
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : project.jar.archiveVersion,
+                'Implementation-Vendor'   : mod_author,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                'Timestampe'              : System.currentTimeMillis(),
+                'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+                'Build-On-Minecraft'      : minecraft_version
+            ])
+        }
+    }
 
-apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.4/ferry.gradle'
+    sourcesJar {
+        from(rootProject.file("LICENSE")) {
+            rename { "${it}_${mod_name}" }
+        }
+    }
 
-repositories {
-	mavenLocal()
-	maven {
-		url "https://maven.jamieswhiteshirt.com/libs-release"
-		content {
-			includeGroup "com.jamieswhiteshirt"
-		}
-	}
-	maven {
-		name = "Ladysnake Libs"
-		url = "https://ladysnake.jfrog.io/artifactory/mods"
-	}
-}
+    repositories {
 
-dependencies {
-	minecraft "com.mojang:minecraft:$project.minecraft_version"
-	mappings loom.officialMojangMappings()
+        mavenCentral()
 
-	modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
-	modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
-//	modImplementation("com.terraformersmc:dossier:${project.dossier_version}")
-//	modNotTransitive("gravestones", "net.guavy:Gravestones:${project.gravestones_version}")
-//	modImplementation "dev.emi:trinkets:${trinkets_version}"
+        maven {
+            name = 'Sponge / Mixin'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
+        }
 
-//	include modImplementation("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}")
-}
+        maven {
+            name = 'BlameJared Maven (CrT / Bookshelf)'
+            url = 'https://maven.blamejared.com'
+        }
+    }
 
-loom {
-	accessWidenerPath =  file("src/main/resources/campanion.accesswidener")
-}
+    tasks.withType(JavaCompile).configureEach {
+    
+        it.options.encoding = 'UTF-8'
+        it.options.release = 17
+    }
 
-subprojects.each {
-	remapJar.dependsOn("${it.path}:remapJar")
-}
+    // Disables Gradle's custom module metadata from being published to maven. The
+    // metadata includes mapped dependencies which are not reasonably consumable by
+    // other mod developers.
+    tasks.withType(GenerateModuleMetadata) {
 
-def modNotTransitive(String localOverrideKey, Object dep) {
-	File file = file("../.${localOverrideKey}-local");
-	if (file.exists()) {
-		dependencies.implementation(dep) {
-			transitive = false
-		}
-	} else {
-		dependencies.modImplementation(dep) {
-			transitive = false
-		}
-	}
-}
-
-java {
-	withSourcesJar()
-}
-
-repositories {
-	maven {
-		name = 'TerraformersMC'
-		url = 'https://maven.terraformersmc.com/'
-	}
+        enabled = false
+    }
 }
