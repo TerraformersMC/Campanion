@@ -4,62 +4,47 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.terraformersmc.campanion.advancement.criterion.CampanionCriteria;
-import com.terraformersmc.campanion.block.CampanionBlocks;
-import com.terraformersmc.campanion.blockentity.CampanionBlockEntities;
 import com.terraformersmc.campanion.config.CampanionConfigManager;
-import com.terraformersmc.campanion.entity.CampanionEntities;
 import com.terraformersmc.campanion.entity.FlareEntity;
 import com.terraformersmc.campanion.entity.SkippingStoneEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.network.C2SOpenBackpack;
 import com.terraformersmc.campanion.network.C2SRotateHeldItem;
-import com.terraformersmc.campanion.recipe.CampanionRecipeSerializers;
-import com.terraformersmc.campanion.sound.CampanionSoundEvents;
+import com.terraformersmc.campanion.platform.Services;
 import com.terraformersmc.campanion.stat.CampanionStats;
 import com.terraformersmc.campanion.tag.CampanionBlockTags;
 import com.terraformersmc.campanion.tag.CampanionItemTags;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.Util;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.Position;
-import net.minecraft.core.Registry;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class Campanion implements ModInitializer {
+import java.util.List;
+
+public class Campanion {
 
 	public static final String MOD_ID = "campanion";
 	public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
+	public static final Logger LOG = LoggerFactory.getLogger("Campanion");
 
-	@Override
-	public void onInitialize() {
-		register();
-	}
+	public static CreativeModeTab TAB;
 
-	public static void register() {
+    public static void init() {
+		TAB = Services.PLATFORM.createItemGroup("items", () -> CampanionItems.SMORE.asItem().getDefaultInstance());
+
+
 		CampanionConfigManager.initializeConfig();
-
-		CampanionSoundEvents.register();
-		CampanionItems.register();
-		CampanionBlocks.register();
-		CampanionBlockEntities.register();
-		CampanionEntities.register();
-		CampanionRecipeSerializers.register();
 
 		CampanionCriteria.loadClass();
 		CampanionStats.loadClass();
-
-		FabricItemGroupBuilder.create(new ResourceLocation(MOD_ID, "items")).icon(() -> CampanionItems.SMORE.asItem().getDefaultInstance()).appendItems(stacks -> Registry.ITEM.forEach(item -> {
-			if (Registry.ITEM.getKey(item).getNamespace().equals(MOD_ID)) {
-				item.fillItemCategory(item.getItemCategory(), (NonNullList<ItemStack>) stacks);
-			}
-		})).build();
 
 		registerServerboundPackets();
 
@@ -83,7 +68,7 @@ public class Campanion implements ModInitializer {
 
 		CampanionBlockTags.load();
 		CampanionItemTags.load();
-	}
+    }
 
 	public static void registerServerboundPackets() {
 		ServerPlayNetworking.registerGlobalReceiver(C2SOpenBackpack.ID, C2SOpenBackpack::onPacket);

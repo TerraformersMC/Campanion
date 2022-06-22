@@ -1,7 +1,6 @@
 package com.terraformersmc.campanion.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.network.C2SOpenBackpack;
 import net.fabricmc.fabric.api.client.keybinding.FabricKeyBinding;
 import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;

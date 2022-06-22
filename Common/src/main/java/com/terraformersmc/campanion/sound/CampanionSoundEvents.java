@@ -25,9 +25,13 @@ public class CampanionSoundEvents {
 		return event;
 	}
 
-	public static void register() {
-		for (ResourceLocation identifier : SOUNDS.keySet()) {
-			Registry.register(Registry.SOUND_EVENT, identifier, SOUNDS.get(identifier));
-		}
+//	public static void register() {
+//		for (ResourceLocation identifier : SOUNDS.keySet()) {
+//			Registry.register(Registry.SOUND_EVENT, identifier, SOUNDS.get(identifier));
+//		}
+//	}
+
+	public static Map<ResourceLocation, SoundEvent> getSounds() {
+		return SOUNDS;
 	}
 }

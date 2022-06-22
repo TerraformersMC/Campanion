@@ -2,7 +2,6 @@ package com.terraformersmc.campanion.client.renderer.entity.feature;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.client.model.entity.backpack.CampingPackEntityModel;
 import com.terraformersmc.campanion.client.model.entity.backpack.DayPackEntityModel;
 import com.terraformersmc.campanion.client.model.entity.backpack.HikingPackEntityModel;

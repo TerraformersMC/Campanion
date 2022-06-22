@@ -1,6 +1,5 @@
 package com.terraformersmc.campanion.stat;
 
-import com.terraformersmc.campanion.Campanion;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.StatFormatter;

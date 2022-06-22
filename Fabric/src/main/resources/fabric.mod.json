@@ -19,7 +19,7 @@
     "environment": "*",
     "entrypoints": {
       "main": [
-        "com.example.examplemod.ExampleMod"
+        "com.terraformersmc.campanion.CampanionFabric"
       ]
     },
     "mixins": [
@@ -36,4 +36,3 @@
       "another-mod": "*"
     }
   }
-  

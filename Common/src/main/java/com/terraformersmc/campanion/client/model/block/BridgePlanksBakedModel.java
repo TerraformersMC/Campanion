@@ -1,6 +1,5 @@
 package com.terraformersmc.campanion.client.model.block;
 
-import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.blockentity.RopeBridgePlanksBlockEntity;
 import com.terraformersmc.campanion.ropebridge.RopeBridge;
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;

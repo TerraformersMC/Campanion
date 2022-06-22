@@ -1,11 +1,10 @@
 package com.terraformersmc.campanion.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -15,6 +14,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
 import java.util.Random;
 
 public class FlareBlock extends Block {
@@ -41,7 +41,6 @@ public class FlareBlock extends Block {
 		return canSupportCenter(world, pos.below(), Direction.UP);
 	}
 
-	@Environment(EnvType.CLIENT)
 	public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
 		double d = (double)pos.getX() + 0.5D;
 		double e = (double)pos.getY() + 0.2D;
@@ -50,7 +49,7 @@ public class FlareBlock extends Block {
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random random) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
 		world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 	}
 }

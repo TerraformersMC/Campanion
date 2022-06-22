@@ -1,6 +1,5 @@
 package com.terraformersmc.campanion.data;
 
-import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.block.CampanionBlocks;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.recipe.CampanionRecipeSerializers;
@@ -26,7 +25,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import java.util.function.Consumer;
-import static net.minecraft.world.level.material.MaterialColor.MATERIAL_COLORS;
 
 public class CampanionData implements DossierProvider {
 	@Override

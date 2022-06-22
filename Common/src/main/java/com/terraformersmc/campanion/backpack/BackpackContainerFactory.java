@@ -3,7 +3,6 @@ package com.terraformersmc.campanion.backpack;
 import com.terraformersmc.campanion.item.BackpackItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -23,7 +22,7 @@ public class BackpackContainerFactory implements MenuProvider {
 
 	@Override
 	public Component getDisplayName() {
-		return new TranslatableComponent("container.campanion." + this.type.name().toLowerCase());
+		return Component.translatable("container.campanion." + this.type.name().toLowerCase());
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package com.terraformersmc.campanion.entity;
 
 import com.terraformersmc.campanion.item.SpearItem;
-import com.terraformersmc.campanion.network.S2CEntitySpawnPacket;
+import com.terraformersmc.campanion.network.S2CEntitySpawnGrapplingHookPacket;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -61,7 +61,7 @@ public class SpearEntity extends AbstractArrow {
 
 	@Override
 	public Packet<?> getAddEntityPacket() {
-		return S2CEntitySpawnPacket.createPacket(this);
+		return S2CEntitySpawnGrapplingHookPacket.createPacket(this);
 	}
 
 	@Override

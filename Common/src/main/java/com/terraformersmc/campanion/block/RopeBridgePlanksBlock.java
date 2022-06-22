@@ -2,9 +2,9 @@ package com.terraformersmc.campanion.block;
 
 import com.terraformersmc.campanion.blockentity.RopeBridgePlanksBlockEntity;
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;
-import net.minecraft.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -19,7 +19,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 public class RopeBridgePlanksBlock extends Block implements EntityBlock {
@@ -49,7 +48,7 @@ public class RopeBridgePlanksBlock extends Block implements EntityBlock {
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random random) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
 		BlockEntity entity = world.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			RopeBridgePlanksBlockEntity be = (RopeBridgePlanksBlockEntity) entity;

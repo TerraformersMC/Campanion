@@ -1,6 +1,5 @@
 package com.terraformersmc.campanion.network;
 
-import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.backpack.BackpackStorePlayer;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;

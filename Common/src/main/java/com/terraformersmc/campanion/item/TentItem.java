@@ -1,6 +1,5 @@
 package com.terraformersmc.campanion.item;
 
-import com.terraformersmc.campanion.Campanion;
 import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;

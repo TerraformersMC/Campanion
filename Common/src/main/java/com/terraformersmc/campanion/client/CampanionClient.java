@@ -1,6 +1,5 @@
 package com.terraformersmc.campanion.client;
 
-import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.block.CampanionBlocks;
 import com.terraformersmc.campanion.blockentity.CampanionBlockEntities;
 import com.terraformersmc.campanion.client.model.block.BridgePlanksUnbakedModel;
@@ -9,13 +8,11 @@ import com.terraformersmc.campanion.client.renderer.entity.EmptyRenderer;
 import com.terraformersmc.campanion.client.renderer.entity.GrapplingHookEntityRenderer;
 import com.terraformersmc.campanion.client.renderer.entity.SpearEntityRenderer;
 import com.terraformersmc.campanion.entity.CampanionEntities;
-import com.terraformersmc.campanion.entity.FlareEntity;
 import com.terraformersmc.campanion.entity.GrapplingHookUser;
-import com.terraformersmc.campanion.entity.SkippingStoneEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.SleepingBagItem;
 import com.terraformersmc.campanion.item.TentBagItem;
-import com.terraformersmc.campanion.network.S2CEntitySpawnPacket;
+import com.terraformersmc.campanion.network.S2CEntitySpawnGrapplingHookPacket;
 import com.terraformersmc.campanion.network.S2CSyncBackpackContents;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -84,7 +81,7 @@ public class CampanionClient implements ClientModInitializer {
 	}
 
 	public static void registerClientboundPackets() {
-		ClientPlayNetworking.registerGlobalReceiver(S2CEntitySpawnPacket.ID, S2CEntitySpawnPacket::onPacket);
+		ClientPlayNetworking.registerGlobalReceiver(S2CEntitySpawnGrapplingHookPacket.ID, S2CEntitySpawnGrapplingHookPacket::onPacket);
 		ClientPlayNetworking.registerGlobalReceiver(S2CSyncBackpackContents.ID, S2CSyncBackpackContents::onPacket);
 	}
 

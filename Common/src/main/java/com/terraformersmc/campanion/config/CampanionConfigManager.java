@@ -1,7 +1,5 @@
 package com.terraformersmc.campanion.config;
 
-import com.terraformersmc.campanion.Campanion;
-import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.tag.CampanionItemTags;
 import dev.emi.trinkets.api.SlotType;
 import dev.emi.trinkets.api.TrinketsApi;

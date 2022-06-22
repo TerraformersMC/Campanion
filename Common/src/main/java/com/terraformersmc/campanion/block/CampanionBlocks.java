@@ -1,10 +1,6 @@
 package com.terraformersmc.campanion.block;
 
 import com.terraformersmc.campanion.Campanion;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -12,18 +8,20 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CampanionBlocks {
 
-	private static final Map<ResourceLocation, BlockItem> ITEMS = new LinkedHashMap<>();
+	private static final Map<ResourceLocation, Item> ITEMS = new LinkedHashMap<>();
 	private static final Map<ResourceLocation, Block> BLOCKS = new LinkedHashMap<>();
 
-	public static final Block ROPE_BRIDGE_POST = add("rope_bridge_post", new RopeBridgePostBlock(FabricBlockSettings.of(Material.WOOD).sound(SoundType.WOOD).strength(1.0F, 1.0F).dynamicShape().noOcclusion()), CreativeModeTab.TAB_TOOLS);
-	public static final Block ROPE_BRIDGE_PLANKS = add("rope_bridge_planks", new RopeBridgePlanksBlock(FabricBlockSettings.of(Material.WOOD).sound(SoundType.WOOD).strength(0.5F, 1.0F).dynamicShape().noOcclusion().noDrops()));
-	public static final Block ROPE_LADDER = add("rope_ladder", new RopeLadderBlock(FabricBlockSettings.of(Material.WOOD).noOcclusion().destroyTime(0.2F).sound(SoundType.LADDER).noDrops()), CreativeModeTab.TAB_DECORATIONS);
+	public static final Block ROPE_BRIDGE_POST = add("rope_bridge_post", new RopeBridgePostBlock(BlockBehaviour.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(1.0F, 1.0F).dynamicShape().noOcclusion()), Campanion.TAB);
+	public static final Block ROPE_BRIDGE_PLANKS = add("rope_bridge_planks", new RopeBridgePlanksBlock(BlockBehaviour.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(0.5F, 1.0F).dynamicShape().noOcclusion().noLootTable()), Campanion.TAB);
+	public static final Block ROPE_LADDER = add("rope_ladder", new RopeLadderBlock(BlockBehaviour.Properties.of(Material.WOOD).noOcclusion().destroyTime(0.2F).sound(SoundType.LADDER).noLootTable()), Campanion.TAB);
 
 	public static final Block WHITE_LAWN_CHAIR = createLawnChair("white");
 	public static final Block ORANGE_LAWN_CHAIR = createLawnChair("orange");
@@ -42,7 +40,7 @@ public class CampanionBlocks {
 	public static final Block RED_LAWN_CHAIR = createLawnChair("red");
 	public static final Block BLACK_LAWN_CHAIR = createLawnChair("black");
 
-	public static final Block LEATHER_TANNER = add("leather_tanner", new LeatherTanner(FabricBlockSettings.of(Material.WOOD).noOcclusion().sound(SoundType.WOOD)), CreativeModeTab.TAB_DECORATIONS);
+	public static final Block LEATHER_TANNER = add("leather_tanner", new LeatherTanner(BlockBehaviour.Properties.of(Material.WOOD).noOcclusion().sound(SoundType.WOOD)), Campanion.TAB);
 
 	public static final TentSideBlock WHITE_TENT_SIDE = tentSide(DyeColor.WHITE);
 	public static final TentSideBlock ORANGE_TENT_SIDE = tentSide(DyeColor.ORANGE);
@@ -112,9 +110,9 @@ public class CampanionBlocks {
 	public static final TentTopFlatBlock RED_FLAT_TENT_TOP = tentTopFlat(DyeColor.RED);
 	public static final TentTopFlatBlock BLACK_FLAT_TENT_TOP = tentTopFlat(DyeColor.BLACK);
 
-	public static final Block TENT_POLE = add("tent_pole", new TentPoleBlock(FabricBlockSettings.of(Material.WOOD).noOcclusion().destroyTime(-1F).explosionResistance(1200F).sound(SoundType.WOOD)), (CreativeModeTab) null);
+	public static final Block TENT_POLE = add("tent_pole", new TentPoleBlock(BlockBehaviour.Properties.of(Material.WOOD).noOcclusion().destroyTime(-1F).explosionResistance(1200F).sound(SoundType.WOOD)));
 
-	public static final FlareBlock FLARE_BLOCK = add("flare_block", new FlareBlock(FabricBlockSettings.of(Material.EXPLOSIVE).lightLevel(14)), (CreativeModeTab) null);
+	public static final FlareBlock FLARE_BLOCK = add("flare_block", new FlareBlock(BlockBehaviour.Properties.of(Material.EXPLOSIVE).lightLevel(state -> 14)));
 
 	private static <B extends Block> B add(String name, B block, CreativeModeTab tab) {
 		Item.Properties settings = new Item.Properties();
@@ -144,49 +142,45 @@ public class CampanionBlocks {
 		return item;
 	}
 
-	public static void register() {
-		for (ResourceLocation id : ITEMS.keySet()) {
-			Registry.register(Registry.ITEM, id, ITEMS.get(id));
-		}
-		for (ResourceLocation id : BLOCKS.keySet()) {
-			Registry.register(Registry.BLOCK, id, BLOCKS.get(id));
-		}
-		addFuels();
-		addFlammables();
-	}
+//	public static void register() {
+//		for (ResourceLocation id : ITEMS.keySet()) {
+//			Registry.register(Registry.ITEM, id, ITEMS.get(id));
+//		}
+//		for (ResourceLocation id : BLOCKS.keySet()) {
+//			Registry.register(Registry.BLOCK, id, BLOCKS.get(id));
+//		}
+//		addFuels();
+//		addFlammables();
+//	}
+
 
 	private static TentSideBlock tentSide(DyeColor color) {
-		return add(color.getName() + "_tent_side", new TentSideBlock(FabricBlockSettings.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color), (CreativeModeTab) null);
+		return add(color.getName() + "_tent_side", new TentSideBlock(BlockBehaviour.Properties.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color));
 	}
 
 	private static TentTopBlock tentTop(DyeColor color) {
-		return add(color.getName() + "_tent_top", new TentTopBlock(FabricBlockSettings.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color), (CreativeModeTab) null);
+		return add(color.getName() + "_tent_top", new TentTopBlock(BlockBehaviour.Properties.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color));
 	}
 
 	private static TentTopPoleBlock toppedTentPole(DyeColor color) {
-		return add(color.getName() + "_topped_tent_pole", new TentTopPoleBlock(FabricBlockSettings.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color), (CreativeModeTab) null);
+		return add(color.getName() + "_topped_tent_pole", new TentTopPoleBlock(BlockBehaviour.Properties.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color));
 	}
 
 	private static TentTopFlatBlock tentTopFlat(DyeColor color) {
-		return add(color.getName() + "_flat_tent_top", new TentTopFlatBlock(FabricBlockSettings.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color), (CreativeModeTab) null);
+		return add(color.getName() + "_flat_tent_top", new TentTopFlatBlock(BlockBehaviour.Properties.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color));
 	}
 
 
 	private static LawnChairBlock createLawnChair(String color) {
-		return add(color + "_lawn_chair", new LawnChairBlock(FabricBlockSettings.of(Material.WOOD).noOcclusion().sound(SoundType.WOOD)), CreativeModeTab.TAB_DECORATIONS);
-	}
-
-	private static void addFuels() {
-		FuelRegistry fuelRegistry = FuelRegistry.INSTANCE;
-
-	}
-
-	private static void addFlammables() {
-		FlammableBlockRegistry flammableRegistry = FlammableBlockRegistry.getDefaultInstance();
-
+		return add(color + "_lawn_chair", new LawnChairBlock(BlockBehaviour.Properties.of(Material.WOOD).noOcclusion().sound(SoundType.WOOD)), Campanion.TAB);
 	}
 
 	public static Map<ResourceLocation, Block> getBlocks() {
 		return BLOCKS;
 	}
+
+	public static Map<ResourceLocation, Item> getItemBlocks() {
+		return ITEMS;
+	}
+
 }

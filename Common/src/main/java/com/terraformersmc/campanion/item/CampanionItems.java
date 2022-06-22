@@ -1,10 +1,9 @@
 package com.terraformersmc.campanion.item;
 
-import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.entity.CampanionEntities;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import net.minecraft.core.Registry;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
@@ -59,10 +58,14 @@ public class CampanionItems {
 		return item;
 	}
 
-	public static void register() {
-		for (ResourceLocation id : ITEMS.keySet()) {
-			Registry.register(Registry.ITEM, id, ITEMS.get(id));
-		}
-	}
+//	public static void register() {
+//		for (ResourceLocation id : ITEMS.keySet()) {
+//			Registry.register(Registry.ITEM, id, ITEMS.get(id));
+//		}
+//	}
 
+
+	public static Map<ResourceLocation, Item> getItems() {
+		return ITEMS;
+	}
 }

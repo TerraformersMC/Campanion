@@ -1,9 +1,8 @@
 package com.terraformersmc.campanion.recipe;
 
-import com.terraformersmc.campanion.Campanion;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import net.minecraft.core.Registry;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -21,10 +20,14 @@ public class CampanionRecipeSerializers {
         return serializer;
     }
 
-    public static void register() {
-        for (ResourceLocation identifier : RECIPE_SERIALIZERS.keySet()) {
-            Registry.register(Registry.RECIPE_SERIALIZER, identifier, RECIPE_SERIALIZERS.get(identifier));
-        }
-    }
+//    public static void register() {
+//        for (ResourceLocation identifier : RECIPE_SERIALIZERS.keySet()) {
+//            Registry.register(Registry.RECIPE_SERIALIZER, identifier, RECIPE_SERIALIZERS.get(identifier));
+//        }
+//    }
 
+
+	public static Map<ResourceLocation, RecipeSerializer<?>> getRecipeSerializers() {
+		return RECIPE_SERIALIZERS;
+	}
 }

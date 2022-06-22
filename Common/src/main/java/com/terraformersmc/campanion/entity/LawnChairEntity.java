@@ -2,7 +2,7 @@ package com.terraformersmc.campanion.entity;
 
 import com.terraformersmc.campanion.block.LawnChairBlock;
 import com.terraformersmc.campanion.blockentity.LawnChairBlockEntity;
-import com.terraformersmc.campanion.network.S2CEntitySpawnPacket;
+import com.terraformersmc.campanion.network.S2CEntitySpawnGrapplingHookPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -78,6 +78,6 @@ public class LawnChairEntity extends Entity {
 
     @Override
     public Packet<?> getAddEntityPacket() {
-        return S2CEntitySpawnPacket.createPacket(this);
+        return S2CEntitySpawnGrapplingHookPacket.createPacket(this);
     }
 }

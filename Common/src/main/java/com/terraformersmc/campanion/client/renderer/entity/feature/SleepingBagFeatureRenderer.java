@@ -3,7 +3,6 @@ package com.terraformersmc.campanion.client.renderer.entity.feature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.client.model.entity.SleepingBagModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

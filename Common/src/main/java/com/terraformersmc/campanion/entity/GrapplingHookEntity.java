@@ -1,12 +1,11 @@
 package com.terraformersmc.campanion.entity;
 
 import com.terraformersmc.campanion.item.CampanionItems;
-import com.terraformersmc.campanion.network.S2CEntitySpawnPacket;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import com.terraformersmc.campanion.network.S2CEntitySpawnGrapplingHookPacket;
+import com.terraformersmc.campanion.platform.Services;
+import com.terraformersmc.campanion.platform.services.OmniNetwork;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -22,9 +21,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import java.util.stream.Collectors;
 
-public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEntity {
+public class GrapplingHookEntity extends Entity {
 
 	private static final EntityDataAccessor<Boolean> IS_IN_BLOCK = SynchedEntityData.defineId(GrapplingHookEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -60,9 +58,18 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
 	public boolean shouldRenderAtSqrDistance(double distance) {
 		return distance < 16384.0D;
+	}
+
+	@Override
+	protected void readAdditionalSaveData(CompoundTag compoundTag) {
+
+	}
+
+	@Override
+	protected void addAdditionalSaveData(CompoundTag compoundTag) {
+
 	}
 
 	@Override
@@ -169,14 +176,6 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 		super.remove(RemovalReason.DISCARDED);
 	}
 
-	@Override
-	public void addAdditionalSaveData(CompoundTag tag) {
-	}
-
-	@Override
-	public void readAdditionalSaveData(CompoundTag tag) {
-	}
-
 
 	protected void ensureEntityVelocity() {
 		if (this.player != null) {
@@ -219,10 +218,6 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 		}
 	}
 
-	protected boolean canClimb() {
-		return false;
-	}
-
 	@Override
 	public boolean canChangeDimensions() {
 		return false;
@@ -230,28 +225,10 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 
 	@Override
 	public Packet<?> getAddEntityPacket() {
-		return S2CEntitySpawnPacket.createPacket(this);
+		return Services.NETWORK.toVanillaPacket(new S2CEntitySpawnGrapplingHookPacket(this), OmniNetwork.PacketType.PLAY_S2C);
 	}
 
-	@Override
-	public void writeToBuffer(FriendlyByteBuf buffer) {
-		if (this.player != null) {
-			buffer.writeBoolean(true);
-			buffer.writeInt(this.player.getId());
-		} else {
-			buffer.writeBoolean(false);
-		}
-	}
-
-	@Override
-	public void readFromBuffer(FriendlyByteBuf buffer) {
-		if (buffer.readBoolean()) {
-			int i = buffer.readInt();
-			Entity entity = this.level.getEntity(i);
-			if (entity instanceof Player) {
-				this.player = (Player) entity;
-				((GrapplingHookUser) this.player).setGrapplingHook(this);
-			}
-		}
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 }

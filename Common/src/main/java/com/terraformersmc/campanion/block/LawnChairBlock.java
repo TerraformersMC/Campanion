@@ -2,7 +2,6 @@ package com.terraformersmc.campanion.block;
 
 import com.terraformersmc.campanion.blockentity.LawnChairBlockEntity;
 import com.terraformersmc.campanion.entity.LawnChairEntity;
-import net.minecraft.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;

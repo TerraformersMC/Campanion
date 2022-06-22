@@ -1,11 +1,9 @@
 package com.terraformersmc.campanion.blockentity;
 
-import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.block.CampanionBlocks;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.function.Supplier;
-import net.minecraft.core.Registry;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -51,11 +49,11 @@ public class CampanionBlockEntities {
 		return blockEntityType;
 	}
 
-	public static void register() {
-		for (ResourceLocation id : BLOCK_ENTITY_TYPES.keySet()) {
-			Registry.register(Registry.BLOCK_ENTITY_TYPE, id, BLOCK_ENTITY_TYPES.get(id));
-		}
-	}
+//	public static void register() {
+//		for (ResourceLocation id : BLOCK_ENTITY_TYPES.keySet()) {
+//			Registry.register(Registry.BLOCK_ENTITY_TYPE, id, BLOCK_ENTITY_TYPES.get(id));
+//		}
+//	}
 
 	public static Map<ResourceLocation, BlockEntityType<? extends BlockEntity>> getBlockEntityTypes() {
 		return BLOCK_ENTITY_TYPES;
