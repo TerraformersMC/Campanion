@@ -2,16 +2,12 @@ package com.terraformersmc.campanion.client.model.block;
 
 import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.blockentity.RopeBridgePlanksBlockEntity;
+import com.terraformersmc.campanion.client.renderer.RopeBridgePlankRenderer;
+import com.terraformersmc.campanion.platform.Services;
 import com.terraformersmc.campanion.platform.services.rendering.BlockModelCreatedData;
+import com.terraformersmc.campanion.platform.services.rendering.BlockModelPartCreator;
 import com.terraformersmc.campanion.ropebridge.RopeBridge;
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;
-import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -41,7 +37,14 @@ public class BridgePlanksBakedModel implements BakedModel {
 	public static final Material ROPE = new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Campanion.MOD_ID, "ropebridge/rope"));
 	public static final Material STOPPER = new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Campanion.MOD_ID, "ropebridge/stopper"));
 
+	private BlockModelCreatedData staticData;
+
 	protected <T extends BlockModelCreatedData> Optional<T> getData(BlockAndTintGetter blockView, BlockPos pos, Class<T> expectedClass) {
+		if(this.staticData != null) {
+			if(expectedClass.isInstance(this.staticData)) {
+				return Optional.of((T) this.staticData);
+			}
+		}
 		if (blockView.getBlockEntity(pos) instanceof RopeBridgePlanksBlockEntity blockEntity) {
 			BlockModelCreatedData data = blockEntity.getModelCreatedData();
 			if(expectedClass.isInstance(data)) {
@@ -92,27 +95,16 @@ public class BridgePlanksBakedModel implements BakedModel {
 	}
 
 	public static BridgePlanksBakedModel createStaticModel(List<RopeBridgePlank> planks) {
-		//TODO: make this work
-		return new StaticPlanksModel(planks);
+		BridgePlanksBakedModel planksModel = Services.CLIENT_PLATFORM.createPlanksModel();
+		BlockModelPartCreator emitter = Services.CLIENT_PLATFORM.blockModelCreator();
+		for (RopeBridgePlank plank : planks) {
+			RopeBridgePlankRenderer.emitAllQuads(plank, true, emitter);
+		}
+
+		planksModel.staticData = emitter.created();
+
+		return planksModel;
 	}
 
-//	private static class StaticPlanksModel extends BridgePlanksBakedModel {
-//
-//		private final Mesh mesh;
-//
-//		private StaticPlanksModel(List<RopeBridgePlank> planks) {
-//			Renderer renderer = RendererAccess.INSTANCE.getRenderer();
-//			MeshBuilder builder = renderer.meshBuilder();
-//			QuadEmitter emitter = builder.getEmitter();
-//			for (RopeBridgePlank plank : planks) {
-//				plank.generateMesh(true, emitter);
-//			}
-//			this.mesh = builder.build();
-//		}
-//
-//		@Override
-//		public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-//			context.meshConsumer().accept(this.mesh);
-//		}
-//	}
+
 }

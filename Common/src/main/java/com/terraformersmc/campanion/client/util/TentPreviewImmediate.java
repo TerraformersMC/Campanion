@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
-import net.fabricmc.loader.api.FabricLoader;
+import com.terraformersmc.campanion.platform.Services;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import org.apache.logging.log4j.LogManager;
@@ -39,14 +39,14 @@ public class TentPreviewImmediate extends MultiBufferSource.BufferSource {
 				if (buffer.building()) {
 					buffer.setQuadSortOrigin(0, 0, 0);
 
-					buffer.end();
+					BufferBuilder.RenderedBuffer end = buffer.end();
 					layer.setupRenderState();
 
 					RenderSystem.enableBlend();
 					RenderSystem.defaultBlendFunc();
 //					RenderSystem.defaultAlphaFunc(); may require shader change
 
-					BufferUploader.end(buffer);
+					BufferUploader.drawWithShader(end);
 
 					RenderSystem.disableBlend();
 
@@ -57,7 +57,7 @@ public class TentPreviewImmediate extends MultiBufferSource.BufferSource {
 				}
 			}
 		} catch (NoSuchFieldError e) {
-			if (FabricLoader.getInstance().isModLoaded("optifabric")) {
+			if (Services.PLATFORM.isOptifineLoaded()) {
 				LOGGER.error("ERROR likely due to OptiFine - Could not find required field:", e);
 			} else {
 				throw e;

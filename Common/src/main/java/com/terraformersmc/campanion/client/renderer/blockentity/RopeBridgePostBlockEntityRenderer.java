@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.terraformersmc.campanion.blockentity.RopeBridgePostBlockEntity;
 import com.terraformersmc.campanion.client.model.block.BridgePlanksBakedModel;
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;
+import net.minecraft.util.RandomSource;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class RopeBridgePostBlockEntityRenderer implements BlockEntityRenderer<Ro
 
     private static final ThreadLocal<ModelBlockRenderer> RENDERER = ThreadLocal.withInitial(() -> Minecraft.getInstance().getBlockRenderer().getModelRenderer());
 
-    private static final Random RND = new Random();
+    private static final RandomSource RND =  RandomSource.create();
     public RopeBridgePostBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
     }
 
@@ -43,8 +44,8 @@ public class RopeBridgePostBlockEntityRenderer implements BlockEntityRenderer<Ro
         });
     }
 
-    @Override
-    public boolean rendersOutsideBoundingBox(RopeBridgePostBlockEntity blockEntity) {
-        return true;
-    }
+	@Override
+	public boolean shouldRenderOffScreen(RopeBridgePostBlockEntity $$0) {
+		return true;
+	}
 }

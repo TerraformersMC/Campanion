@@ -34,7 +34,12 @@ public class FabricPlatformHelper implements IPlatformHelper {
         return FabricLoader.getInstance().isModLoaded(modId);
     }
 
-    @Override
+	@Override
+	public boolean isOptifineLoaded() {
+		return isModLoaded("optifabric");
+	}
+
+	@Override
     public boolean isDevelopmentEnvironment() {
 
         return FabricLoader.getInstance().isDevelopmentEnvironment();

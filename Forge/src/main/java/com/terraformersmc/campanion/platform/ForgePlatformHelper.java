@@ -31,7 +31,12 @@ public class ForgePlatformHelper implements IPlatformHelper {
         return ModList.get().isLoaded(modId);
     }
 
-    @Override
+	@Override
+	public boolean isOptifineLoaded() {
+		return false;//TODO: figure out how to do
+	}
+
+	@Override
     public boolean isDevelopmentEnvironment() {
         return !FMLLoader.isProduction();
     }

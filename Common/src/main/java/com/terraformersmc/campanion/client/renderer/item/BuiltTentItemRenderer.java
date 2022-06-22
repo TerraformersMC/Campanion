@@ -3,12 +3,10 @@ package com.terraformersmc.campanion.client.renderer.item;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.terraformersmc.campanion.item.CampanionRenderWorldStasher;
-import com.terraformersmc.campanion.item.PlaceableTentItem;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.*;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,12 +14,12 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import java.util.Random;
 
 public enum BuiltTentItemRenderer {
 	INSTANCE;
@@ -47,7 +45,7 @@ public enum BuiltTentItemRenderer {
 		BlockPos off = basePos.offset(pos);
 		BlockRenderDispatcher manager = Minecraft.getInstance().getBlockRenderer();
 		if (state.getRenderShape() == RenderShape.MODEL) {
-			manager.renderBatched(state, off, world, matrices, buffer, false, new Random());
+			manager.renderBatched(state, off, world, matrices, buffer, false, RandomSource.create());
 		}
 
 		BlockEntity entity = world.getBlockEntity(pos);

@@ -3,6 +3,7 @@ package com.terraformersmc.campanion.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
+import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.client.model.entity.GrapplingHookEntityModel;
 import com.terraformersmc.campanion.entity.GrapplingHookEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
@@ -39,7 +40,7 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 			stack.pushPose();
 			stack.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(tickDelta, entity.yRotO, entity.getYRot()) - 90.0F));
 			stack.mulPose(Vector3f.ZP.rotationDegrees(Mth.lerp(tickDelta, entity.xRotO, entity.getXRot()) + 90.0F));
-			VertexConsumer vertexConsumer = ItemRenderer.getArmorFoilBuffer(vertexConsumers, model.renderType(this.getTexture(entity)), false, false);
+			VertexConsumer vertexConsumer = ItemRenderer.getArmorFoilBuffer(vertexConsumers, model.renderType(this.getTextureLocation(entity)), false, false);
 			this.model.renderToBuffer(stack, vertexConsumer, light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 			stack.popPose();
 
@@ -60,7 +61,7 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 			double playerZ;
 			float playerEye;
 			if ((this.entityRenderDispatcher.options == null || this.entityRenderDispatcher.options.getCameraType().isFirstPerson()) && player == Minecraft.getInstance().player) {
-				double x = 960.0D / this.entityRenderDispatcher.options.fov;
+				double x = 960.0D / this.entityRenderDispatcher.options.fov().get();
 				Vec3 vec3d = this.entityRenderDispatcher.camera.getNearPlane().getPointOnPlane((float)armOffset * 0.525F, -0.1F);
 				vec3d = vec3d.scale(x);
 				vec3d = vec3d.yRot(k * 0.5F);
@@ -112,7 +113,7 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 
 
 	@Override
-	public ResourceLocation getTexture(GrapplingHookEntity hook) {
+	public ResourceLocation getTextureLocation(GrapplingHookEntity hook) {
 		return TEXTURE;
 	}
 }

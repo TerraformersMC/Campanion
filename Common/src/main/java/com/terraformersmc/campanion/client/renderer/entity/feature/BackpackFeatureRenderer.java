@@ -2,12 +2,11 @@ package com.terraformersmc.campanion.client.renderer.entity.feature;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.client.model.entity.backpack.CampingPackEntityModel;
 import com.terraformersmc.campanion.client.model.entity.backpack.DayPackEntityModel;
 import com.terraformersmc.campanion.client.model.entity.backpack.HikingPackEntityModel;
 import com.terraformersmc.campanion.item.BackpackItem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.AgeableListModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -20,10 +19,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 import java.util.Objects;
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class BackpackFeatureRenderer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
 	public BackpackFeatureRenderer(RenderLayerParent<T, M> context) {
