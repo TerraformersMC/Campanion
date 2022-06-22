@@ -1,65 +1,64 @@
 package com.terraformersmc.campanion.item;
 
 import com.terraformersmc.campanion.backpack.BackpackStorePlayer;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 
 public class BackpackItem extends Item {
 
-	private static final Text BACKPACK_HAS_ITEMS1 =
-		new TranslatableText("message.campanion.backpack.hasitems1")
-			.setStyle(Style.EMPTY.withColor(Formatting.RED));
-	private static final Text BACKPACK_HAS_ITEMS2 =
-		new TranslatableText("message.campanion.backpack.hasitems2")
-			.setStyle(Style.EMPTY.withColor(Formatting.RED));
+	private static final Component BACKPACK_HAS_ITEMS1 =
+		new TranslatableComponent("message.campanion.backpack.hasitems1")
+			.setStyle(Style.EMPTY.withColor(ChatFormatting.RED));
+	private static final Component BACKPACK_HAS_ITEMS2 =
+		new TranslatableComponent("message.campanion.backpack.hasitems2")
+			.setStyle(Style.EMPTY.withColor(ChatFormatting.RED));
 
 	public final Type type;
 
-	public BackpackItem(Type type, Item.Settings settings) {
-		super(settings.maxCount(1));
+	public BackpackItem(Type type, Item.Properties settings) {
+		super(settings.stacksTo(1));
 		this.type = type;
-		DispenserBlock.registerBehavior(this, ArmorItem.DISPENSER_BEHAVIOR);
+		DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-		ItemStack stackInHand = user.getStackInHand(hand);
-		EquipmentSlot equipmentSlot = MobEntity.getPreferredEquipmentSlot(stackInHand);
-		ItemStack equippedStack = user.getEquippedStack(equipmentSlot);
+	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+		ItemStack stackInHand = user.getItemInHand(hand);
+		EquipmentSlot equipmentSlot = Mob.getEquipmentSlotForItem(stackInHand);
+		ItemStack equippedStack = user.getItemBySlot(equipmentSlot);
 		if (equippedStack.isEmpty()) {
-			user.equipStack(equipmentSlot, stackInHand.copy());
+			user.setItemSlot(equipmentSlot, stackInHand.copy());
 			stackInHand.setCount(0);
-			return TypedActionResult.success(stackInHand);
+			return InteractionResultHolder.success(stackInHand);
 		} else {
-			return TypedActionResult.fail(stackInHand);
+			return InteractionResultHolder.fail(stackInHand);
 		}
 	}
 
 	@Override
-	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-		ClientPlayerEntity player = MinecraftClient.getInstance().player;
-		if(player != null && player.getEquippedStack(EquipmentSlot.CHEST) == stack) {
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+		LocalPlayer player = Minecraft.getInstance().player;
+		if(player != null && player.getItemBySlot(EquipmentSlot.CHEST) == stack) {
 			for (ItemStack itemStack : ((BackpackStorePlayer) player).getBackpackStacks()) {
 				if(!itemStack.isEmpty()) {
 					tooltip.add(BACKPACK_HAS_ITEMS1);
@@ -68,7 +67,7 @@ public class BackpackItem extends Item {
 				}
 			}
 		}
-		super.appendTooltip(stack, world, tooltip, context);
+		super.appendHoverText(stack, world, tooltip, context);
 	}
 
 	private static int MAX_SLOTS = 0;
@@ -77,22 +76,22 @@ public class BackpackItem extends Item {
 	}
 
 	public enum Type {
-		DAY_PACK(1, ScreenHandlerType.GENERIC_9X1),
-		CAMPING_PACK(2, ScreenHandlerType.GENERIC_9X2),
-		HIKING_PACK(3, ScreenHandlerType.GENERIC_9X3);
+		DAY_PACK(1, MenuType.GENERIC_9x1),
+		CAMPING_PACK(2, MenuType.GENERIC_9x2),
+		HIKING_PACK(3, MenuType.GENERIC_9x3);
 
 		private final int rows;
 		private final int slots;
-		private final ScreenHandlerType<GenericContainerScreenHandler> containerType;
+		private final MenuType<ChestMenu> containerType;
 
-		Type(int rows, ScreenHandlerType<GenericContainerScreenHandler> containerType) {
+		Type(int rows, MenuType<ChestMenu> containerType) {
 			this.rows = rows;
 			this.slots = rows * 9;
 			MAX_SLOTS = Math.max(MAX_SLOTS, this.slots);
 			this.containerType = containerType;
 		}
 
-		public ScreenHandlerType<GenericContainerScreenHandler> getContainerType() {
+		public MenuType<ChestMenu> getContainerType() {
 			return containerType;
 		}
 

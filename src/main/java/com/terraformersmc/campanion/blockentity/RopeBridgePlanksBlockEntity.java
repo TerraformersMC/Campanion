@@ -7,17 +7,15 @@ import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.util.function.BooleanBiFunction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -70,17 +68,17 @@ public class RopeBridgePlanksBlockEntity extends SerializableBlockEntity {
 
 	public void addPlank(RopeBridgePlank plank) {
 		this.planks.add(plank);
-		this.markDirty();
+		this.setChanged();
 		this.clearPlankCache();
 	}
 
 	public boolean removeBroken() {
 		boolean ret = this.planks.removeIf(RopeBridgePlank::isBroken);
 		this.clearPlankCache();
-		this.markDirty();
-		if (this.world != null && !this.world.isClient) {
+		this.setChanged();
+		if (this.level != null && !this.level.isClientSide) {
 			this.sync();
-			this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState(), 11);
+			this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 11);
 		}
 		return ret;
 	}
@@ -96,26 +94,26 @@ public class RopeBridgePlanksBlockEntity extends SerializableBlockEntity {
 		if (this.slimPlankShape != null) {
 			return this.slimPlankShape;
 		}
-		return this.slimPlankShape = VoxelShapes.combine(this.generateShape(false), VoxelShapes.fullCube(), BooleanBiFunction.AND);
+		return this.slimPlankShape = Shapes.joinUnoptimized(this.generateShape(false), Shapes.block(), BooleanOp.AND);
 	}
 
 	public VoxelShape getRaytraceShape() {
 		if (this.cutPlankShape != null) {
 			return this.cutPlankShape;
 		}
-		return this.cutPlankShape = VoxelShapes.combine(this.generateShape(true), VoxelShapes.fullCube(), BooleanBiFunction.AND);
+		return this.cutPlankShape = Shapes.joinUnoptimized(this.generateShape(true), Shapes.block(), BooleanOp.AND);
 	}
 
 	private VoxelShape generateStopperShape(boolean full, float x, float y, float z, double sin, double cos) {
 		float size = (RopeBridge.STOPPER_WIDTH + 1) / 32F * (full ? 1F : 0.25F);
-		return VoxelShapes.cuboid(-size, 0, -size, size, (RopeBridge.STOPPER_HEIGHT + 0.5) / 16F, size).offset(x + sin, y, z - cos);
+		return Shapes.box(-size, 0, -size, size, (RopeBridge.STOPPER_HEIGHT + 0.5) / 16F, size).move(x + sin, y, z - cos);
 	}
 
 	public VoxelShape generateShape(boolean full) {
-		VoxelShape shape = VoxelShapes.empty();
+		VoxelShape shape = Shapes.empty();
 		if (this.planks.isEmpty() || this.forceRenderStopper()) {
-			shape = VoxelShapes.union(shape, this.generateStopperShape(full, 0.5F, 0, 0.5F, 0, -RopeBridge.PLANK_LENGTH / 2));
-			shape = VoxelShapes.union(shape, this.generateStopperShape(full, 0.5F, 0, 0.5F, 0, RopeBridge.PLANK_LENGTH / 2));
+			shape = Shapes.or(shape, this.generateStopperShape(full, 0.5F, 0, 0.5F, 0, -RopeBridge.PLANK_LENGTH / 2));
+			shape = Shapes.or(shape, this.generateStopperShape(full, 0.5F, 0, 0.5F, 0, RopeBridge.PLANK_LENGTH / 2));
 		}
 		for (RopeBridgePlank plank : this.planks) {
 			double sin = RopeBridge.PLANK_LENGTH / 2 * Math.sin(plank.getyAngle());
@@ -134,11 +132,11 @@ public class RopeBridgePlanksBlockEntity extends SerializableBlockEntity {
 			double minZ = plank.getDeltaPosition().z - zRange;
 			double maxZ = plank.getDeltaPosition().z + zRange;
 
-			shape = VoxelShapes.union(shape, VoxelShapes.cuboid(minX, minY, minZ, maxX, maxY, maxZ));
+			shape = Shapes.or(shape, Shapes.box(minX, minY, minZ, maxX, maxY, maxZ));
 
 			if (plank.isStopper()) {
-				shape = VoxelShapes.union(shape, this.generateStopperShape(full, (float) plank.getDeltaPosition().x, (float) plank.getDeltaPosition().y, (float) plank.getDeltaPosition().z, -sin, -cos));
-				shape = VoxelShapes.union(shape, this.generateStopperShape(full, (float) plank.getDeltaPosition().x, (float) plank.getDeltaPosition().y, (float) plank.getDeltaPosition().z, sin, cos));
+				shape = Shapes.or(shape, this.generateStopperShape(full, (float) plank.getDeltaPosition().x, (float) plank.getDeltaPosition().y, (float) plank.getDeltaPosition().z, -sin, -cos));
+				shape = Shapes.or(shape, this.generateStopperShape(full, (float) plank.getDeltaPosition().x, (float) plank.getDeltaPosition().y, (float) plank.getDeltaPosition().z, sin, cos));
 			}
 		}
 		return shape;
@@ -149,39 +147,39 @@ public class RopeBridgePlanksBlockEntity extends SerializableBlockEntity {
 	}
 
 
-	public void fromClientTag(NbtCompound tag) {
+	public void fromClientTag(CompoundTag tag) {
 		fromTag(tag);
 
-		assert this.world != null;
-		this.world.updateListeners(this.pos, this.getCachedState(), this.getCachedState(), 11);
+		assert this.level != null;
+		this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 11);
 	}
 
-	public void toClientTag(NbtCompound tag) {
+	public void toClientTag(CompoundTag tag) {
 		toTag(tag);
 	}
 
 	@Override
-	public void toTag(NbtCompound tag) {
+	public void toTag(CompoundTag tag) {
 		tag.put("Planks", writeTo(this.planks));
 	}
 
 	@Override
-	public void fromTag(NbtCompound tag) {
+	public void fromTag(CompoundTag tag) {
 		this.planks.clear();
-		this.planks.addAll(this.getFrom(tag.getList("Planks", NbtElement.COMPOUND_TYPE)));
+		this.planks.addAll(this.getFrom(tag.getList("Planks", Tag.TAG_COMPOUND)));
 		this.clearPlankCache();
 	}
 
-	protected List<RopeBridgePlank> getFrom(NbtList list) {
+	protected List<RopeBridgePlank> getFrom(ListTag list) {
 		List<RopeBridgePlank> out = new ArrayList<>();
-		for (NbtElement nbt : list) {
-			out.add(RopeBridgePlank.deserialize((NbtCompound) nbt));
+		for (Tag nbt : list) {
+			out.add(RopeBridgePlank.deserialize((CompoundTag) nbt));
 		}
 		return out;
 	}
 
-	protected NbtList writeTo(List<RopeBridgePlank> planks) {
-		NbtList list = new NbtList();
+	protected ListTag writeTo(List<RopeBridgePlank> planks) {
+		ListTag list = new ListTag();
 		for (RopeBridgePlank plank : planks) {
 			list.add(RopeBridgePlank.serialize(plank));
 		}

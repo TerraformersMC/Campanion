@@ -1,5 +1,7 @@
 package com.terraformersmc.campanion.client.renderer.entity.feature;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.client.model.entity.backpack.CampingPackEntityModel;
 import com.terraformersmc.campanion.client.model.entity.backpack.DayPackEntityModel;
@@ -7,49 +9,46 @@ import com.terraformersmc.campanion.client.model.entity.backpack.HikingPackEntit
 import com.terraformersmc.campanion.item.BackpackItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.AnimalModel;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.client.model.AgeableListModel;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import java.util.Objects;
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
-public class BackpackFeatureRenderer<T extends LivingEntity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
+public class BackpackFeatureRenderer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
-	public BackpackFeatureRenderer(FeatureRendererContext<T, M> context) {
+	public BackpackFeatureRenderer(RenderLayerParent<T, M> context) {
 		super(context);
 	}
 
 	@Override
-	public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
-		ItemStack stack = entity.getEquippedStack(EquipmentSlot.CHEST);
+	public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float customAngle, float headYaw, float headPitch) {
+		ItemStack stack = entity.getItemBySlot(EquipmentSlot.CHEST);
 		if (stack.getItem() instanceof BackpackItem) {
 			Type type = Type.values()[((BackpackItem) stack.getItem()).type.ordinal()];
-			AnimalModel model = Objects.requireNonNull(type.createModel());
+			AgeableListModel model = Objects.requireNonNull(type.createModel());
 
 			//Should always be true
-			if (model instanceof BipedEntityModel && this.getContextModel() instanceof BipedEntityModel) {
-				((BipedEntityModel) this.getContextModel()).setAttributes((BipedEntityModel) model);
+			if (model instanceof HumanoidModel && this.getParentModel() instanceof HumanoidModel) {
+				((HumanoidModel) this.getParentModel()).copyPropertiesTo((HumanoidModel) model);
 			} else {
-				this.getContextModel().copyStateTo(model);
+				this.getParentModel().copyPropertiesTo(model);
 			}
 
-			model.animateModel(entity, limbAngle, limbDistance, tickDelta);
-			model.setAngles(entity, limbAngle, limbDistance, customAngle, headYaw, headPitch);
-			VertexConsumer vertexConsumer = ItemRenderer.getArmorGlintConsumer(vertexConsumers, model.getLayer(type.getTexture()), false, stack.hasGlint());
-			model.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+			model.prepareMobModel(entity, limbAngle, limbDistance, tickDelta);
+			model.setupAnim(entity, limbAngle, limbDistance, customAngle, headYaw, headPitch);
+			VertexConsumer vertexConsumer = ItemRenderer.getArmorFoilBuffer(vertexConsumers, model.renderType(type.getTexture()), false, stack.hasFoil());
+			model.renderToBuffer(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 		}
 	}
 
@@ -58,19 +57,19 @@ public class BackpackFeatureRenderer<T extends LivingEntity, M extends EntityMod
 		CAMPING_PACK("camping_pack", CampingPackEntityModel::new),
 		HIKING_PACK("hiking_pack", HikingPackEntityModel::new);
 
-		private Identifier texture;
-		private Supplier<AnimalModel> modelSupplier;
+		private ResourceLocation texture;
+		private Supplier<AgeableListModel> modelSupplier;
 
-		Type(String name, Supplier<AnimalModel> modelSupplier) {
-			this.texture = new Identifier(Campanion.MOD_ID, "textures/entity/backpack/" + name + ".png");
+		Type(String name, Supplier<AgeableListModel> modelSupplier) {
+			this.texture = new ResourceLocation(Campanion.MOD_ID, "textures/entity/backpack/" + name + ".png");
 			this.modelSupplier = modelSupplier;
 		}
 
-		public Identifier getTexture() {
+		public ResourceLocation getTexture() {
 			return texture;
 		}
 
-		public AnimalModel createModel() {
+		public AgeableListModel createModel() {
 			return modelSupplier.get();
 		}
 	}

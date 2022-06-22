@@ -4,36 +4,36 @@ import com.terraformersmc.campanion.advancement.criterion.CampanionCriteria;
 import com.terraformersmc.campanion.stat.CampanionStats;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particle.ItemStackParticleEffect;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
-public class SkippingStoneEntity extends ThrownItemEntity {
+public class SkippingStoneEntity extends ThrowableItemProjectile {
 
-	private static final TrackedData<Integer> NUMBER_OF_SKIPS = DataTracker.registerData(SkippingStoneEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final EntityDataAccessor<Integer> NUMBER_OF_SKIPS = SynchedEntityData.defineId(SkippingStoneEntity.class, EntityDataSerializers.INT);
 
-	public SkippingStoneEntity(World world, LivingEntity owner) {
+	public SkippingStoneEntity(Level world, LivingEntity owner) {
 		super(EntityType.SNOWBALL, owner, world);
 	}
 
-	public SkippingStoneEntity(World world, double x, double y, double z) {
+	public SkippingStoneEntity(Level world, double x, double y, double z) {
 		super(EntityType.SNOWBALL, x, y, z, world);
 	}
 
@@ -43,68 +43,68 @@ public class SkippingStoneEntity extends ThrownItemEntity {
 	}
 
 	@Override
-	protected void initDataTracker() {
-		this.dataTracker.startTracking(NUMBER_OF_SKIPS, 0);
-		super.initDataTracker();
+	protected void defineSynchedData() {
+		this.entityData.define(NUMBER_OF_SKIPS, 0);
+		super.defineSynchedData();
 	}
 
 	@Environment(EnvType.CLIENT)
-	private ParticleEffect getParticleParameters() {
-		ItemStack itemStack = this.getItem();
-		return itemStack.isEmpty() ? ParticleTypes.SPLASH : new ItemStackParticleEffect(ParticleTypes.ITEM, itemStack);
+	private ParticleOptions getParticleParameters() {
+		ItemStack itemStack = this.getItemRaw();
+		return itemStack.isEmpty() ? ParticleTypes.SPLASH : new ItemParticleOption(ParticleTypes.ITEM, itemStack);
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void handleStatus(byte status) {
+	public void handleEntityEvent(byte status) {
 		if (status == 3) {
-			ParticleEffect particleEffect = this.getParticleParameters();
+			ParticleOptions particleEffect = this.getParticleParameters();
 			for (int i = 0; i < 8; ++i) {
-				this.world.addParticle(particleEffect, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+				this.level.addParticle(particleEffect, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
 			}
 		}
 	}
 
 	@Override
-	protected void onSwimmingStart() {
-		if (!this.world.isClient) {
-			Vec3d vel = this.getVelocity();
-			double squaredHorizontalVelocity = (vel.getX() * vel.getX()) + (vel.getZ() * vel.getZ());
+	protected void doWaterSplashEffect() {
+		if (!this.level.isClientSide) {
+			Vec3 vel = this.getDeltaMovement();
+			double squaredHorizontalVelocity = (vel.x() * vel.x()) + (vel.z() * vel.z());
 
-			this.world.sendEntityStatus(this, (byte) 3);
-			if (vel.getY() * vel.getY() > squaredHorizontalVelocity || this.random.nextInt(3) == 0) {
+			this.level.broadcastEntityEvent(this, (byte) 3);
+			if (vel.y() * vel.y() > squaredHorizontalVelocity || this.random.nextInt(3) == 0) {
 				this.remove(RemovalReason.DISCARDED);
 			} else {
-				this.dataTracker.set(NUMBER_OF_SKIPS, this.dataTracker.get(NUMBER_OF_SKIPS) + 1);
-				if (getOwner() instanceof PlayerEntity) {
-					((PlayerEntity) getOwner()).incrementStat(CampanionStats.STONE_SKIPS);
+				this.entityData.set(NUMBER_OF_SKIPS, this.entityData.get(NUMBER_OF_SKIPS) + 1);
+				if (getOwner() instanceof Player) {
+					((Player) getOwner()).awardStat(CampanionStats.STONE_SKIPS);
 				}
-				this.addVelocity(0, (0.5 + -vel.getY()) / 1.5, 0);
+				this.push(0, (0.5 + -vel.y()) / 1.5, 0);
 			}
 		}
 	}
 
 	@Override
-	public void onCollision(HitResult hitResult) {
+	public void onHit(HitResult hitResult) {
 		if (hitResult.getType() == HitResult.Type.ENTITY) {
 			Entity entity = ((EntityHitResult) hitResult).getEntity();
-			entity.damage(DamageSource.thrownProjectile(this, this.getOwner()), this.dataTracker.get(NUMBER_OF_SKIPS) + 1);
+			entity.hurt(DamageSource.thrown(this, this.getOwner()), this.entityData.get(NUMBER_OF_SKIPS) + 1);
 			Entity owner = getOwner();
 			if (!entity.isAlive() && owner != null) {
-				CampanionCriteria.KILLED_WITH_STONE.trigger((ServerPlayerEntity) owner, entity, this.dataTracker.get(NUMBER_OF_SKIPS));
+				CampanionCriteria.KILLED_WITH_STONE.trigger((ServerPlayer) owner, entity, this.entityData.get(NUMBER_OF_SKIPS));
 			}
 		}
 
-		if (!this.world.isClient) {
+		if (!this.level.isClientSide) {
 			this.remove(RemovalReason.DISCARDED);
-			this.world.sendEntityStatus(this, (byte) 3);
+			this.level.broadcastEntityEvent(this, (byte) 3);
 		}
 	}
 
 	@Override
 	public void remove(RemovalReason reason) {
-		if (getOwner() instanceof ServerPlayerEntity) {
-			CampanionCriteria.STONE_SKIPS.trigger((ServerPlayerEntity) getOwner(), this.dataTracker.get(NUMBER_OF_SKIPS));
+		if (getOwner() instanceof ServerPlayer) {
+			CampanionCriteria.STONE_SKIPS.trigger((ServerPlayer) getOwner(), this.entityData.get(NUMBER_OF_SKIPS));
 		}
 		super.remove(reason);
 	}

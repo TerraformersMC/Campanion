@@ -2,11 +2,11 @@ package com.terraformersmc.campanion.client.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,14 +14,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public class TentPreviewImmediate extends VertexConsumerProvider.Immediate {
+public class TentPreviewImmediate extends MultiBufferSource.BufferSource {
 
 	public static final TentPreviewImmediate STORAGE = new TentPreviewImmediate(new TentPreviewBufferBuilder(256), ImmutableMap.of());
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	private final TentPreviewBufferBuilder builder;
 
-	private TentPreviewImmediate(TentPreviewBufferBuilder fallbackBuffer, Map<RenderLayer, BufferBuilder> layerBuffers) {
+	private TentPreviewImmediate(TentPreviewBufferBuilder fallbackBuffer, Map<RenderType, BufferBuilder> layerBuffers) {
 		super(fallbackBuffer, layerBuffers);
 		this.builder = fallbackBuffer;
 	}
@@ -31,29 +31,29 @@ public class TentPreviewImmediate extends VertexConsumerProvider.Immediate {
 	}
 
 	@Override
-	public void draw(RenderLayer layer) {
+	public void endBatch(RenderType layer) {
 		try {
-			BufferBuilder buffer = this.layerBuffers.getOrDefault(layer, this.fallbackBuffer);
-			boolean bl = Objects.equals(this.currentLayer, layer.asOptional());
-			if ((bl || buffer != this.fallbackBuffer) && this.activeConsumers.remove(buffer)) {
-				if (buffer.isBuilding()) {
-					buffer.sortFrom(0, 0, 0);
+			BufferBuilder buffer = this.fixedBuffers.getOrDefault(layer, this.builder);
+			boolean bl = Objects.equals(this.lastState, layer.asOptional());
+			if ((bl || buffer != this.builder) && this.startedBuffers.remove(buffer)) {
+				if (buffer.building()) {
+					buffer.setQuadSortOrigin(0, 0, 0);
 
 					buffer.end();
-					layer.startDrawing();
+					layer.setupRenderState();
 
 					RenderSystem.enableBlend();
 					RenderSystem.defaultBlendFunc();
 //					RenderSystem.defaultAlphaFunc(); may require shader change
 
-					BufferRenderer.draw(buffer);
+					BufferUploader.end(buffer);
 
 					RenderSystem.disableBlend();
 
-					layer.endDrawing();
+					layer.clearRenderState();
 				}
 				if (bl) {
-					this.currentLayer = Optional.empty();
+					this.lastState = Optional.empty();
 				}
 			}
 		} catch (NoSuchFieldError e) {

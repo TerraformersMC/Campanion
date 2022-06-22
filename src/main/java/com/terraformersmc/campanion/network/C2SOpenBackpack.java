@@ -10,38 +10,38 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
 
 public class C2SOpenBackpack {
-	public static final Identifier ID = new Identifier(Campanion.MOD_ID, "open_backpack");
+	public static final ResourceLocation ID = new ResourceLocation(Campanion.MOD_ID, "open_backpack");
 
 	public static Packet<?> createPacket() {
-		return ClientPlayNetworking.createC2SPacket(ID, new PacketByteBuf(Unpooled.buffer()));
+		return ClientPlayNetworking.createC2SPacket(ID, new FriendlyByteBuf(Unpooled.buffer()));
 	}
 
-	public static void onPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler networkHandler, PacketByteBuf buffer, PacketSender sender) {
+	public static void onPacket(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl networkHandler, FriendlyByteBuf buffer, PacketSender sender) {
 		server.execute(() -> {
-			ItemStack stack = player.getEquippedStack(EquipmentSlot.CHEST);
+			ItemStack stack = player.getItemBySlot(EquipmentSlot.CHEST);
 
 			if (CampanionConfigManager.getConfig().isTrinketsBackpacksEnabled() &&
 					FabricLoader.getInstance().isModLoaded("trinkets")) {
 				TrinketComponent component = TrinketsApi.getTrinketComponent(player).orElse(null);
 
 				if (component != null && component.isEquipped(itemStack -> itemStack.getItem() instanceof BackpackItem)) {
-					stack = component.getEquipped(itemStack -> itemStack.getItem() instanceof BackpackItem).get(0).getRight();
+					stack = component.getEquipped(itemStack -> itemStack.getItem() instanceof BackpackItem).get(0).getB();
 				}
 			}
 
 			if (stack.getItem() instanceof BackpackItem) {
 				BackpackItem.Type type = ((BackpackItem) stack.getItem()).type;
-				player.openHandledScreen(new BackpackContainerFactory(type));
+				player.openMenu(new BackpackContainerFactory(type));
 			}
 		});
 	}

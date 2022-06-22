@@ -1,17 +1,16 @@
 package com.terraformersmc.campanion.sound;
 
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 
 import static com.terraformersmc.campanion.Campanion.MOD_ID;
 
 public class CampanionSoundEvents {
 
-	private static final Map<Identifier, SoundEvent> SOUNDS = new LinkedHashMap<>();
+	private static final Map<ResourceLocation, SoundEvent> SOUNDS = new LinkedHashMap<>();
 
 	public static final SoundEvent HOWL = add("howl");
 	public static final SoundEvent SPEAR_HIT_GROUND = add("spear_hit_ground");
@@ -20,14 +19,14 @@ public class CampanionSoundEvents {
 	public static final SoundEvent FLARE_STRIKE = add("flare_strike");
 
 	private static SoundEvent add(String id) {
-		Identifier identifier = new Identifier(MOD_ID, id);
+		ResourceLocation identifier = new ResourceLocation(MOD_ID, id);
 		SoundEvent event = new SoundEvent(identifier);
 		SOUNDS.put(identifier, event);
 		return event;
 	}
 
 	public static void register() {
-		for (Identifier identifier : SOUNDS.keySet()) {
+		for (ResourceLocation identifier : SOUNDS.keySet()) {
 			Registry.register(Registry.SOUND_EVENT, identifier, SOUNDS.get(identifier));
 		}
 	}

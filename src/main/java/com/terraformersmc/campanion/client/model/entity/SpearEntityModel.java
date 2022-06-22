@@ -1,38 +1,44 @@
 package com.terraformersmc.campanion.client.model.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.RenderType;
 
 public class SpearEntityModel extends Model {
     private final ModelPart base;
 
     public SpearEntityModel(ModelPart root) {
-        super(RenderLayer::getEntitySolid);
+        super(RenderType::entitySolid);
         this.base = root.getChild("base");
     }
 
 	public SpearEntityModel() {
-		this(getTexturedModelData().createModel());
+		this(getTexturedModelData().bakeRoot());
 	}
 
-	public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = new ModelData();
-		ModelPartData root = modelData.getRoot();
+	public static LayerDefinition getTexturedModelData() {
+		MeshDefinition modelData = new MeshDefinition();
+		PartDefinition root = modelData.getRoot();
 
-		ModelPartBuilder base = ModelPartBuilder.create().uv(0, 6).cuboid(-0.5F, 0.0F, -0.5F, 1.0F, 27.0F, 1.0F, new Dilation(0.0F));
-		ModelPartBuilder head = ModelPartBuilder.create().uv(4, 0).cuboid(-1F, 1F, -1F, 2F, 1F, 2F);
+		CubeListBuilder base = CubeListBuilder.create().texOffs(0, 6).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 27.0F, 1.0F, new CubeDeformation(0.0F));
+		CubeListBuilder head = CubeListBuilder.create().texOffs(4, 0).addBox(-1F, 1F, -1F, 2F, 1F, 2F);
 
-		root.addChild("base", base, ModelTransform.NONE)
-			.addChild("head", head, ModelTransform.NONE);
+		root.addOrReplaceChild("base", base, PartPose.ZERO)
+			.addOrReplaceChild("head", head, PartPose.ZERO);
 
-		return TexturedModelData.of(modelData, 32, 32);
+		return LayerDefinition.create(modelData, 32, 32);
 	}
 
     @Override
-	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         this.base.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 }

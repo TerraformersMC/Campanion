@@ -8,21 +8,6 @@ import com.terraformersmc.campanion.entity.SleepNoSetSpawnPlayer;
 import com.terraformersmc.campanion.item.BackpackItem;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.TentBagItem;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.stat.Stat;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameMode;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,14 +17,28 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.concurrent.Callable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.stats.Stat;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 
-@Mixin(PlayerEntity.class)
+@Mixin(Player.class)
 public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoSetSpawnPlayer, GrapplingHookUser, BackpackStorePlayer {
 
 	public GrapplingHookEntity campanion_grapplingHook;
-	private DefaultedList<ItemStack> backpackStacks = DefaultedList.of();
+	private NonNullList<ItemStack> backpackStacks = NonNullList.create();
 
-	protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, World world) {
+	protected MixinPlayerEntity(EntityType<? extends LivingEntity> type, Level world) {
 		super(type, world);
 	}
 
@@ -48,31 +47,31 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 
 	@Override
 	public void sleepWithoutSpawnPoint(BlockPos pos) {
-		this.resetStat(Stats.CUSTOM.getOrCreateStat(Stats.TIME_SINCE_REST));
-		super.sleep(pos);
+		this.resetStat(Stats.CUSTOM.get(Stats.TIME_SINCE_REST));
+		super.startSleeping(pos);
 		this.sleepTimer = 0;
-		if (this.world instanceof ServerWorld) {
-			((ServerWorld) this.world).updateSleepingPlayers();
+		if (this.level instanceof ServerLevel) {
+			((ServerLevel) this.level).updateSleepingPlayerList();
 		}
 	}
 
 	@Override
-	public DefaultedList<ItemStack> getBackpackStacks() {
+	public NonNullList<ItemStack> getBackpackStacks() {
 		return this.backpackStacks;
 	}
 
 	@Override
-	public void setBackpackStacks(DefaultedList<ItemStack> stacks) {
+	public void setBackpackStacks(NonNullList<ItemStack> stacks) {
 		this.backpackStacks = stacks;
 	}
 
 	@Inject(method = "isBlockBreakingRestricted(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/GameMode;)Z", at = @At("HEAD"), cancellable = true)
-	public void isBlockBreakingRestricted(World world, BlockPos pos, GameMode gameMode, CallbackInfoReturnable<Boolean> info) {
+	public void isBlockBreakingRestricted(Level world, BlockPos pos, GameType gameMode, CallbackInfoReturnable<Boolean> info) {
 		if(world.getBlockState(pos).getBlock() instanceof BaseTentBlock) {
 			int slotIndex = -1;
-			PlayerEntity player = (PlayerEntity) (Object) this;
-			for (int i = 0; i < player.getInventory().size(); i++) {
-				ItemStack stack = player.getInventory().getStack(i);
+			Player player = (Player) (Object) this;
+			for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+				ItemStack stack = player.getInventory().getItem(i);
 				if (stack.getItem() == CampanionItems.TENT_BAG && TentBagItem.isEmpty(stack)) {
 					slotIndex = i;
 				}
@@ -84,24 +83,24 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 	}
 
 	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-	public void writeCustomDataToNbt(NbtCompound tag, CallbackInfo info) {
-		tag.put("_campanion_backpack", Inventories.writeNbt(new NbtCompound(), this.backpackStacks));
+	public void writeCustomDataToNbt(CompoundTag tag, CallbackInfo info) {
+		tag.put("_campanion_backpack", ContainerHelper.saveAllItems(new CompoundTag(), this.backpackStacks));
 		tag.putInt("_campanion_backpack_size", this.backpackStacks.size());
 	}
 
 	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-	public void readCustomDataFromNbt(NbtCompound tag, CallbackInfo info) {
+	public void readCustomDataFromNbt(CompoundTag tag, CallbackInfo info) {
 		this.backpackStacks.clear();
 		for (int i = 0; i < tag.getInt("_campanion_backpack_size"); i++) {
 			this.backpackStacks.add(ItemStack.EMPTY);
 		}
-		Inventories.readNbt(tag.getCompound("_campanion_backpack"), this.backpackStacks);
+		ContainerHelper.loadAllItems(tag.getCompound("_campanion_backpack"), this.backpackStacks);
 
 		//If there are stacks in the old format, then put them in the new format
-		ItemStack stack = this.getEquippedStack(EquipmentSlot.CHEST);
-		if(stack.getItem() instanceof BackpackItem && stack.getOrCreateNbt().contains("Inventory", 10)) {
-			Inventories.readNbt(stack.getOrCreateNbt().getCompound("Inventory"), this.backpackStacks);
-			stack.getNbt().remove("Inventory");
+		ItemStack stack = this.getItemBySlot(EquipmentSlot.CHEST);
+		if(stack.getItem() instanceof BackpackItem && stack.getOrCreateTag().contains("Inventory", 10)) {
+			ContainerHelper.loadAllItems(stack.getOrCreateTag().getCompound("Inventory"), this.backpackStacks);
+			stack.getTag().remove("Inventory");
 		}
 	}
 

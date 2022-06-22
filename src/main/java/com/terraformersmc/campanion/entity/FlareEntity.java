@@ -3,26 +3,26 @@ package com.terraformersmc.campanion.entity;
 import com.terraformersmc.campanion.block.CampanionBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particle.ItemStackParticleEffect;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 
-public class FlareEntity extends ThrownItemEntity {
+public class FlareEntity extends ThrowableItemProjectile {
 
-	public FlareEntity(World world, LivingEntity owner) {
+	public FlareEntity(Level world, LivingEntity owner) {
 		super(EntityType.SNOWBALL, owner, world);
 	}
 
-	public FlareEntity(World world, double x, double y, double z) {
+	public FlareEntity(Level world, double x, double y, double z) {
 		super(EntityType.SNOWBALL, x, y, z, world);
 	}
 
@@ -32,42 +32,42 @@ public class FlareEntity extends ThrownItemEntity {
 	}
 
 	@Environment(EnvType.CLIENT)
-	private ParticleEffect getParticleParameters() {
-		ItemStack itemStack = this.getItem();
-		return itemStack.isEmpty() ? ParticleTypes.LAVA : new ItemStackParticleEffect(ParticleTypes.ITEM, itemStack);
+	private ParticleOptions getParticleParameters() {
+		ItemStack itemStack = this.getItemRaw();
+		return itemStack.isEmpty() ? ParticleTypes.LAVA : new ItemParticleOption(ParticleTypes.ITEM, itemStack);
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void handleStatus(byte status) {
+	public void handleEntityEvent(byte status) {
 		//Status 3 just means it was just destroyed
 		if (status == 3) {
-			ParticleEffect particleEffect = this.getParticleParameters();
+			ParticleOptions particleEffect = this.getParticleParameters();
 			for (int i = 0; i < 8; ++i) {
-				this.world.addParticle(particleEffect, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+				this.level.addParticle(particleEffect, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
 			}
 		}
 	}
 
 	@Override
-	protected void onSwimmingStart() {
+	protected void doWaterSplashEffect() {
 		//TODO spawn some smoke particles and destroy the entity
 	}
 
 	@Override
-	public void onCollision(HitResult hitResult) {
+	public void onHit(HitResult hitResult) {
 		if (hitResult.getType().equals(HitResult.Type.BLOCK)) {
-			if (!getLandingBlockState().isAir()) {
-				BlockPos pos = getLandingPos().up();
-				if (world.getBlockState(pos).isAir()) {
-					world.setBlockState(pos, CampanionBlocks.FLARE_BLOCK.getDefaultState());
+			if (!getBlockStateOn().isAir()) {
+				BlockPos pos = getOnPos().above();
+				if (level.getBlockState(pos).isAir()) {
+					level.setBlockAndUpdate(pos, CampanionBlocks.FLARE_BLOCK.defaultBlockState());
 				}
-				if (!this.world.isClient) {
+				if (!this.level.isClientSide) {
 					this.remove(RemovalReason.DISCARDED);
-					this.world.sendEntityStatus(this, (byte) 3);
+					this.level.broadcastEntityEvent(this, (byte) 3);
 				}
 			} else {
-				this.setVelocity(0, -0.1, 0);
+				this.setDeltaMovement(0, -0.1, 0);
 			}
 		}
 	}

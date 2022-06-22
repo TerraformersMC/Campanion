@@ -1,30 +1,30 @@
 package com.terraformersmc.campanion.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public abstract class BaseTent4WayBlock extends BaseTentBlock {
 
-	protected static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+	protected static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
 	private final VoxelShape northShape;
 	private final VoxelShape eastShape;
 	private final VoxelShape southShape;
 	private final VoxelShape westShape;
 
-	public BaseTent4WayBlock(Settings settings, DyeColor color, Direction baseDir) {
+	public BaseTent4WayBlock(Properties settings, DyeColor color, Direction baseDir) {
 		super(settings, color);
 
 		VoxelShape shape = this.createShape();
@@ -34,17 +34,17 @@ public abstract class BaseTent4WayBlock extends BaseTentBlock {
 		this.southShape = rotateShape(baseDir, Direction.SOUTH, shape);
 		this.westShape = rotateShape(baseDir, Direction.WEST, shape);
 
-		this.setDefaultState(this.stateManager.getDefaultState().with(FACING, Direction.NORTH));
+		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
 	}
 
 	@Override
-	public BlockState getPlacementState(ItemPlacementContext ctx) {
-		return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+		return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-		switch (state.get(FACING)) {
+	public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+		switch (state.getValue(FACING)) {
 			case NORTH:
 				return this.northShape;
 			case EAST:
@@ -54,23 +54,23 @@ public abstract class BaseTent4WayBlock extends BaseTentBlock {
 			case WEST:
 				return this.westShape;
 			default:
-				return super.getOutlineShape(state, view, pos, context);
+				return super.getShape(state, view, pos, context);
 		}
 	}
 
 	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(FACING);
 	}
 
 	@Override
-	public BlockState rotate(BlockState state, BlockRotation rotation) {
-		return state.with(FACING, rotation.rotate(state.get(FACING)));
+	public BlockState rotate(BlockState state, Rotation rotation) {
+		return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
 	}
 
 	@Override
-	public BlockState mirror(BlockState state, BlockMirror mirror) {
-		return state.rotate(mirror.getRotation(state.get(FACING)));
+	public BlockState mirror(BlockState state, Mirror mirror) {
+		return state.rotate(mirror.getRotation(state.getValue(FACING)));
 	}
 
 	protected abstract VoxelShape createShape();

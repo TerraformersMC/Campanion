@@ -1,14 +1,14 @@
 package com.terraformersmc.campanion.block;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class TentSideBlock extends BaseTent4WayBlock {
 
-	public TentSideBlock(Settings settings, DyeColor color) {
+	public TentSideBlock(Properties settings, DyeColor color) {
 		super(settings, color, Direction.SOUTH);
 	}
 
@@ -18,8 +18,8 @@ public class TentSideBlock extends BaseTent4WayBlock {
 	}
 
 	@Override
-	public BlockState getPlacementState(ItemPlacementContext ctx) {
-		return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
+	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+		return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection());
 	}
 
 }

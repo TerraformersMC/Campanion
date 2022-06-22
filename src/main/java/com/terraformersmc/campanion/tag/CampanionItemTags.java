@@ -1,11 +1,10 @@
 package com.terraformersmc.campanion.tag;
 
 import com.terraformersmc.campanion.Campanion;
-import net.minecraft.item.Item;
-import net.minecraft.tag.Tag;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 
 public class CampanionItemTags {
 	public static final TagKey<Item> MARSHMALLOWS = get("marshmallows");
@@ -28,7 +27,7 @@ public class CampanionItemTags {
 	public static final TagKey<Item> MRE_COMPONENTS = get("mre_components");
 
 	private static TagKey<Item> get(String id) {
-		return TagKey.of(Registry.ITEM_KEY, new Identifier(Campanion.MOD_ID, id));
+		return TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(Campanion.MOD_ID, id));
 	}
 
 	public static void load() {

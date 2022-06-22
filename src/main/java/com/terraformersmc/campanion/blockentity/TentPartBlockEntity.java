@@ -1,16 +1,15 @@
 package com.terraformersmc.campanion.blockentity;
 
 import com.terraformersmc.campanion.mixin.InvokerBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TentPartBlockEntity extends SerializableBlockEntity {
 
-	private BlockPos linkedPos = BlockPos.ORIGIN;
-	private BlockPos size = BlockPos.ORIGIN;
+	private BlockPos linkedPos = BlockPos.ZERO;
+	private BlockPos size = BlockPos.ZERO;
 
 	public TentPartBlockEntity(BlockPos pos, BlockState state) {
 		super(CampanionBlockEntities.TENT_PART, pos, state);
@@ -33,25 +32,25 @@ public class TentPartBlockEntity extends SerializableBlockEntity {
 	}
 
 	@Override
-	public void toTag(NbtCompound tag) {
+	public void toTag(CompoundTag tag) {
 		((InvokerBlockEntity) this).callWriteIdentifyingData(tag);
-		tag.put("LinkedPos", NbtHelper.fromBlockPos(this.linkedPos));
-		tag.put("Size", NbtHelper.fromBlockPos(this.size));
+		tag.put("LinkedPos", NbtUtils.writeBlockPos(this.linkedPos));
+		tag.put("Size", NbtUtils.writeBlockPos(this.size));
 	}
 
 	@Override
-	public void fromTag(NbtCompound tag) {
-		this.linkedPos = NbtHelper.toBlockPos(tag.getCompound("LinkedPos"));
-		this.size = NbtHelper.toBlockPos(tag.getCompound("Size"));
+	public void fromTag(CompoundTag tag) {
+		this.linkedPos = NbtUtils.readBlockPos(tag.getCompound("LinkedPos"));
+		this.size = NbtUtils.readBlockPos(tag.getCompound("Size"));
 	}
 
 	@Override
-	public void toClientTag(NbtCompound tag) {
+	public void toClientTag(CompoundTag tag) {
 		toTag(tag);
 	}
 
 	@Override
-	public void fromClientTag(NbtCompound tag) {
+	public void fromClientTag(CompoundTag tag) {
 		fromTag(tag);
 	}
 }

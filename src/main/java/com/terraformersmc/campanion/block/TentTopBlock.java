@@ -1,57 +1,57 @@
 package com.terraformersmc.campanion.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class TentTopBlock extends BaseTentBlock {
 
-	private static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
+	private static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
 	private static final VoxelShape XSHAPE = createDiagonals(7, 8, true);
 	private static final VoxelShape ZSHAPE = rotateShape(Direction.NORTH, Direction.EAST, XSHAPE);
 
-	public TentTopBlock(Settings settings, DyeColor color) {
+	public TentTopBlock(Properties settings, DyeColor color) {
 		super(settings, color);
 	}
 
 	@Override
-	public BlockState getPlacementState(ItemPlacementContext ctx) {
-		return this.getDefaultState().with(AXIS, ctx.getPlayerFacing().getAxis());
+	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+		return this.defaultBlockState().setValue(AXIS, ctx.getHorizontalDirection().getAxis());
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-		switch (state.get(AXIS)) {
+	public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+		switch (state.getValue(AXIS)) {
 			case X:
 				return XSHAPE;
 			case Z:
 				return ZSHAPE;
 			default:
-				return super.getOutlineShape(state, view, pos, context);
+				return super.getShape(state, view, pos, context);
 		}
 	}
 
 	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(AXIS);
 	}
 
 	@Override
-	public BlockState rotate(BlockState state, BlockRotation rotation) {
-		if (rotation == BlockRotation.NONE || rotation == BlockRotation.CLOCKWISE_180) {
+	public BlockState rotate(BlockState state, Rotation rotation) {
+		if (rotation == Rotation.NONE || rotation == Rotation.CLOCKWISE_180) {
 			return state;
 		}
-		return state.with(AXIS, state.get(AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X);
+		return state.setValue(AXIS, state.getValue(AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X);
 	}
 }

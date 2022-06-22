@@ -1,53 +1,51 @@
 package com.terraformersmc.campanion.client.renderer.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.client.model.entity.SpearEntityModel;
 import com.terraformersmc.campanion.entity.SpearEntity;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.registry.Registry;
-
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
 
 public class SpearEntityRenderer extends EntityRenderer<SpearEntity> {
-	private static final Map<EntityType<?>, Identifier> TEXTURES = new HashMap<>();
+	private static final Map<EntityType<?>, ResourceLocation> TEXTURES = new HashMap<>();
 	private final SpearEntityModel model = new SpearEntityModel();
 
-	public SpearEntityRenderer(EntityRendererFactory.Context factoryCtx) {
+	public SpearEntityRenderer(EntityRendererProvider.Context factoryCtx) {
 		super(factoryCtx);
 	}
 
 	@Override
-	public void render(SpearEntity spear, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-		matrixStack.push();
-		matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(MathHelper.lerp(g, spear.prevYaw, spear.getYaw()) - 90.0F));
-		matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(MathHelper.lerp(g, spear.prevPitch, spear.getPitch()) + 90.0F));
-		VertexConsumer vertexConsumer = ItemRenderer.getArmorGlintConsumer(vertexConsumerProvider, model.getLayer(this.getTexture(spear)), false, spear.method_23751());
-		model.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
+	public void render(SpearEntity spear, float f, float g, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i) {
+		matrixStack.pushPose();
+		matrixStack.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(g, spear.yRotO, spear.getYRot()) - 90.0F));
+		matrixStack.mulPose(Vector3f.ZP.rotationDegrees(Mth.lerp(g, spear.xRotO, spear.getXRot()) + 90.0F));
+		VertexConsumer vertexConsumer = ItemRenderer.getArmorFoilBuffer(vertexConsumerProvider, model.renderType(this.getTexture(spear)), false, spear.method_23751());
+		model.renderToBuffer(matrixStack, vertexConsumer, i, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 		matrixStack.scale(2.0F, -2.0F, -2.0F);
-		matrixStack.pop();
+		matrixStack.popPose();
 		super.render(spear, f, g, matrixStack, vertexConsumerProvider, i);
 	}
 
 	@Override
-	public Identifier getTexture(SpearEntity spear) {
+	public ResourceLocation getTexture(SpearEntity spear) {
 		return getTexture(spear.getType());
 	}
 
-	public static Identifier getTexture(EntityType<?> type) {
+	public static ResourceLocation getTexture(EntityType<?> type) {
 		if (!TEXTURES.containsKey(type)) {
-			TEXTURES.put(type, new Identifier(Campanion.MOD_ID, "textures/entity/spear/" + Registry.ENTITY_TYPE.getId(type).getPath() + ".png"));
+			TEXTURES.put(type, new ResourceLocation(Campanion.MOD_ID, "textures/entity/spear/" + Registry.ENTITY_TYPE.getKey(type).getPath() + ".png"));
 		}
 		return TEXTURES.get(type);
 	}

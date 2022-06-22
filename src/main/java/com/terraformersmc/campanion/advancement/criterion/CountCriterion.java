@@ -1,57 +1,57 @@
 package com.terraformersmc.campanion.advancement.criterion;
 
 import com.google.gson.JsonObject;
-import net.minecraft.advancement.criterion.AbstractCriterion;
-import net.minecraft.advancement.criterion.AbstractCriterionConditions;
-import net.minecraft.predicate.NumberRange;
-import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
-import net.minecraft.predicate.entity.AdvancementEntityPredicateSerializer;
-import net.minecraft.predicate.entity.EntityPredicate;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
-public class CountCriterion extends AbstractCriterion<CountCriterion.Conditions> {
-	public final Identifier id;
+public class CountCriterion extends SimpleCriterionTrigger<CountCriterion.Conditions> {
+	public final ResourceLocation id;
 
-	public CountCriterion(Identifier id) {
+	public CountCriterion(ResourceLocation id) {
 		this.id = id;
 	}
 
 	@Override
-	public Identifier getId() {
+	public ResourceLocation getId() {
 		return id;
 	}
 
-	public void trigger(ServerPlayerEntity player, int count) {
+	public void trigger(ServerPlayer player, int count) {
 		this.trigger(player, (conditions) -> conditions.matches(count));
 	}
 
 	@Override
-	protected Conditions conditionsFromJson(JsonObject json, EntityPredicate.Extended entityPredicate, AdvancementEntityPredicateDeserializer deserializer) {
-		NumberRange.IntRange count = NumberRange.IntRange.fromJson(json.get("count"));
+	protected Conditions createInstance(JsonObject json, EntityPredicate.Composite entityPredicate, DeserializationContext deserializer) {
+		MinMaxBounds.Ints count = MinMaxBounds.Ints.fromJson(json.get("count"));
 		return new CountCriterion.Conditions(id, count, entityPredicate);
 	}
 
-	public static class Conditions extends AbstractCriterionConditions {
-		private final NumberRange.IntRange count;
+	public static class Conditions extends AbstractCriterionTriggerInstance {
+		private final MinMaxBounds.Ints count;
 
-		public Conditions(Identifier id, NumberRange.IntRange count, EntityPredicate.Extended entityPredicate) {
+		public Conditions(ResourceLocation id, MinMaxBounds.Ints count, EntityPredicate.Composite entityPredicate) {
 			super(id, entityPredicate);
 			this.count = count;
 		}
 
-		public static CountCriterion.Conditions create(Identifier id, NumberRange.IntRange count, EntityPredicate.Extended entityPredicate) {
+		public static CountCriterion.Conditions create(ResourceLocation id, MinMaxBounds.Ints count, EntityPredicate.Composite entityPredicate) {
 			return new CountCriterion.Conditions(id, count, entityPredicate);
 		}
 
 		public boolean matches(int count) {
-			return this.count.test(count);
+			return this.count.matches(count);
 		}
 
 		@Override
-		public JsonObject toJson(AdvancementEntityPredicateSerializer serializer) {
+		public JsonObject serializeToJson(SerializationContext serializer) {
 			JsonObject json = new JsonObject();
-			json.add("count", this.count.toJson());
+			json.add("count", this.count.serializeToJson());
 			return json;
 		}
 	}

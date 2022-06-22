@@ -7,11 +7,7 @@ import dev.emi.trinkets.api.SlotType;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.util.TriState;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.Item;
-import net.minecraft.tag.ItemTags;
-import net.minecraft.tag.Tag;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.resources.ResourceLocation;
 import java.io.*;
 
 public class CampanionConfigManager {
@@ -50,8 +46,8 @@ public class CampanionConfigManager {
 			}
 
 			if (FabricLoader.getInstance().isModLoaded("trinkets")) {
-				TrinketsApi.registerTrinketPredicate(new Identifier("campanion", "backpacks"), (stack, ref, entity) -> {
-					if (stack.isIn(CampanionItemTags.BACKPACKS)) {
+				TrinketsApi.registerTrinketPredicate(new ResourceLocation("campanion", "backpacks"), (stack, ref, entity) -> {
+					if (stack.is(CampanionItemTags.BACKPACKS)) {
 						return config.isTrinketsBackpacksEnabled() ? TriState.TRUE : TriState.FALSE;
 					}
 					return TriState.DEFAULT;

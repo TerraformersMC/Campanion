@@ -3,9 +3,9 @@ package com.terraformersmc.campanion.mixin.client;
 import com.terraformersmc.campanion.client.renderer.item.FakeWorld;
 import com.terraformersmc.campanion.item.CampanionRenderWorldStasher;
 import com.terraformersmc.campanion.item.PlaceableTentItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 

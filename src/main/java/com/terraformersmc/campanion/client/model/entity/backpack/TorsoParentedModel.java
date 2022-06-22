@@ -2,31 +2,36 @@ package com.terraformersmc.campanion.client.model.entity.backpack;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.world.entity.LivingEntity;
 
-public class TorsoParentedModel<T extends LivingEntity> extends BipedEntityModel<T> {
+public class TorsoParentedModel<T extends LivingEntity> extends HumanoidModel<T> {
     protected TorsoParentedModel(ModelPart root) {
         super(root);
     }
 
-    protected static ModelData getModelData() {
-    	ModelData modelData = BipedEntityModel.getModelData(new Dilation(1/16F), 0);
-		ModelPartData root = modelData.getRoot();
-    	ModelPartBuilder body = ModelPartBuilder.create().uv(16, 16);
+    protected static MeshDefinition getModelData() {
+    	MeshDefinition modelData = HumanoidModel.createMesh(new CubeDeformation(1/16F), 0);
+		PartDefinition root = modelData.getRoot();
+    	CubeListBuilder body = CubeListBuilder.create().texOffs(16, 16);
 
-		root.addChild("body", body, ModelTransform.NONE);
+		root.addOrReplaceChild("body", body, PartPose.ZERO);
 
 		return modelData;
 	}
 
     @Override
-    protected Iterable<ModelPart> getHeadParts() {
+    protected Iterable<ModelPart> headParts() {
         return ImmutableList.of();
     }
 
     @Override
-    protected Iterable<ModelPart> getBodyParts() {
+    protected Iterable<ModelPart> bodyParts() {
         return ImmutableList.of(this.body);
     }
 }

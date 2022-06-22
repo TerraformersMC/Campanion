@@ -1,22 +1,28 @@
 package com.terraformersmc.campanion.mixin.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
 import com.terraformersmc.campanion.client.renderer.item.BuiltTentItemRenderer;
 import com.terraformersmc.campanion.client.util.TentPreviewImmediate;
 import com.terraformersmc.campanion.item.PlaceableTentItem;
 import com.terraformersmc.campanion.item.TentBagItem;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.RenderBuffers;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,61 +33,61 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.Random;
 
-@Mixin(WorldRenderer.class)
+@Mixin(LevelRenderer.class)
 public class MixinWorldRenderer {
 
 	@Final
 	@Shadow
-	private BufferBuilderStorage bufferBuilders;
+	private RenderBuffers bufferBuilders;
 
 	@Final
 	@Shadow
-	private MinecraftClient client;
+	private Minecraft client;
 
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", ordinal = 11, shift = At.Shift.BEFORE))
-	public void render(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, CallbackInfo info) {
+	public void render(PoseStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightmapTextureManager, Matrix4f matrix4f, CallbackInfo info) {
 		TentPreviewImmediate immediate = TentPreviewImmediate.STORAGE;
 
-		for (PlayerEntity player : this.client.world.getPlayers()) {
+		for (Player player : this.client.level.players()) {
 			if (player != null) {
-				ItemStack stack = player.getMainHandStack();
+				ItemStack stack = player.getMainHandItem();
 				if (stack.getItem() instanceof PlaceableTentItem) {
 					PlaceableTentItem tent = (PlaceableTentItem) stack.getItem();
 					if (tent.hasBlocks(stack)) {
-						HitResult result = player.raycast(10, 0, true);
+						HitResult result = player.pick(10, 0, true);
 						if (result instanceof BlockHitResult && result.getType() == HitResult.Type.BLOCK) {
-							BlockPos placePos = ((BlockHitResult) result).getBlockPos().offset(((BlockHitResult) result).getSide());
-							Vec3d d = camera.getPos().subtract(Vec3d.of(placePos));
+							BlockPos placePos = ((BlockHitResult) result).getBlockPos().relative(((BlockHitResult) result).getDirection());
+							Vec3 d = camera.getPosition().subtract(Vec3.atLowerCornerOf(placePos));
 
-							matrices.push();
+							matrices.pushPose();
 							matrices.translate(-d.x, -d.y, -d.z);
 
-							List<BlockPos> list = tent.getErrorPosition(this.client.world, placePos, stack);
+							List<BlockPos> list = tent.getErrorPosition(this.client.level, placePos, stack);
 							TentPreviewImmediate.STORAGE.setApplyModifiers(!list.isEmpty());
 							BuiltTentItemRenderer.INSTANCE.render(stack, matrices, placePos, immediate, -1);
 
 							for (BlockPos pos : list) {
-								matrices.push();
+								matrices.pushPose();
 								matrices.translate(pos.getX() - placePos.getX(), pos.getY() - placePos.getY(), pos.getZ() - placePos.getZ());
-								if (this.client.world.getBlockState(pos).getMaterial() == Material.AIR) {
-									BlockState stone = Blocks.STONE.getDefaultState();
-									MinecraftClient.getInstance().getBlockRenderManager().renderBlock(stone, pos, this.client.world, matrices, immediate.getBuffer(RenderLayers.getBlockLayer(stone)), false, new Random());
+								if (this.client.level.getBlockState(pos).getMaterial() == Material.AIR) {
+									BlockState stone = Blocks.STONE.defaultBlockState();
+									Minecraft.getInstance().getBlockRenderer().renderBatched(stone, pos, this.client.level, matrices, immediate.getBuffer(ItemBlockRenderTypes.getChunkRenderType(stone)), false, new Random());
 								} else {
 									float scale = 1.03F;
 									matrices.scale(scale, scale, scale);
 									matrices.translate(-0.5 * scale + 0.5, -0.5 * scale + 0.5, -0.5 * scale + 0.5);
-									BuiltTentItemRenderer.renderFakeBlock(this.client.world, pos, BlockPos.ORIGIN, matrices, immediate);
+									BuiltTentItemRenderer.renderFakeBlock(this.client.level, pos, BlockPos.ZERO, matrices, immediate);
 								}
-								matrices.pop();
+								matrices.popPose();
 							}
 
-							matrices.pop();
+							matrices.popPose();
 						}
 					}
 				}
 			}
 		}
-		immediate.draw();
+		immediate.endBatch();
 	}
 
 

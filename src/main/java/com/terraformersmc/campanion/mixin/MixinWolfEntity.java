@@ -2,28 +2,28 @@ package com.terraformersmc.campanion.mixin;
 
 import com.terraformersmc.campanion.entity.HowlingEntity;
 import com.terraformersmc.campanion.entity.ai.goal.HowlGoal;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.world.World;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(WolfEntity.class)
-public abstract class MixinWolfEntity extends TameableEntity implements HowlingEntity {
+@Mixin(Wolf.class)
+public abstract class MixinWolfEntity extends TamableAnimal implements HowlingEntity {
 
-	private static final TrackedData<Boolean> HOWLING;
+	private static final EntityDataAccessor<Boolean> HOWLING;
 
 	private float howlAnimationProgress;
 	//For when I want to animate this
 	private float lastHowlAnimationProgress;
 
-	protected MixinWolfEntity(EntityType<? extends TameableEntity> type, World world) {
+	protected MixinWolfEntity(EntityType<? extends TamableAnimal> type, Level world) {
 		super(type, world);
 	}
 
@@ -41,7 +41,7 @@ public abstract class MixinWolfEntity extends TameableEntity implements HowlingE
 
 	@Inject(method = "initGoals", at = @At("HEAD"), cancellable = true)
 	protected void initGoals(CallbackInfo callbackInfo) {
-		this.goalSelector.add(5, new HowlGoal(this));
+		this.goalSelector.addGoal(5, new HowlGoal(this));
 	}
 
 	@Override
@@ -50,12 +50,12 @@ public abstract class MixinWolfEntity extends TameableEntity implements HowlingE
 			this.howlAnimationProgress = 0.0F;
 			this.lastHowlAnimationProgress = 0.0F;
 		}
-		this.dataTracker.set(HOWLING, howling);
+		this.entityData.set(HOWLING, howling);
 	}
 
 	@Override
 	public boolean isHowling() {
-		return this.dataTracker.get(HOWLING);
+		return this.entityData.get(HOWLING);
 	}
 
 	@Override
@@ -65,11 +65,11 @@ public abstract class MixinWolfEntity extends TameableEntity implements HowlingE
 
 	@Inject(method = "initDataTracker", at = @At("TAIL"), cancellable = true)
 	protected void initDataTracker(CallbackInfo callbackInfo) {
-		this.dataTracker.startTracking(HOWLING, false);
+		this.entityData.define(HOWLING, false);
 	}
 
 	static {
-		HOWLING = DataTracker.registerData(WolfEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+		HOWLING = SynchedEntityData.defineId(Wolf.class, EntityDataSerializers.BOOLEAN);
 	}
 
 }

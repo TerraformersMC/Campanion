@@ -1,11 +1,10 @@
 package com.terraformersmc.campanion.tag;
 
 import com.terraformersmc.campanion.Campanion;
-import net.minecraft.block.Block;
-import net.minecraft.tag.Tag;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
 
 public class CampanionBlockTags {
 	public static final TagKey<Block> LAWN_CHAIRS = get("lawn_chairs");
@@ -16,7 +15,7 @@ public class CampanionBlockTags {
 	public static final TagKey<Block> TENT_POLES = get("tent_poles");
 
 	private static TagKey<Block> get(String id) {
-		return TagKey.of(Registry.BLOCK_KEY, new Identifier(Campanion.MOD_ID, id));
+		return TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(Campanion.MOD_ID, id));
 	}
 
 	public static void load() {

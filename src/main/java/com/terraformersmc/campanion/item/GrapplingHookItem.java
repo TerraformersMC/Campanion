@@ -2,49 +2,48 @@ package com.terraformersmc.campanion.item;
 
 import com.terraformersmc.campanion.entity.GrapplingHookEntity;
 import com.terraformersmc.campanion.entity.GrapplingHookUser;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
-
 import java.util.Random;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class GrapplingHookItem extends Item {
-	public GrapplingHookItem(Item.Settings settings) {
+	public GrapplingHookItem(Item.Properties settings) {
 		super(settings);
 	}
 	protected final Random RANDOM = new Random();
 
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
 		GrapplingHookUser user = (GrapplingHookUser) player;
-		ItemStack itemStack = player.getStackInHand(hand);
+		ItemStack itemStack = player.getItemInHand(hand);
 		GrapplingHookEntity hook = user.getGrapplingHook();
 
 		if (hook == null || !hook.isAlive()) {
-			world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ENTITY_FISHING_BOBBER_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (RANDOM.nextFloat() * 0.4F + 0.8F));
-			if (!world.isClient) {
+			world.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (RANDOM.nextFloat() * 0.4F + 0.8F));
+			if (!world.isClientSide) {
 				GrapplingHookEntity hookEntity = new GrapplingHookEntity(player, world);
 				user.setGrapplingHook(hookEntity);
-				world.spawnEntity(hookEntity);
-				itemStack.damage(1, player, entity -> entity.sendToolBreakStatus(hand));
+				world.addFreshEntity(hookEntity);
+				itemStack.hurtAndBreak(1, player, entity -> entity.broadcastBreakEvent(hand));
 			}
 
-			player.incrementStat(Stats.USED.getOrCreateStat(this));
-		} else if(!world.isClient) {
+			player.awardStat(Stats.ITEM_USED.get(this));
+		} else if(!world.isClientSide) {
 			hook.kill();
 		}
 
-		return TypedActionResult.success(itemStack);
+		return InteractionResultHolder.success(itemStack);
 	}
 
 	@Override
-	public int getEnchantability() {
+	public int getEnchantmentValue() {
 		return 1;
 	}
 }

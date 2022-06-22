@@ -1,9 +1,9 @@
 package com.terraformersmc.campanion.mixin;
 
 import com.terraformersmc.campanion.entity.CollideAxisEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,10 +15,10 @@ public class MixinEntity implements CollideAxisEntity {
 	private boolean collidedZ;
 
 	@Inject(method = "adjustMovementForCollisions(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;", at = @At("RETURN"))
-	public void adjustMovementForCollisions(Vec3d movement, CallbackInfoReturnable<Vec3d> info) {
-		Vec3d vec3d = info.getReturnValue();
-		this.collidedX = !MathHelper.approximatelyEquals(movement.x, vec3d.x);
-		this.collidedZ = !MathHelper.approximatelyEquals(movement.z, vec3d.z);
+	public void adjustMovementForCollisions(Vec3 movement, CallbackInfoReturnable<Vec3> info) {
+		Vec3 vec3d = info.getReturnValue();
+		this.collidedX = !Mth.equal(movement.x, vec3d.x);
+		this.collidedZ = !Mth.equal(movement.z, vec3d.z);
 	}
 
 	@Override

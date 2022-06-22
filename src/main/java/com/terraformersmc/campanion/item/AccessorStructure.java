@@ -1,9 +1,8 @@
 package com.terraformersmc.campanion.item;
 
-import net.minecraft.structure.Structure;
-
 import java.util.List;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public interface AccessorStructure {
-    List<Structure.PalettedBlockInfoList> getBlocks();
+    List<StructureTemplate.Palette> getBlocks();
 }

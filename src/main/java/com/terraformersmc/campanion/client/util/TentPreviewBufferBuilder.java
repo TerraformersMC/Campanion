@@ -1,7 +1,7 @@
 package com.terraformersmc.campanion.client.util;
 
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.VertexConsumer;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
 public class TentPreviewBufferBuilder extends BufferBuilder {
     public TentPreviewBufferBuilder(int initialCapacity) {

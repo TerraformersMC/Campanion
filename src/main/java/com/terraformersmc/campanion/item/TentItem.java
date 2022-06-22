@@ -1,60 +1,59 @@
 package com.terraformersmc.campanion.item;
 
 import com.terraformersmc.campanion.Campanion;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.Structure;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
-
 import java.util.Objects;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public class TentItem extends PlaceableTentItem {
 
-	private final Identifier structure;
+	private final ResourceLocation structure;
 
-	public TentItem(Settings settings, String structureName) {
+	public TentItem(Properties settings, String structureName) {
 		super(settings);
-		this.structure = new Identifier(Campanion.MOD_ID, "tents/" + structureName + "_tent");
+		this.structure = new ResourceLocation(Campanion.MOD_ID, "tents/" + structureName + "_tent");
 	}
 
-	public Identifier getStructure() {
+	public ResourceLocation getStructure() {
 		return structure;
 	}
 
 	@Override
 	public void onPlaceTent(ItemStack stack) {
-		stack.decrement(1);
+		stack.shrink(1);
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-		if (!hasBlocks(stack) && world instanceof ServerWorld) {
-			initNbt(stack, Objects.requireNonNull(((ServerWorld) world).getStructureManager().getStructure(((TentItem) stack.getItem()).getStructure()).orElseThrow()));
+	public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+		if (!hasBlocks(stack) && world instanceof ServerLevel) {
+			initNbt(stack, Objects.requireNonNull(((ServerLevel) world).getStructureManager().get(((TentItem) stack.getItem()).getStructure()).orElseThrow()));
 		}
 		super.inventoryTick(stack, world, entity, slot, selected);
 	}
 
-	public static void initNbt(ItemStack stack, Structure structure) {
+	public static void initNbt(ItemStack stack, StructureTemplate structure) {
 		Vec3i size = structure.getSize();
-		NbtList list = new NbtList();
-		for (Structure.StructureBlockInfo info : ((AccessorStructure) structure).getBlocks().get(0).getAll()) {
-			NbtCompound tag = new NbtCompound();
-			tag.put("Pos", NbtHelper.fromBlockPos(info.pos.add(-size.getX() / 2, 0, -size.getZ() / 2)));
-			tag.put("BlockState", NbtHelper.fromBlockState(info.state));
+		ListTag list = new ListTag();
+		for (StructureTemplate.StructureBlockInfo info : ((AccessorStructure) structure).getBlocks().get(0).blocks()) {
+			CompoundTag tag = new CompoundTag();
+			tag.put("Pos", NbtUtils.writeBlockPos(info.pos.offset(-size.getX() / 2, 0, -size.getZ() / 2)));
+			tag.put("BlockState", NbtUtils.writeBlockState(info.state));
 			if (info.nbt != null && !info.nbt.isEmpty()) {
 				tag.put("BlockEntityData", info.nbt);
 			}
 			list.add(tag);
 		}
 
-		stack.getOrCreateNbt().put("Blocks", list);
-		stack.getOrCreateNbt().put("TentSize", NbtHelper.fromBlockPos(new BlockPos(size)));
+		stack.getOrCreateTag().put("Blocks", list);
+		stack.getOrCreateTag().put("TentSize", NbtUtils.writeBlockPos(new BlockPos(size)));
 	}
 }

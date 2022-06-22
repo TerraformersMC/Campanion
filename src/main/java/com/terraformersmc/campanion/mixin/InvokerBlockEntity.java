@@ -1,13 +1,13 @@
 package com.terraformersmc.campanion.mixin;
 
 
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(BlockEntity.class)
 public interface InvokerBlockEntity {
 	@Invoker
-	void callWriteIdentifyingData(NbtCompound nbt);
+	void callWriteIdentifyingData(CompoundTag nbt);
 }

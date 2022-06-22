@@ -1,49 +1,49 @@
 package com.terraformersmc.campanion.block;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LadderBlock;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class RopeLadderBlock extends LadderBlock {
 
-	public RopeLadderBlock(Settings settings) {
+	public RopeLadderBlock(Properties settings) {
 		super(settings);
 	}
 
 	@Override
-	public BlockState getPlacementState(ItemPlacementContext ctx) {
-		BlockState state = super.getPlacementState(ctx);
+	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+		BlockState state = super.getStateForPlacement(ctx);
 		if (state == null) {
-			state = getDefaultState();
+			state = defaultBlockState();
 		}
-		BlockState upperState = ctx.getWorld().getBlockState(ctx.getBlockPos().up());
+		BlockState upperState = ctx.getLevel().getBlockState(ctx.getClickedPos().above());
 		if (upperState.getBlock() == this) {
-			return state.with(FACING, upperState.get(FACING));
+			return state.setValue(FACING, upperState.getValue(FACING));
 		}
 		return state;
 	}
 
 	@Override
-	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-		return super.canPlaceAt(state, world, pos) || world.getBlockState(pos.up()).getBlock() instanceof RopeLadderBlock;
+	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+		return super.canSurvive(state, world, pos) || world.getBlockState(pos.above()).getBlock() instanceof RopeLadderBlock;
 	}
 
 	@Override
-	public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
-		BlockPos.Mutable progress = pos.mutableCopy();
+	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+		BlockPos.MutableBlockPos progress = pos.mutable();
 		// Variable to get more ladders from other parts of the inventory if the one in the hand runs out
 		int extraLaddersLocation = -1;
 		// Boolean to check if we are using a stack different than the original one the player used
@@ -55,7 +55,7 @@ public class RopeLadderBlock extends LadderBlock {
 		int count;
 		for (count = 0; count < pos.getY(); count++) {
 			progress.move(Direction.DOWN);
-			if (!canPlaceAt(state, world, progress) || !world.getBlockState(progress).isAir() || itemStack.getCount() < 1) {
+			if (!canSurvive(state, world, progress) || !world.getBlockState(progress).isAir() || itemStack.getCount() < 1) {
 				break;
 			}
 			// Check if we are using the original stack containing the item the player placed
@@ -63,17 +63,17 @@ public class RopeLadderBlock extends LadderBlock {
 				// Check if the item count of the stack is greater than one
 				if (itemStack.getCount() > 1) {
 					// Place the ladder
-					world.setBlockState(progress, state);
+					world.setBlockAndUpdate(progress, state);
 				} else if (itemStack.getCount() == 1 || itemStack.getCount() == 0) {
 					// Since the item count on the stack is either 1 or 0
 					// Get if the placer is a player
-					if (placer instanceof PlayerEntity) {
+					if (placer instanceof Player) {
 						// Try to get more ladders from the inventory
-						extraLaddersLocation = tryToGetMoreLadders((PlayerEntity) placer, originalStack);
+						extraLaddersLocation = tryToGetMoreLadders((Player) placer, originalStack);
 						// If we got more ladders
 						if (extraLaddersLocation != -1) {
 							// The current itemStack will be the ItemStack that has more ladders
-							itemStack = ((PlayerEntity) placer).getInventory().getStack(extraLaddersLocation);
+							itemStack = ((Player) placer).getInventory().getItem(extraLaddersLocation);
 							// Set usingAnotherStack to true
 							usingAnotherStack = true;
 						}
@@ -86,23 +86,23 @@ public class RopeLadderBlock extends LadderBlock {
 				// Check if the ItemStack count is more than 1
 				if (itemStack.getCount() > 1) {
 					// Place the item and let the logic below know that we have not manually decremented the stack count
-					world.setBlockState(progress, state);
+					world.setBlockAndUpdate(progress, state);
 					stackDecremented = false;
 				} else if (itemStack.getCount() == 1) {
 					// Since the ItemStack count is 1 place the RopeLadderBlock
-					world.setBlockState(progress, state);
+					world.setBlockAndUpdate(progress, state);
 					// Decrement the stack to make it 0 and let the logic below know that we already decremented the stack count
-					itemStack.decrement(1);
+					itemStack.shrink(1);
 					stackDecremented = true;
 
 					// Get if the placer is a player
-					if (placer instanceof PlayerEntity) {
+					if (placer instanceof Player) {
 						// Since we ran out of ladders, check if we have more ladders on other parts of the inventory
-						extraLaddersLocation = tryToGetMoreLadders((PlayerEntity) placer, originalStack);
+						extraLaddersLocation = tryToGetMoreLadders((Player) placer, originalStack);
 						// Check if we have more ladders
 						if (extraLaddersLocation != -1) {
 							// The current itemStack will be the ItemStack that has more ladders
-							itemStack = ((PlayerEntity) placer).getInventory().getStack(extraLaddersLocation);
+							itemStack = ((Player) placer).getInventory().getItem(extraLaddersLocation);
 							// Make sure we let the logic know we are using another stack different from the original since the original at this point still has count 1 that won't
 							// be decremented until the end of this method call
 							usingAnotherStack = true;
@@ -112,8 +112,8 @@ public class RopeLadderBlock extends LadderBlock {
 			}
 			// Check if the stack has not been decremented yet
 			if (!stackDecremented) {
-				if (!((PlayerEntity) placer).getAbilities().creativeMode) {
-					itemStack.decrement(1);
+				if (!((Player) placer).getAbilities().instabuild) {
+					itemStack.shrink(1);
 				}
 			}
 
@@ -121,41 +121,41 @@ public class RopeLadderBlock extends LadderBlock {
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		ItemStack stackInHand = player.getStackInHand(hand);
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		ItemStack stackInHand = player.getItemInHand(hand);
 		if (stackInHand.getItem() == CampanionBlocks.ROPE_LADDER.asItem()) {
 			for (int i = 1; i < world.getHeight(); i++) {
-				BlockPos attemptPos = pos.offset(Direction.DOWN, i);
-				BlockState upperState = world.getBlockState(attemptPos.up());
+				BlockPos attemptPos = pos.relative(Direction.DOWN, i);
+				BlockState upperState = world.getBlockState(attemptPos.above());
 				if (upperState.getBlock() != this && !upperState.isAir()) {
-					return ActionResult.FAIL;
+					return InteractionResult.FAIL;
 				}
 				ItemStack previousStack = stackInHand.copy();
-				ActionResult actionResult = stackInHand.useOnBlock(new ItemUsageContext(player, hand, new BlockHitResult(Vec3d.ZERO, Direction.UP, attemptPos, false)));
-				if (player.getAbilities().creativeMode && stackInHand == player.getStackInHand(hand) && stackInHand.getCount() < previousStack.getCount()) {
+				InteractionResult actionResult = stackInHand.useOn(new UseOnContext(player, hand, new BlockHitResult(Vec3.ZERO, Direction.UP, attemptPos, false)));
+				if (player.getAbilities().instabuild && stackInHand == player.getItemInHand(hand) && stackInHand.getCount() < previousStack.getCount()) {
 					stackInHand.setCount(previousStack.getCount());
 				}
-				if (actionResult.isAccepted()) {
+				if (actionResult.consumesAction()) {
 					return actionResult;
 				}
 			}
 		}
-		return super.onUse(state, world, pos, player, hand, hit);
+		return super.use(state, world, pos, player, hand, hit);
 	}
 
 	@Override
-	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-		BlockPos.Mutable progress = pos.mutableCopy();
+	public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+		BlockPos.MutableBlockPos progress = pos.mutable();
 		int count;
 		for (count = 0; count < pos.getY(); count++) {
 			progress.move(Direction.DOWN);
 			if (!world.getBlockState(progress).getBlock().equals(CampanionBlocks.ROPE_LADDER)) {
 				break;
 			}
-			world.setBlockState(progress, Blocks.AIR.getDefaultState());
+			world.setBlockAndUpdate(progress, Blocks.AIR.defaultBlockState());
 		}
-		if (!player.getAbilities().creativeMode) {
-			player.giveItemStack(new ItemStack(CampanionBlocks.ROPE_LADDER, count + 1));
+		if (!player.getAbilities().instabuild) {
+			player.addItem(new ItemStack(CampanionBlocks.ROPE_LADDER, count + 1));
 		}
 	}
 
@@ -166,15 +166,15 @@ public class RopeLadderBlock extends LadderBlock {
 	 * @param originalItemStack the original item stack that the player placed
 	 * @return returns the number in the inventory where the RopeLadderBlock stack was found. Returns -1 if no RopeLadderBlock was found in the player's inventory
 	 **/
-	private int tryToGetMoreLadders(PlayerEntity player, ItemStack originalItemStack) {
+	private int tryToGetMoreLadders(Player player, ItemStack originalItemStack) {
 		// Iterate through the player's inventory
-		for (int i = 0; i < player.getInventory().size(); i++) {
+		for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
 			// Check if the item in the current position being iterated over is a RopeLadderBlock
-			if (player.getInventory().getStack(i).getItem().equals(CampanionBlocks.ROPE_LADDER.asItem())) {
+			if (player.getInventory().getItem(i).getItem().equals(CampanionBlocks.ROPE_LADDER.asItem())) {
 				// Check if the item in the current position being iterated over is not the one in the hand that was used to put it
-				if (player.getInventory().getStack(i) != originalItemStack) {
+				if (player.getInventory().getItem(i) != originalItemStack) {
 					// Check if the item count on the current position being iterated over is more than 0
-					if (player.getInventory().getStack(i).getCount() > 0) {
+					if (player.getInventory().getItem(i).getCount() > 0) {
 						// Return the position of the item in the inventory
 						return i;
 					}

@@ -25,14 +25,14 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegi
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.block.BlockModels;
-import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeableItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeableLeatherItem;
+import net.minecraft.world.item.ItemStack;
 
 public class CampanionClient implements ClientModInitializer {
 	@Override
@@ -46,7 +46,7 @@ public class CampanionClient implements ClientModInitializer {
 		CampanionKeybinds.initialize();
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(rm -> (modelId, context) -> {
-			if (modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState())) || modelId.equals(BlockModels.getModelId(CampanionBlocks.ROPE_BRIDGE_POST.getDefaultState()))) {
+			if (modelId.equals(BlockModelShaper.stateToModelLocation(CampanionBlocks.ROPE_BRIDGE_PLANKS.defaultBlockState())) || modelId.equals(BlockModelShaper.stateToModelLocation(CampanionBlocks.ROPE_BRIDGE_POST.defaultBlockState()))) {
 				return new BridgePlanksUnbakedModel();
 			}
 			return null;
@@ -64,14 +64,14 @@ public class CampanionClient implements ClientModInitializer {
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.GRAPPLING_HOOK, GrapplingHookEntityRenderer::new);
 		EntityRendererRegistry.INSTANCE.register(CampanionEntities.LAWN_CHAIR, EmptyRenderer::new);
 
-		EntityRendererRegistry.INSTANCE.register(CampanionEntities.THROWING_STONE, FlyingItemEntityRenderer::new);
-		EntityRendererRegistry.INSTANCE.register(CampanionEntities.FLARE, FlyingItemEntityRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.THROWING_STONE, ThrownItemRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(CampanionEntities.FLARE, ThrownItemRenderer::new);
 	}
 
 	private static void registerRenderLayers() {
-		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.ROPE_LADDER, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.LEATHER_TANNER, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.FLARE_BLOCK, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.ROPE_LADDER, RenderType.cutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.LEATHER_TANNER, RenderType.cutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(CampanionBlocks.FLARE_BLOCK, RenderType.cutout());
 	}
 
 	private static void registerBlockEntityRenderers() {
@@ -80,7 +80,7 @@ public class CampanionClient implements ClientModInitializer {
 
 
 	private static void registerColorProviders() {
-		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0 ? ((DyeableItem) stack.getItem()).getColor(stack) : -1, CampanionItems.SLEEPING_BAG);
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0 ? ((DyeableLeatherItem) stack.getItem()).getColor(stack) : -1, CampanionItems.SLEEPING_BAG);
 	}
 
 	public static void registerClientboundPackets() {
@@ -89,10 +89,10 @@ public class CampanionClient implements ClientModInitializer {
 	}
 
 	public static void registerModelPredicateProviders() {
-		FabricModelPredicateProviderRegistry.register(CampanionItems.GRAPPLING_HOOK, new Identifier(Campanion.MOD_ID, "deployed"), (stack, world, entity, seed) -> {
-			if (entity instanceof PlayerEntity) {
-				for (Hand value : Hand.values()) {
-					ItemStack heldStack = entity.getStackInHand(value);
+		FabricModelPredicateProviderRegistry.register(CampanionItems.GRAPPLING_HOOK, new ResourceLocation(Campanion.MOD_ID, "deployed"), (stack, world, entity, seed) -> {
+			if (entity instanceof Player) {
+				for (InteractionHand value : InteractionHand.values()) {
+					ItemStack heldStack = entity.getItemInHand(value);
 					if (heldStack == stack && (((GrapplingHookUser) entity).getGrapplingHook() != null && !((GrapplingHookUser) entity).getGrapplingHook().isRemoved())) {
 						return 1;
 					}
@@ -100,7 +100,7 @@ public class CampanionClient implements ClientModInitializer {
 			}
 			return 0;
 		});
-		FabricModelPredicateProviderRegistry.register(CampanionItems.TENT_BAG, new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity, seed) -> TentBagItem.isEmpty(stack) ? 1 : 0);
-		FabricModelPredicateProviderRegistry.register(CampanionItems.SLEEPING_BAG, new Identifier(Campanion.MOD_ID, "open"), (stack, world, entity, seed) -> SleepingBagItem.inUse(stack) ? 1 : 0);
+		FabricModelPredicateProviderRegistry.register(CampanionItems.TENT_BAG, new ResourceLocation(Campanion.MOD_ID, "open"), (stack, world, entity, seed) -> TentBagItem.isEmpty(stack) ? 1 : 0);
+		FabricModelPredicateProviderRegistry.register(CampanionItems.SLEEPING_BAG, new ResourceLocation(Campanion.MOD_ID, "open"), (stack, world, entity, seed) -> SleepingBagItem.inUse(stack) ? 1 : 0);
 	}
 }

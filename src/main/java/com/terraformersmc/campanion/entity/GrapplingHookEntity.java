@@ -4,65 +4,64 @@ import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.network.S2CEntitySpawnPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.World;
-
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.stream.Collectors;
 
 public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEntity {
 
-	private static final TrackedData<Boolean> IS_IN_BLOCK = DataTracker.registerData(GrapplingHookEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> IS_IN_BLOCK = SynchedEntityData.defineId(GrapplingHookEntity.class, EntityDataSerializers.BOOLEAN);
 
-	private PlayerEntity player;
+	private Player player;
 	private int grappleTicks = -1;
 
-	private Vec3d previousPlayerPos;
+	private Vec3 previousPlayerPos;
 
-	public GrapplingHookEntity(World world) {
+	public GrapplingHookEntity(Level world) {
 		super(CampanionEntities.GRAPPLING_HOOK, world);
 	}
 
-	public GrapplingHookEntity(PlayerEntity player, World world) {
+	public GrapplingHookEntity(Player player, Level world) {
 		this(world);
 		this.player = player;
-		float playerPitch = this.player.getPitch();
-		float playerYaw = this.player.getYaw();
+		float playerPitch = this.player.getXRot();
+		float playerYaw = this.player.getYRot();
 
-		float velX = -MathHelper.sin(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
-		float velY = -MathHelper.sin(playerPitch * 0.017453292F);
-		float velZ = MathHelper.cos(playerYaw * 0.017453292F) * MathHelper.cos(playerPitch * 0.017453292F);
-		this.setVelocity(new Vec3d(velX, velY, velZ).multiply(1.5F));
+		float velX = -Mth.sin(playerYaw * 0.017453292F) * Mth.cos(playerPitch * 0.017453292F);
+		float velY = -Mth.sin(playerPitch * 0.017453292F);
+		float velZ = Mth.cos(playerYaw * 0.017453292F) * Mth.cos(playerPitch * 0.017453292F);
+		this.setDeltaMovement(new Vec3(velX, velY, velZ).scale(1.5F));
 
-		this.prevYaw = this.getYaw();
-		this.prevPitch = this.getPitch();
+		this.yRotO = this.getYRot();
+		this.xRotO = this.getXRot();
 
-		this.refreshPositionAndAngles(this.player.getX(), this.player.getEyeY() - 0.1, this.player.getZ(), this.getYaw(), this.getPitch());
+		this.moveTo(this.player.getX(), this.player.getEyeY() - 0.1, this.player.getZ(), this.getYRot(), this.getXRot());
 	}
 
 	@Override
-	protected void initDataTracker() {
-		this.dataTracker.startTracking(IS_IN_BLOCK, false);
+	protected void defineSynchedData() {
+		this.entityData.define(IS_IN_BLOCK, false);
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public boolean shouldRender(double distance) {
+	public boolean shouldRenderAtSqrDistance(double distance) {
 		return distance < 16384.0D;
 	}
 
@@ -70,77 +69,77 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	public void tick() {
 		super.tick();
 
-		Vec3d vec3d = this.getVelocity();
-		if (!this.dataTracker.get(IS_IN_BLOCK) && this.prevPitch == 0.0F && this.prevYaw == 0.0F) {
-			float f = MathHelper.sqrt((float) vec3d.horizontalLengthSquared());
-			this.setYaw((float) (MathHelper.atan2(vec3d.x, vec3d.z) * 57.2957763671875D));
-			this.setPitch((float) (MathHelper.atan2(vec3d.y, (double) f) * 57.2957763671875D));
-			this.prevYaw = this.getYaw();
-			this.prevPitch = this.getPitch();
+		Vec3 vec3d = this.getDeltaMovement();
+		if (!this.entityData.get(IS_IN_BLOCK) && this.xRotO == 0.0F && this.yRotO == 0.0F) {
+			float f = Mth.sqrt((float) vec3d.horizontalDistanceSqr());
+			this.setYRot((float) (Mth.atan2(vec3d.x, vec3d.z) * 57.2957763671875D));
+			this.setXRot((float) (Mth.atan2(vec3d.y, (double) f) * 57.2957763671875D));
+			this.yRotO = this.getYRot();
+			this.xRotO = this.getXRot();
 		}
 
 		if (this.player == null) {
 			this.remove(RemovalReason.DISCARDED);
-		} else if (this.world.isClient || this.removeIfInvalid()) {
-			if (!this.world.isClient) {
+		} else if (this.level.isClientSide || this.removeIfInvalid()) {
+			if (!this.level.isClientSide) {
 				this.checkForCollision();
 			}
-			if (!this.dataTracker.get(IS_IN_BLOCK)) {
-				this.move(MovementType.SELF, this.getVelocity());
-				this.setVelocity(this.getVelocity().add(0, -0.02D, 0));
-				this.refreshPosition();
+			if (!this.entityData.get(IS_IN_BLOCK)) {
+				this.move(MoverType.SELF, this.getDeltaMovement());
+				this.setDeltaMovement(this.getDeltaMovement().add(0, -0.02D, 0));
+				this.reapplyPosition();
 			} else {
-				this.setVelocity(Vec3d.ZERO);
+				this.setDeltaMovement(Vec3.ZERO);
 				this.grappleTicks++;
 				this.ensureEntityVelocity();
 			}
 		}
 
-		if (!this.dataTracker.get(IS_IN_BLOCK)) {
+		if (!this.entityData.get(IS_IN_BLOCK)) {
 			this.smoothMovement();
 		}
 	}
 
 	private void smoothMovement() {
-		Vec3d vec3d = this.getVelocity();
+		Vec3 vec3d = this.getDeltaMovement();
 		double d = vec3d.x;
 		double e = vec3d.y;
 		double g = vec3d.z;
 
-		float l = MathHelper.sqrt((float) vec3d.horizontalLengthSquared());
+		float l = Mth.sqrt((float) vec3d.horizontalDistanceSqr());
 
-		this.setYaw((float) (MathHelper.atan2(d, g) * 57.2957763671875D));
+		this.setYRot((float) (Mth.atan2(d, g) * 57.2957763671875D));
 
-		for (this.setPitch((float) (MathHelper.atan2(e, (double) l) * 57.2957763671875D)); this.getPitch() - this.prevPitch < -180.0F; this.prevPitch -= 360.0F) {
+		for (this.setXRot((float) (Mth.atan2(e, (double) l) * 57.2957763671875D)); this.getXRot() - this.xRotO < -180.0F; this.xRotO -= 360.0F) {
 		}
 
-		while (this.getPitch() - this.prevPitch >= 180.0F) {
-			this.prevPitch += 360.0F;
+		while (this.getXRot() - this.xRotO >= 180.0F) {
+			this.xRotO += 360.0F;
 		}
 
-		while (this.getYaw() - this.prevYaw < -180.0F) {
-			this.prevYaw -= 360.0F;
+		while (this.getYRot() - this.yRotO < -180.0F) {
+			this.yRotO -= 360.0F;
 		}
 
-		while (this.getYaw() - this.prevYaw >= 180.0F) {
-			this.prevYaw += 360.0F;
+		while (this.getYRot() - this.yRotO >= 180.0F) {
+			this.yRotO += 360.0F;
 		}
 
-		this.setPitch(MathHelper.lerp(0.2F, this.prevPitch, this.getPitch()));
-		this.setYaw(MathHelper.lerp(0.2F, this.prevYaw, this.getYaw()));
+		this.setXRot(Mth.lerp(0.2F, this.xRotO, this.getXRot()));
+		this.setYRot(Mth.lerp(0.2F, this.yRotO, this.getYRot()));
 	}
 
 	private boolean removeIfInvalid() {
-		ItemStack mainHandStack = this.player.getMainHandStack();
-		ItemStack offHandStack = this.player.getOffHandStack();
+		ItemStack mainHandStack = this.player.getMainHandItem();
+		ItemStack offHandStack = this.player.getOffhandItem();
 		boolean inMainHand = mainHandStack.getItem() == CampanionItems.GRAPPLING_HOOK;
 		boolean inOffHand = offHandStack.getItem() == CampanionItems.GRAPPLING_HOOK;
 		boolean isHookedEntity = ((GrapplingHookUser) this.player).getGrapplingHook() == this;
-		double dist = this.squaredDistanceTo(this.player);
+		double dist = this.distanceToSqr(this.player);
 		if (
 				this.player.isRemoved() || !this.player.isAlive() || !isHookedEntity
 						|| (!inMainHand && !inOffHand) || dist > 16384 ||
-						(this.dataTracker.get(IS_IN_BLOCK) && dist < 2)) {
+						(this.entityData.get(IS_IN_BLOCK) && dist < 2)) {
 			this.remove(RemovalReason.DISCARDED);
 			return false;
 		} else {
@@ -149,16 +148,16 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	}
 
 	private void checkForCollision() {
-		HitResult hitResult = ProjectileUtil.getCollision(this, entity -> false);
+		HitResult hitResult = ProjectileUtil.getHitResult(this, entity -> false);
 
 		if (hitResult.getType() == HitResult.Type.BLOCK && this.grappleTicks == -1) {
-			this.previousPlayerPos = this.player.getPos();
-			this.dataTracker.set(IS_IN_BLOCK, true);
+			this.previousPlayerPos = this.player.position();
+			this.entityData.set(IS_IN_BLOCK, true);
 			this.grappleTicks = 0;
 		}
 	}
 
-	public PlayerEntity getPlayer() {
+	public Player getPlayer() {
 		return player;
 	}
 
@@ -171,11 +170,11 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	}
 
 	@Override
-	public void writeCustomDataToNbt(NbtCompound tag) {
+	public void addAdditionalSaveData(CompoundTag tag) {
 	}
 
 	@Override
-	public void readCustomDataFromNbt(NbtCompound tag) {
+	public void readAdditionalSaveData(CompoundTag tag) {
 	}
 
 
@@ -184,39 +183,39 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 			double dx = this.getX() - this.player.getX();
 			double dy = this.getY() - this.player.getY() + 1;
 			double dz = this.getZ() - this.player.getZ();
-			double xzDist = (double) MathHelper.sqrt((float) (dx * dx + dz * dz));
+			double xzDist = (double) Mth.sqrt((float) (dx * dx + dz * dz));
 
 			double theta = Math.atan2(dy, xzDist);
 			double xzTheta = Math.atan2(dz, dx);
 
 			double xzAmount = Math.cos(theta);
-			Vec3d movement = new Vec3d(xzAmount * Math.cos(xzTheta), Math.sin(theta), xzAmount * Math.sin(xzTheta));
+			Vec3 movement = new Vec3(xzAmount * Math.cos(xzTheta), Math.sin(theta), xzAmount * Math.sin(xzTheta));
 
 			boolean xCollide = false;
 			boolean zCollide = false;
 
-			Box box = this.player.getBoundingBox().stretch(movement.normalize().x, 0, movement.normalize().z);
-			for (VoxelShape shape : this.world.getBlockCollisions(this.player, box)) {
-				xCollide |= box.contains(shape.getMax(Direction.Axis.X), box.minY, box.minZ) || box.contains(shape.getMax(Direction.Axis.X), box.minY, box.minZ);
-				zCollide |= box.contains(box.minX, box.minY, shape.getMin(Direction.Axis.Z)) || box.contains(box.minX, box.minY, shape.getMax(Direction.Axis.Z));
+			AABB box = this.player.getBoundingBox().expandTowards(movement.normalize().x, 0, movement.normalize().z);
+			for (VoxelShape shape : this.level.getBlockCollisions(this.player, box)) {
+				xCollide |= box.contains(shape.max(Direction.Axis.X), box.minY, box.minZ) || box.contains(shape.max(Direction.Axis.X), box.minY, box.minZ);
+				zCollide |= box.contains(box.minX, box.minY, shape.min(Direction.Axis.Z)) || box.contains(box.minX, box.minY, shape.max(Direction.Axis.Z));
 			}
 
 			if (xCollide && zCollide) {
-				movement = new Vec3d(0, movement.y, 0);
+				movement = new Vec3(0, movement.y, 0);
 			} else if (xCollide) {
-				movement = new Vec3d(0, movement.y, xzAmount * Math.signum(movement.z));
+				movement = new Vec3(0, movement.y, xzAmount * Math.signum(movement.z));
 			} else if (zCollide) {
-				movement = new Vec3d(xzAmount * Math.signum(movement.x), movement.y, 0);
+				movement = new Vec3(xzAmount * Math.signum(movement.x), movement.y, 0);
 			}
 
 //			movement = movement.normalize().add(0, -0.25, 0);
 
 			movement = movement.normalize();
 
-			Vec3d playerVelocity = this.player.getVelocity();
-			Vec3d velocity = movement.subtract(movement.subtract(playerVelocity).multiply(0.5));
-			this.player.setVelocity(velocity);
-			this.player.velocityModified = true;
+			Vec3 playerVelocity = this.player.getDeltaMovement();
+			Vec3 velocity = movement.subtract(movement.subtract(playerVelocity).scale(0.5));
+			this.player.setDeltaMovement(velocity);
+			this.player.hurtMarked = true;
 		}
 	}
 
@@ -225,17 +224,17 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	}
 
 	@Override
-	public boolean canUsePortals() {
+	public boolean canChangeDimensions() {
 		return false;
 	}
 
 	@Override
-	public Packet<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return S2CEntitySpawnPacket.createPacket(this);
 	}
 
 	@Override
-	public void writeToBuffer(PacketByteBuf buffer) {
+	public void writeToBuffer(FriendlyByteBuf buffer) {
 		if (this.player != null) {
 			buffer.writeBoolean(true);
 			buffer.writeInt(this.player.getId());
@@ -245,12 +244,12 @@ public class GrapplingHookEntity extends Entity implements AdditionalSpawnDataEn
 	}
 
 	@Override
-	public void readFromBuffer(PacketByteBuf buffer) {
+	public void readFromBuffer(FriendlyByteBuf buffer) {
 		if (buffer.readBoolean()) {
 			int i = buffer.readInt();
-			Entity entity = this.world.getEntityById(i);
-			if (entity instanceof PlayerEntity) {
-				this.player = (PlayerEntity) entity;
+			Entity entity = this.level.getEntity(i);
+			if (entity instanceof Player) {
+				this.player = (Player) entity;
 				((GrapplingHookUser) this.player).setGrapplingHook(this);
 			}
 		}

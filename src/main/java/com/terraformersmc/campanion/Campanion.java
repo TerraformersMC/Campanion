@@ -21,16 +21,16 @@ import com.terraformersmc.campanion.tag.CampanionItemTags;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.Position;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
+import net.minecraft.Util;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.Position;
+import net.minecraft.core.Registry;
+import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 
 public class Campanion implements ModInitializer {
 
@@ -55,27 +55,27 @@ public class Campanion implements ModInitializer {
 		CampanionCriteria.loadClass();
 		CampanionStats.loadClass();
 
-		FabricItemGroupBuilder.create(new Identifier(MOD_ID, "items")).icon(() -> CampanionItems.SMORE.asItem().getDefaultStack()).appendItems(stacks -> Registry.ITEM.forEach(item -> {
-			if (Registry.ITEM.getId(item).getNamespace().equals(MOD_ID)) {
-				item.appendStacks(item.getGroup(), (DefaultedList<ItemStack>) stacks);
+		FabricItemGroupBuilder.create(new ResourceLocation(MOD_ID, "items")).icon(() -> CampanionItems.SMORE.asItem().getDefaultInstance()).appendItems(stacks -> Registry.ITEM.forEach(item -> {
+			if (Registry.ITEM.getKey(item).getNamespace().equals(MOD_ID)) {
+				item.fillItemCategory(item.getItemCategory(), (NonNullList<ItemStack>) stacks);
 			}
 		})).build();
 
 		registerServerboundPackets();
 
-		DispenserBlock.registerBehavior(CampanionItems.SKIPPING_STONE, new ProjectileDispenserBehavior() {
+		DispenserBlock.registerBehavior(CampanionItems.SKIPPING_STONE, new AbstractProjectileDispenseBehavior() {
 			@Override
-			protected ProjectileEntity createProjectile(World world, Position position, ItemStack stack) {
-				return Util.make(new SkippingStoneEntity(world, position.getX(), position.getY(), position.getZ()), (snowballEntity) -> {
+			protected Projectile getProjectile(Level world, Position position, ItemStack stack) {
+				return Util.make(new SkippingStoneEntity(world, position.x(), position.y(), position.z()), (snowballEntity) -> {
 					snowballEntity.setItem(stack);
 				});
 			}
 		});
 
-		DispenserBlock.registerBehavior(CampanionItems.FLARE, new ProjectileDispenserBehavior() {
+		DispenserBlock.registerBehavior(CampanionItems.FLARE, new AbstractProjectileDispenseBehavior() {
 			@Override
-			protected ProjectileEntity createProjectile(World world, Position position, ItemStack stack) {
-				return Util.make(new FlareEntity(world, position.getX(), position.getY(), position.getZ()), (flareEntity) -> {
+			protected Projectile getProjectile(Level world, Position position, ItemStack stack) {
+				return Util.make(new FlareEntity(world, position.x(), position.y(), position.z()), (flareEntity) -> {
 					flareEntity.setItem(stack);
 				});
 			}

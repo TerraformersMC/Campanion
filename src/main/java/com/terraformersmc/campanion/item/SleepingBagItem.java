@@ -3,90 +3,89 @@ package com.terraformersmc.campanion.item;
 import com.terraformersmc.campanion.advancement.criterion.CampanionCriteria;
 import com.terraformersmc.campanion.entity.SleepNoSetSpawnPlayer;
 import com.terraformersmc.campanion.stat.CampanionStats;
-import net.minecraft.block.BedBlock;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeableItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.stat.Stats;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeableLeatherItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.phys.AABB;
 
-public class SleepingBagItem extends Item implements DyeableItem {
+public class SleepingBagItem extends Item implements DyeableLeatherItem {
 
-	public static final Text CANT_SLEEP_DAY = PlayerEntity.SleepFailureReason.NOT_POSSIBLE_NOW.getMessage();
-	public static final Text NOT_SAFE = PlayerEntity.SleepFailureReason.NOT_SAFE.getMessage();
-	public static final Text NOT_ON_GROUND = new TranslatableText("item.campanion.sleeping_bag.not_on_ground");
-	public static final Text TOO_WET = new TranslatableText("item.campanion.sleeping_bag.too_wet");
+	public static final Component CANT_SLEEP_DAY = Player.BedSleepingProblem.NOT_POSSIBLE_NOW.getMessage();
+	public static final Component NOT_SAFE = Player.BedSleepingProblem.NOT_SAFE.getMessage();
+	public static final Component NOT_ON_GROUND = new TranslatableComponent("item.campanion.sleeping_bag.not_on_ground");
+	public static final Component TOO_WET = new TranslatableComponent("item.campanion.sleeping_bag.too_wet");
 
-	public SleepingBagItem(Settings settings) {
+	public SleepingBagItem(Properties settings) {
 		super(settings);
 	}
 
 	@Override
 	public int getColor(ItemStack stack) {
-		NbtCompound compoundTag = stack.getSubNbt("display");
+		CompoundTag compoundTag = stack.getTagElement("display");
 		return compoundTag != null && compoundTag.contains("color", 99) ? compoundTag.getInt("color") : 0xffffff;
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-		ItemStack stack = user.getStackInHand(hand);
-		if (!world.isClient) {
-			BlockPos pos = user.getBlockPos();
-			if (!BedBlock.isBedWorking(world)) {
-				world.createExplosion(null, DamageSource.badRespawnPoint(), null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0F, true, Explosion.DestructionType.DESTROY);
-				stack.damage(25, user, e -> e.sendToolBreakStatus(hand));
+	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+		ItemStack stack = user.getItemInHand(hand);
+		if (!world.isClientSide) {
+			BlockPos pos = user.blockPosition();
+			if (!BedBlock.canSetSpawn(world)) {
+				world.explode(null, DamageSource.badRespawnPointExplosion(), null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0F, true, Explosion.BlockInteraction.DESTROY);
+				stack.hurtAndBreak(25, user, e -> e.broadcastBreakEvent(hand));
 			} else if (world.isDay()) {
-				user.sendMessage(CANT_SLEEP_DAY, true);
+				user.displayClientMessage(CANT_SLEEP_DAY, true);
 			} else if (!user.isOnGround()) {
-				user.sendMessage(NOT_ON_GROUND, true);
-			} else if (world.getDimension().hasSkyLight()) {
+				user.displayClientMessage(NOT_ON_GROUND, true);
+			} else if (world.dimensionType().hasSkyLight()) {
 				if (!user.isCreative()) {
-					List<HostileEntity> list = world.getEntitiesByClass(HostileEntity.class,
-							new Box(pos).offset(0.5D, 0.0D, 0.5D).expand(8.0D, 5.0D, 8.0D),
-							hostileEntity -> hostileEntity.isAngryAt(user));
+					List<Monster> list = world.getEntitiesOfClass(Monster.class,
+							new AABB(pos).move(0.5D, 0.0D, 0.5D).inflate(8.0D, 5.0D, 8.0D),
+							hostileEntity -> hostileEntity.isPreventingPlayerRest(user));
 					if (!list.isEmpty()) {
-						user.sendMessage(NOT_SAFE, true);
-						return new TypedActionResult<>(ActionResult.SUCCESS, stack);
+						user.displayClientMessage(NOT_SAFE, true);
+						return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 					}
 				}
 				if (world.isRaining()) {
-					if (!checkForCover(world, user.getBlockPos().mutableCopy())) {
-						user.sendMessage(TOO_WET, true);
-						return new TypedActionResult<>(ActionResult.SUCCESS, stack);
+					if (!checkForCover(world, user.blockPosition().mutable())) {
+						user.displayClientMessage(TOO_WET, true);
+						return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 					}
 				}
 				((SleepNoSetSpawnPlayer) user).sleepWithoutSpawnPoint(pos);
-				if (user instanceof ServerPlayerEntity) {
-					CampanionCriteria.SLEPT_IN_SLEEPING_BAG.trigger((ServerPlayerEntity) user);
-					user.incrementStat(CampanionStats.SLEEP_IN_SLEEPING_BAG);
+				if (user instanceof ServerPlayer) {
+					CampanionCriteria.SLEPT_IN_SLEEPING_BAG.trigger((ServerPlayer) user);
+					user.awardStat(CampanionStats.SLEEP_IN_SLEEPING_BAG);
 				}
-				user.incrementStat(Stats.USED.getOrCreateStat(this));
+				user.awardStat(Stats.ITEM_USED.get(this));
 				setInUse(stack, true);
 			}
 		}
-		return new TypedActionResult<>(ActionResult.SUCCESS, stack);
+		return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 	}
 
-	private boolean checkForCover(World world, BlockPos.Mutable pos) {
+	private boolean checkForCover(Level world, BlockPos.MutableBlockPos pos) {
 		for (int i = pos.getY(); i < world.getHeight(); i++) {
 			pos.move(Direction.UP);
 			if (!world.getBlockState(pos).isAir()) {
@@ -97,9 +96,9 @@ public class SleepingBagItem extends Item implements DyeableItem {
 	}
 
 	public static Optional<ItemStack> getUsingStack(LivingEntity user) {
-		if (user.getPose() == EntityPose.SLEEPING || user.isSleeping()) {
-			for (Hand value : Hand.values()) {
-				ItemStack stack = user.getStackInHand(value);
+		if (user.getPose() == Pose.SLEEPING || user.isSleeping()) {
+			for (InteractionHand value : InteractionHand.values()) {
+				ItemStack stack = user.getItemInHand(value);
 				if (inUse(stack)) {
 					return Optional.of(stack);
 				}
@@ -109,10 +108,10 @@ public class SleepingBagItem extends Item implements DyeableItem {
 	}
 
 	public static boolean inUse(ItemStack stack) {
-		return stack.getItem() == CampanionItems.SLEEPING_BAG && stack.getOrCreateNbt().getBoolean("IsInUse");
+		return stack.getItem() == CampanionItems.SLEEPING_BAG && stack.getOrCreateTag().getBoolean("IsInUse");
 	}
 
 	public static void setInUse(ItemStack stack, boolean inUse) {
-		stack.getOrCreateNbt().putBoolean("IsInUse", inUse);
+		stack.getOrCreateTag().putBoolean("IsInUse", inUse);
 	}
 }

@@ -2,21 +2,20 @@ package com.terraformersmc.campanion.blockentity;
 
 import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.block.CampanionBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import static com.terraformersmc.campanion.block.CampanionBlocks.*;
 
 public class CampanionBlockEntities {
 
-	private static final Map<Identifier, BlockEntityType<? extends BlockEntity>> BLOCK_ENTITY_TYPES = new LinkedHashMap<>();
+	private static final Map<ResourceLocation, BlockEntityType<? extends BlockEntity>> BLOCK_ENTITY_TYPES = new LinkedHashMap<>();
 
 	public static final BlockEntityType<RopeBridgePlanksBlockEntity> ROPE_BRIDGE_PLANK = add("rope_bridge_planks", RopeBridgePlanksBlockEntity::new, CampanionBlocks.ROPE_BRIDGE_PLANKS);
 	public static final BlockEntityType<RopeBridgePostBlockEntity> ROPE_BRIDGE_POST = add("rope_bridge_post", RopeBridgePostBlockEntity::new, CampanionBlocks.ROPE_BRIDGE_POST);
@@ -39,8 +38,8 @@ public class CampanionBlockEntities {
 		BLUE_FLAT_TENT_TOP, BROWN_FLAT_TENT_TOP, GREEN_FLAT_TENT_TOP, RED_FLAT_TENT_TOP, BLACK_FLAT_TENT_TOP
 	);
 
-	private static <T extends BlockEntity> BlockEntityType<T> add(String name, BlockEntityType.BlockEntityFactory<? extends T> factory, Block... blocks) {
-		return add(name, BlockEntityType.Builder.create(factory, blocks));
+	private static <T extends BlockEntity> BlockEntityType<T> add(String name, BlockEntityType.BlockEntitySupplier<? extends T> factory, Block... blocks) {
+		return add(name, BlockEntityType.Builder.of(factory, blocks));
 	}
 
 	private static <T extends BlockEntity> BlockEntityType<T> add(String name, BlockEntityType.Builder<T> builder) {
@@ -48,17 +47,17 @@ public class CampanionBlockEntities {
 	}
 
 	private static <T extends BlockEntity> BlockEntityType<T> add(String name, BlockEntityType<T> blockEntityType) {
-		BLOCK_ENTITY_TYPES.put(new Identifier(Campanion.MOD_ID, name), blockEntityType);
+		BLOCK_ENTITY_TYPES.put(new ResourceLocation(Campanion.MOD_ID, name), blockEntityType);
 		return blockEntityType;
 	}
 
 	public static void register() {
-		for (Identifier id : BLOCK_ENTITY_TYPES.keySet()) {
+		for (ResourceLocation id : BLOCK_ENTITY_TYPES.keySet()) {
 			Registry.register(Registry.BLOCK_ENTITY_TYPE, id, BLOCK_ENTITY_TYPES.get(id));
 		}
 	}
 
-	public static Map<Identifier, BlockEntityType<? extends BlockEntity>> getBlockEntityTypes() {
+	public static Map<ResourceLocation, BlockEntityType<? extends BlockEntity>> getBlockEntityTypes() {
 		return BLOCK_ENTITY_TYPES;
 	}
 

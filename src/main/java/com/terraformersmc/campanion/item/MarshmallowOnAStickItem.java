@@ -1,22 +1,22 @@
 package com.terraformersmc.campanion.item;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CampfireBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.Items;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class MarshmallowOnAStickItem extends Item {
 
 	private final Item marshmallow;
 
-	public MarshmallowOnAStickItem(Settings settings, Item marshmallow) {
+	public MarshmallowOnAStickItem(Properties settings, Item marshmallow) {
 		super(settings);
 		this.marshmallow = marshmallow;
 	}
@@ -27,38 +27,38 @@ public class MarshmallowOnAStickItem extends Item {
 
 
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
 		if (!user.isCreative()) {
-			user.getStackInHand(hand).decrement(1);
+			user.getItemInHand(hand).shrink(1);
 		}
-		user.giveItemStack(new ItemStack(Items.STICK));
-		user.giveItemStack(new ItemStack(this.getMarshmallow()));
-		return TypedActionResult.success(user.getStackInHand(hand));
+		user.addItem(new ItemStack(Items.STICK));
+		user.addItem(new ItemStack(this.getMarshmallow()));
+		return InteractionResultHolder.success(user.getItemInHand(hand));
 	}
 
 	@Override
-	public ActionResult useOnBlock(ItemUsageContext context) {
-		BlockState state = context.getWorld().getBlockState(context.getBlockPos());
-		if (state.getBlock() instanceof CampfireBlock && state.get(CampfireBlock.LIT)) {
-			ItemStack stack = context.getStack();
-			PlayerEntity player = context.getPlayer();
+	public InteractionResult useOn(UseOnContext context) {
+		BlockState state = context.getLevel().getBlockState(context.getClickedPos());
+		if (state.getBlock() instanceof CampfireBlock && state.getValue(CampfireBlock.LIT)) {
+			ItemStack stack = context.getItemInHand();
+			Player player = context.getPlayer();
 			if (player != null) {
-				Hand hand = context.getHand();
+				InteractionHand hand = context.getHand();
 				if (stack.getItem().equals(CampanionItems.MARSHMALLOW_ON_A_STICK)) {
 					if (!player.isCreative()) {
-						player.getStackInHand(hand).decrement(1);
+						player.getItemInHand(hand).shrink(1);
 					}
-					player.giveItemStack(new ItemStack(CampanionItems.COOKED_MARSHMALLOW_ON_A_STICK));
-					return ActionResult.SUCCESS;
+					player.addItem(new ItemStack(CampanionItems.COOKED_MARSHMALLOW_ON_A_STICK));
+					return InteractionResult.SUCCESS;
 				} else if (stack.getItem().equals(CampanionItems.COOKED_MARSHMALLOW_ON_A_STICK)) {
 					if (!player.isCreative()) {
-						player.getStackInHand(hand).decrement(1);
+						player.getItemInHand(hand).shrink(1);
 					}
-					player.giveItemStack(new ItemStack(CampanionItems.BLACKENED_MARSHMALLOW_ON_A_STICK));
-					return ActionResult.SUCCESS;
+					player.addItem(new ItemStack(CampanionItems.BLACKENED_MARSHMALLOW_ON_A_STICK));
+					return InteractionResult.SUCCESS;
 				}
 			}
 		}
-		return ActionResult.PASS;
+		return InteractionResult.PASS;
 	}
 }

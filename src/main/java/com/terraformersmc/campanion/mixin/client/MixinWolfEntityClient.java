@@ -1,13 +1,13 @@
 package com.terraformersmc.campanion.mixin.client;
 
 import com.terraformersmc.campanion.entity.HowlingEntity;
-import net.minecraft.entity.passive.WolfEntity;
+import net.minecraft.world.entity.animal.Wolf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(WolfEntity.class)
+@Mixin(Wolf.class)
 public class MixinWolfEntityClient {
 
     @Inject(method = "handleStatus", at = @At("HEAD"), cancellable = true)

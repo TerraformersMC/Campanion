@@ -1,8 +1,8 @@
 package com.terraformersmc.campanion.item;
 
 import com.terraformersmc.campanion.client.renderer.item.FakeWorld;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
 
 public interface CampanionRenderWorldStasher {
 	void setCampanionRenderWorld(FakeWorld world);

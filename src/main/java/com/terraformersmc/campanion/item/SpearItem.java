@@ -5,49 +5,48 @@ import com.google.common.collect.Multimap;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.terraformersmc.campanion.entity.SpearEntity;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolMaterial;
-import net.minecraft.item.TridentItem;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.stat.Stats;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import java.util.function.Supplier;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 
 public class SpearItem extends TridentItem {
 
-	private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
+	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
 
-	private final ToolMaterial material;
+	private final Tier material;
 	private final float attackDamage;
 	private final Supplier<EntityType<SpearEntity>> typeSupplier;
 	private EntityType<SpearEntity> cachedType = null;
 
-	public SpearItem(ToolMaterial material, float attackDamage, float attackSpeed, Supplier<EntityType<SpearEntity>> typeSupplier, Item.Settings settings) {
-		super(settings.maxDamageIfAbsent(material.getDurability()));
+	public SpearItem(Tier material, float attackDamage, float attackSpeed, Supplier<EntityType<SpearEntity>> typeSupplier, Item.Properties settings) {
+		super(settings.defaultDurability(material.getUses()));
 		this.material = material;
-		this.attackDamage = attackDamage + material.getAttackDamage();
+		this.attackDamage = attackDamage + material.getAttackDamageBonus();
 		this.typeSupplier = typeSupplier;
-		ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Tool modifier", this.attackDamage, EntityAttributeModifier.Operation.ADDITION));
-		builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Tool modifier", attackSpeed, EntityAttributeModifier.Operation.ADDITION));
-		builder.put(ReachEntityAttributes.REACH, new EntityAttributeModifier("Reach", 1.5, EntityAttributeModifier.Operation.ADDITION));
-		builder.put(ReachEntityAttributes.ATTACK_RANGE, new EntityAttributeModifier("Attack range", 1.5, EntityAttributeModifier.Operation.ADDITION));
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", this.attackDamage, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", attackSpeed, AttributeModifier.Operation.ADDITION));
+		builder.put(ReachEntityAttributes.REACH, new AttributeModifier("Reach", 1.5, AttributeModifier.Operation.ADDITION));
+		builder.put(ReachEntityAttributes.ATTACK_RANGE, new AttributeModifier("Attack range", 1.5, AttributeModifier.Operation.ADDITION));
 		this.attributeModifiers = builder.build();
 	}
 
@@ -58,18 +57,18 @@ public class SpearItem extends TridentItem {
 		return cachedType;
 	}
 
-	public ToolMaterial getMaterial() {
+	public Tier getMaterial() {
 		return this.material;
 	}
 
 	@Override
-	public int getEnchantability() {
-		return this.material.getEnchantability();
+	public int getEnchantmentValue() {
+		return this.material.getEnchantmentValue();
 	}
 
 	@Override
-	public boolean canRepair(ItemStack stack, ItemStack ingredient) {
-		return this.material.getRepairIngredient().test(ingredient) || super.canRepair(stack, ingredient);
+	public boolean isValidRepairItem(ItemStack stack, ItemStack ingredient) {
+		return this.material.getRepairIngredient().test(ingredient) || super.isValidRepairItem(stack, ingredient);
 	}
 
 	public float getAttackDamage() {
@@ -77,63 +76,63 @@ public class SpearItem extends TridentItem {
 	}
 
 	@Override
-	public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner) {
+	public boolean canAttackBlock(BlockState state, Level world, BlockPos pos, Player miner) {
 		return !miner.isCreative();
 	}
 
 	@Override
-	public float getMiningSpeedMultiplier(ItemStack stack, BlockState state) {
+	public float getDestroySpeed(ItemStack stack, BlockState state) {
 		Block block = state.getBlock();
 		if (block == Blocks.COBWEB) {
 			return 15.0F;
 		} else {
 			Material material = state.getMaterial();
-			return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.MOSS_BLOCK && !state.isIn(BlockTags.LEAVES) && material != Material.GOURD ? 1.0F : 1.5F;
+			return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.MOSS && !state.is(BlockTags.LEAVES) && material != Material.VEGETABLE ? 1.0F : 1.5F;
 		}
 	}
 
 	@Override
-	public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-		stack.damage(1, attacker, entity -> entity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+	public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+		stack.hurtAndBreak(1, attacker, entity -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
 		return true;
 	}
 
 	@Override
-	public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
-		if (state.getHardness(world, pos) != 0.0F) {
-			stack.damage(2, miner, entity -> entity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+	public boolean mineBlock(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity miner) {
+		if (state.getDestroySpeed(world, pos) != 0.0F) {
+			stack.hurtAndBreak(2, miner, entity -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
 		}
 
 		return true;
 	}
 
 	@Override
-	public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot) {
-		return equipmentSlot == EquipmentSlot.MAINHAND ? attributeModifiers : super.getAttributeModifiers(equipmentSlot);
+	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
+		return equipmentSlot == EquipmentSlot.MAINHAND ? attributeModifiers : super.getDefaultAttributeModifiers(equipmentSlot);
 	}
 
 	@Override
-	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-		if (user instanceof PlayerEntity) {
-			PlayerEntity playerEntity = (PlayerEntity) user;
-			int i = this.getMaxUseTime(stack) - remainingUseTicks;
+	public void releaseUsing(ItemStack stack, Level world, LivingEntity user, int remainingUseTicks) {
+		if (user instanceof Player) {
+			Player playerEntity = (Player) user;
+			int i = this.getUseDuration(stack) - remainingUseTicks;
 			if (i >= 10) {
-				if (!world.isClient) {
-					stack.damage(1, playerEntity, entity -> entity.sendToolBreakStatus(user.getActiveHand()));
+				if (!world.isClientSide) {
+					stack.hurtAndBreak(1, playerEntity, entity -> entity.broadcastBreakEvent(user.getUsedItemHand()));
 					SpearEntity spearEntity = new SpearEntity(world, playerEntity, this, stack);
-					spearEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, 2.5F, 1.0F);
-					if (playerEntity.getAbilities().creativeMode) {
-						spearEntity.pickupType = PersistentProjectileEntity.PickupPermission.CREATIVE_ONLY;
+					spearEntity.shootFromRotation(playerEntity, playerEntity.getXRot(), playerEntity.getYRot(), 0.0F, 2.5F, 1.0F);
+					if (playerEntity.getAbilities().instabuild) {
+						spearEntity.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
 					}
 
-					world.spawnEntity(spearEntity);
-					world.playSoundFromEntity(null, spearEntity, CampanionSoundEvents.SPEAR_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F);
-					if (!playerEntity.getAbilities().creativeMode) {
-						playerEntity.getInventory().removeOne(stack);
+					world.addFreshEntity(spearEntity);
+					world.playSound(null, spearEntity, CampanionSoundEvents.SPEAR_THROW, SoundSource.PLAYERS, 1.0F, 1.0F);
+					if (!playerEntity.getAbilities().instabuild) {
+						playerEntity.getInventory().removeItem(stack);
 					}
 				}
 
-				playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+				playerEntity.awardStat(Stats.ITEM_USED.get(this));
 			}
 		}
 	}

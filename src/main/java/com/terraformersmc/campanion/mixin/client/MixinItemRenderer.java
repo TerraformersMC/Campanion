@@ -1,20 +1,20 @@
 package com.terraformersmc.campanion.mixin.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.terraformersmc.campanion.client.renderer.item.BuiltTentItemRenderer;
 import com.terraformersmc.campanion.client.renderer.item.SpearItemRenderer;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.SpearItem;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,17 +24,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinItemRenderer {
 
     @Inject(method = "renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformation$Mode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/world/World;III)V", at = @At("HEAD"), cancellable = true)
-    public void renderItem(LivingEntity entity, ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, World world, int light, int overlay, int seed, CallbackInfo info) {
-        BakedModel model = MinecraftClient.getInstance().getItemRenderer().getModel(stack, world, entity, seed);
+    public void renderItem(LivingEntity entity, ItemStack stack, ItemTransforms.TransformType renderMode, boolean leftHanded, PoseStack matrices, MultiBufferSource vertexConsumers, Level world, int light, int overlay, int seed, CallbackInfo info) {
+        BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(stack, world, entity, seed);
         if(stack.getItem() instanceof SpearItem && SpearItemRenderer.INSTANCE.render(entity, stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model)) {
             info.cancel();
         }
-        if(stack.getItem() == CampanionItems.TENT_BAG && renderMode != ModelTransformation.Mode.GUI) {
-            matrices.push();
+        if(stack.getItem() == CampanionItems.TENT_BAG && renderMode != ItemTransforms.TransformType.GUI) {
+            matrices.pushPose();
             matrices.scale(1/4F, 1/4F, 1/4F);
-            MinecraftClient.getInstance().getBlockRenderManager().getModel(Blocks.STONE.getDefaultState()).getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
-            boolean ret = BuiltTentItemRenderer.INSTANCE.render(stack, matrices, BlockPos.ORIGIN.up(500), vertexConsumers, light);
-            matrices.pop();
+            Minecraft.getInstance().getBlockRenderer().getBlockModel(Blocks.STONE.defaultBlockState()).getTransforms().getTransform(renderMode).apply(leftHanded, matrices);
+            boolean ret = BuiltTentItemRenderer.INSTANCE.render(stack, matrices, BlockPos.ZERO.above(500), vertexConsumers, light);
+            matrices.popPose();
             if(ret) {
                 info.cancel();
             }

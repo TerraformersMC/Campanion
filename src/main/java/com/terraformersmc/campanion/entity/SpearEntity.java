@@ -5,87 +5,86 @@ import com.terraformersmc.campanion.network.S2CEntitySpawnPacket;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.ProjectileDamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.network.Packet;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.world.World;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class SpearEntity extends PersistentProjectileEntity {
-	private static final TrackedData<Boolean> ENCHANTMENT_GLINT;
+public class SpearEntity extends AbstractArrow {
+	private static final EntityDataAccessor<Boolean> ENCHANTMENT_GLINT;
 	private ItemStack spearStack;
 	private final Set<UUID> piercedEntities = new HashSet<>();
 
-	public SpearEntity(EntityType<? extends SpearEntity> entityType, World world, SpearItem item) {
+	public SpearEntity(EntityType<? extends SpearEntity> entityType, Level world, SpearItem item) {
 		super(entityType, world);
 		this.spearStack = new ItemStack(item);
 	}
 
-	public SpearEntity(World world, LivingEntity owner, SpearItem item, ItemStack stack) {
+	public SpearEntity(Level world, LivingEntity owner, SpearItem item, ItemStack stack) {
 		super(item.getType(), owner, world);
 		this.spearStack = new ItemStack(item);
 		this.spearStack = stack.copy();
-		this.dataTracker.set(ENCHANTMENT_GLINT, stack.hasGlint());
+		this.entityData.set(ENCHANTMENT_GLINT, stack.hasFoil());
 	}
 
 	@Environment(EnvType.CLIENT)
-	public SpearEntity(World world, double x, double y, double z, SpearItem item) {
+	public SpearEntity(Level world, double x, double y, double z, SpearItem item) {
 		super(item.getType(), x, y, z, world);
 		this.spearStack = new ItemStack(item);
 	}
 
 	@Override
-	protected void initDataTracker() {
-		super.initDataTracker();
-		this.dataTracker.startTracking(ENCHANTMENT_GLINT, false);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.entityData.define(ENCHANTMENT_GLINT, false);
 	}
 
 	@Override
-	public Packet<?> createSpawnPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return S2CEntitySpawnPacket.createPacket(this);
 	}
 
 	@Override
-	protected ItemStack asItemStack() {
+	protected ItemStack getPickupItem() {
 		return this.spearStack.copy();
 	}
 
 	@Environment(EnvType.CLIENT)
 	public boolean method_23751() {
-		return this.dataTracker.get(ENCHANTMENT_GLINT);
+		return this.entityData.get(ENCHANTMENT_GLINT);
 	}
 
 	@Override
-	protected void onEntityHit(EntityHitResult entityHitResult) {
-		int level = EnchantmentHelper.getLevel(Enchantments.PIERCING, this.spearStack);
+	protected void onHitEntity(EntityHitResult entityHitResult) {
+		int level = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PIERCING, this.spearStack);
 		Entity hitEntity = entityHitResult.getEntity();
-		if (this.piercedEntities.contains(hitEntity.getUuid()) || this.piercedEntities.size() > level) {
+		if (this.piercedEntities.contains(hitEntity.getUUID()) || this.piercedEntities.size() > level) {
 			return;
 		}
-		this.piercedEntities.add(hitEntity.getUuid());
+		this.piercedEntities.add(hitEntity.getUUID());
 		float damage = ((SpearItem) this.spearStack.getItem()).getAttackDamage() * 2;
-		if (hitEntity instanceof AnimalEntity) {
-			int impalingLevel = EnchantmentHelper.getLevel(Enchantments.IMPALING, this.spearStack);
+		if (hitEntity instanceof Animal) {
+			int impalingLevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.IMPALING, this.spearStack);
 			if (impalingLevel > 0) {
 				damage += impalingLevel * 1.5F;
 			}
@@ -94,7 +93,7 @@ public class SpearEntity extends PersistentProjectileEntity {
 		Entity owner = this.getOwner();
 		DamageSource damageSource = createSpearDamageSource(this, owner == null ? this : owner);
 		SoundEvent soundEvent = CampanionSoundEvents.SPEAR_HIT_FLESH;
-		if (hitEntity.damage(damageSource, damage)) {
+		if (hitEntity.hurt(damageSource, damage)) {
 			if (hitEntity.getType() == EntityType.ENDERMAN) {
 				return;
 			}
@@ -102,69 +101,69 @@ public class SpearEntity extends PersistentProjectileEntity {
 			if (hitEntity instanceof LivingEntity) {
 				LivingEntity hitLivingEntity = (LivingEntity) hitEntity;
 				if (owner instanceof LivingEntity) {
-					EnchantmentHelper.onUserDamaged(hitLivingEntity, owner);
-					EnchantmentHelper.onTargetDamaged((LivingEntity) owner, hitLivingEntity);
+					EnchantmentHelper.doPostHurtEffects(hitLivingEntity, owner);
+					EnchantmentHelper.doPostDamageEffects((LivingEntity) owner, hitLivingEntity);
 				}
 
-				this.onHit(hitLivingEntity);
+				this.doPostHurtEffects(hitLivingEntity);
 			}
 		}
 
 		if (this.piercedEntities.size() > level) {
-			this.setVelocity(this.getVelocity().multiply(-0.01D, -0.1D, -0.01D));
+			this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
 		} else {
-			this.setVelocity(this.getVelocity().multiply(0.75));
+			this.setDeltaMovement(this.getDeltaMovement().scale(0.75));
 		}
 		this.playSound(soundEvent, 1.0F, 1.0F);
 	}
 
 	@Override
-	protected SoundEvent getHitSound() {
+	protected SoundEvent getDefaultHitGroundSoundEvent() {
 		return CampanionSoundEvents.SPEAR_HIT_GROUND;
 	}
 
 	@Override
-	public void onPlayerCollision(PlayerEntity player) {
+	public void playerTouch(Player player) {
 		Entity entity = this.getOwner();
-		if (entity == null || entity.getUuid() == player.getUuid()) {
-			super.onPlayerCollision(player);
+		if (entity == null || entity.getUUID() == player.getUUID()) {
+			super.playerTouch(player);
 		}
 	}
 
 	@Override
-	public void readCustomDataFromNbt(NbtCompound tag) {
-		super.readCustomDataFromNbt(tag);
+	public void readAdditionalSaveData(CompoundTag tag) {
+		super.readAdditionalSaveData(tag);
 		if (tag.contains("Item", 10)) {
-			this.spearStack = ItemStack.fromNbt(tag.getCompound("Item"));
-			this.dataTracker.set(ENCHANTMENT_GLINT, this.spearStack.hasGlint());
+			this.spearStack = ItemStack.of(tag.getCompound("Item"));
+			this.entityData.set(ENCHANTMENT_GLINT, this.spearStack.hasFoil());
 		}
 
 		this.piercedEntities.clear();
 		if (tag.contains("HitEntities", 9)) {
-			for (NbtElement hitEntity : tag.getList("HitEntities", 10)) {
-				this.piercedEntities.add(((NbtCompound) hitEntity).getUuid("UUID"));
+			for (Tag hitEntity : tag.getList("HitEntities", 10)) {
+				this.piercedEntities.add(((CompoundTag) hitEntity).getUUID("UUID"));
 			}
 		}
 	}
 
 	@Override
-	public void writeCustomDataToNbt(NbtCompound tag) {
-		super.writeCustomDataToNbt(tag);
-		tag.put("Item", this.spearStack.writeNbt(new NbtCompound()));
+	public void addAdditionalSaveData(CompoundTag tag) {
+		super.addAdditionalSaveData(tag);
+		tag.put("Item", this.spearStack.save(new CompoundTag()));
 
-		NbtList tags = new NbtList();
+		ListTag tags = new ListTag();
 		for (UUID uuid : this.piercedEntities) {
-			NbtCompound c = new NbtCompound();
-			c.putUuid("UUID", uuid);
+			CompoundTag c = new CompoundTag();
+			c.putUUID("UUID", uuid);
 			tags.add(c);
 		}
 		tag.put("HitEntities", tags);
 	}
 
 	@Override
-	public void age() {
-		if (this.pickupType != PersistentProjectileEntity.PickupPermission.ALLOWED) {
-			super.age();
+	public void tickDespawn() {
+		if (this.pickup != AbstractArrow.Pickup.ALLOWED) {
+			super.tickDespawn();
 		}
 	}
 
@@ -175,11 +174,11 @@ public class SpearEntity extends PersistentProjectileEntity {
 	}
 
 	static {
-		ENCHANTMENT_GLINT = DataTracker.registerData(net.minecraft.entity.projectile.TridentEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+		ENCHANTMENT_GLINT = SynchedEntityData.defineId(net.minecraft.world.entity.projectile.ThrownTrident.class, EntityDataSerializers.BOOLEAN);
 	}
 
 	public static DamageSource createSpearDamageSource(Entity spear, Entity owner) {
-		return new ProjectileDamageSource("spear", spear, owner).setProjectile();
+		return new IndirectEntityDamageSource("spear", spear, owner).setProjectile();
 	}
 
 

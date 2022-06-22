@@ -2,42 +2,41 @@ package com.terraformersmc.campanion.item;
 
 import com.terraformersmc.campanion.entity.FlareEntity;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
-
 import java.util.Random;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class FlareItem extends Item {
 
-	public FlareItem(Settings settings) {
+	public FlareItem(Properties settings) {
 		super(settings);
 	}
 	protected final Random RANDOM = new Random();
 
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-		ItemStack itemStack = user.getStackInHand(hand);
+	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+		ItemStack itemStack = user.getItemInHand(hand);
 		//TODO replace egg throw with flare crack and throw and fizzle away
-		world.playSound(null, user.getX(), user.getY(), user.getZ(), CampanionSoundEvents.FLARE_STRIKE, SoundCategory.NEUTRAL, 0.5F, 1.1F / (RANDOM.nextFloat() * 0.4F + 0.9F));
-		if (!world.isClient) {
+		world.playSound(null, user.getX(), user.getY(), user.getZ(), CampanionSoundEvents.FLARE_STRIKE, SoundSource.NEUTRAL, 0.5F, 1.1F / (RANDOM.nextFloat() * 0.4F + 0.9F));
+		if (!world.isClientSide) {
 			FlareEntity flare = new FlareEntity(world, user);
 			flare.setItem(itemStack);
-			flare.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 0.8F, 0.6F);
-			world.spawnEntity(flare);
+			flare.shootFromRotation(user, user.getXRot(), user.getYRot(), 0.0F, 0.8F, 0.6F);
+			world.addFreshEntity(flare);
 		}
-		user.incrementStat(Stats.USED.getOrCreateStat(this));
+		user.awardStat(Stats.ITEM_USED.get(this));
 
-		if (!user.getAbilities().creativeMode) {
-			itemStack.decrement(1);
+		if (!user.getAbilities().instabuild) {
+			itemStack.shrink(1);
 		}
 
-		return TypedActionResult.success(itemStack);
+		return InteractionResultHolder.success(itemStack);
 	}
 
 }

@@ -11,23 +11,22 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.json.ModelOverrideList;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -36,14 +35,14 @@ import java.util.stream.IntStream;
 
 public class BridgePlanksBakedModel implements FabricBakedModel, BakedModel {
 
-	public static final SpriteIdentifier[] PLANKS = IntStream.range(0, RopeBridge.PLANK_VARIANT_TEXTURES)
-			.mapToObj(i -> new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Campanion.MOD_ID, "ropebridge/plank" + i)))
-			.toArray(SpriteIdentifier[]::new);
-	public static final SpriteIdentifier ROPE = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Campanion.MOD_ID, "ropebridge/rope"));
-	public static final SpriteIdentifier STOPPER = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Campanion.MOD_ID, "ropebridge/stopper"));
+	public static final Material[] PLANKS = IntStream.range(0, RopeBridge.PLANK_VARIANT_TEXTURES)
+			.mapToObj(i -> new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Campanion.MOD_ID, "ropebridge/plank" + i)))
+			.toArray(Material[]::new);
+	public static final Material ROPE = new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Campanion.MOD_ID, "ropebridge/rope"));
+	public static final Material STOPPER = new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Campanion.MOD_ID, "ropebridge/stopper"));
 
 	@Override
-	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		BlockEntity entity = blockView.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			context.meshConsumer().accept(((RopeBridgePlanksBlockEntity) entity).getMesh());
@@ -70,33 +69,33 @@ public class BridgePlanksBakedModel implements FabricBakedModel, BakedModel {
 	}
 
 	@Override
-	public boolean hasDepth() {
+	public boolean isGui3d() {
 		return false;
 	}
 
 	@Override
-	public boolean isSideLit() {
+	public boolean usesBlockLight() {
 		return false;
 	}
 
 	@Override
-	public boolean isBuiltin() {
+	public boolean isCustomRenderer() {
 		return false;
 	}
 
 	@Override
-	public Sprite getParticleSprite() {
-		return MinecraftClient.getInstance().getBlockRenderManager().getModel(Blocks.OAK_PLANKS.getDefaultState()).getParticleSprite();
+	public TextureAtlasSprite getParticleIcon() {
+		return Minecraft.getInstance().getBlockRenderer().getBlockModel(Blocks.OAK_PLANKS.defaultBlockState()).getParticleIcon();
 	}
 
 	@Override
-	public ModelTransformation getTransformation() {
-		return ModelTransformation.NONE;
+	public ItemTransforms getTransforms() {
+		return ItemTransforms.NO_TRANSFORMS;
 	}
 
 	@Override
-	public ModelOverrideList getOverrides() {
-		return ModelOverrideList.EMPTY;
+	public ItemOverrides getOverrides() {
+		return ItemOverrides.EMPTY;
 	}
 
 	public static BridgePlanksBakedModel createStaticModel(List<RopeBridgePlank> planks) {
@@ -118,7 +117,7 @@ public class BridgePlanksBakedModel implements FabricBakedModel, BakedModel {
 		}
 
 		@Override
-		public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+		public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 			context.meshConsumer().accept(this.mesh);
 		}
 	}

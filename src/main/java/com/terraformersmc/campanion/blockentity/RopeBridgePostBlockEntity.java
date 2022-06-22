@@ -1,14 +1,14 @@
 package com.terraformersmc.campanion.blockentity;
 
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.util.math.BlockPos;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class RopeBridgePostBlockEntity extends RopeBridgePlanksBlockEntity {
 
@@ -34,34 +34,34 @@ public class RopeBridgePostBlockEntity extends RopeBridgePlanksBlockEntity {
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
+    public void fromClientTag(CompoundTag tag) {
         super.fromClientTag(tag);
         this.ghostPlanks.clear();
-        for (NbtElement nbtRaw : tag.getList("GhostPlankMap", 10)) {
-            BlockPos pos = BlockPos.fromLong(((NbtCompound) nbtRaw).getLong("Position"));
+        for (Tag nbtRaw : tag.getList("GhostPlankMap", 10)) {
+            BlockPos pos = BlockPos.of(((CompoundTag) nbtRaw).getLong("Position"));
             List<Pair<BlockPos, List<RopeBridgePlank>>> list = new LinkedList<>();
-            for (NbtElement nbtRawGhostPlanks : ((NbtCompound) nbtRaw).getList("GhostPlanks", 10)) {
-                NbtCompound nbt = (NbtCompound) nbtRawGhostPlanks;
-                list.add(Pair.of(BlockPos.fromLong(nbt.getLong("Pos")), this.getFrom(nbt.getList("Planks", 10))));
+            for (Tag nbtRawGhostPlanks : ((CompoundTag) nbtRaw).getList("GhostPlanks", 10)) {
+                CompoundTag nbt = (CompoundTag) nbtRawGhostPlanks;
+                list.add(Pair.of(BlockPos.of(nbt.getLong("Pos")), this.getFrom(nbt.getList("Planks", 10))));
             }
             this.ghostPlanks.put(pos, list);
         }
 
         this.linkedPositions.clear();
-        Arrays.stream(tag.getLongArray("LinkedPositions")).mapToObj(BlockPos::fromLong).forEach(this.linkedPositions::add);
+        Arrays.stream(tag.getLongArray("LinkedPositions")).mapToObj(BlockPos::of).forEach(this.linkedPositions::add);
     }
 
     @Override
-    public void toClientTag(NbtCompound tag) {
+    public void toClientTag(CompoundTag tag) {
         super.toClientTag(tag);
-        NbtList list = new NbtList();
+        ListTag list = new ListTag();
         this.ghostPlanks.forEach((plankPos, pairs) -> {
-            NbtCompound nbt = new NbtCompound();
+            CompoundTag nbt = new CompoundTag();
             nbt.putLong("Position", plankPos.asLong());
 
-            NbtList ghostPlanksTags = new NbtList();
+            ListTag ghostPlanksTags = new ListTag();
             for (Pair<BlockPos, List<RopeBridgePlank>> plank : pairs) {
-                NbtCompound t = new NbtCompound();
+                CompoundTag t = new CompoundTag();
                 t.putLong("Pos", plank.getLeft().asLong());
                 t.put("Planks", this.writeTo(plank.getRight()));
                 ghostPlanksTags.add(t);

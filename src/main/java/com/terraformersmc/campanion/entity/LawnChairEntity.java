@@ -3,81 +3,81 @@ package com.terraformersmc.campanion.entity;
 import com.terraformersmc.campanion.block.LawnChairBlock;
 import com.terraformersmc.campanion.blockentity.LawnChairBlockEntity;
 import com.terraformersmc.campanion.network.S2CEntitySpawnPacket;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class LawnChairEntity extends Entity {
 
-    public LawnChairEntity(World world, BlockPos pos) {
+    public LawnChairEntity(Level world, BlockPos pos) {
         this(world);
-        this.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+        this.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
     }
 
-    public LawnChairEntity(World world) {
+    public LawnChairEntity(Level world) {
         super(CampanionEntities.LAWN_CHAIR, world);
     }
 
     @Override
-    protected void initDataTracker() {
+    protected void defineSynchedData() {
     }
 
     @Override
     public void baseTick() {
         super.baseTick();
-        BlockPos linkedPosition = this.getBlockPos();
-        BlockEntity blockEntity = this.world.getBlockEntity(linkedPosition);
+        BlockPos linkedPosition = this.blockPosition();
+        BlockEntity blockEntity = this.level.getBlockEntity(linkedPosition);
 
-        if(BlockPos.ORIGIN.equals(linkedPosition) || !(this.world.getBlockState(linkedPosition).getBlock() instanceof LawnChairBlock) ||
-            !(blockEntity instanceof LawnChairBlockEntity) || (!this.world.isClient && ((LawnChairBlockEntity) blockEntity).findOrCreateEntity() != this)) {
+        if(BlockPos.ZERO.equals(linkedPosition) || !(this.level.getBlockState(linkedPosition).getBlock() instanceof LawnChairBlock) ||
+            !(blockEntity instanceof LawnChairBlockEntity) || (!this.level.isClientSide && ((LawnChairBlockEntity) blockEntity).findOrCreateEntity() != this)) {
             this.kill();
         }
     }
 
     @Override
-    public double getMountedHeightOffset() {
+    public double getPassengersRidingOffset() {
         return 0.25D;
     }
 
     @Override
     protected void removePassenger(Entity passenger) {
-        BlockPos pos = this.getBlockPos();
-        BlockState state = this.world.getBlockState(pos);
+        BlockPos pos = this.blockPosition();
+        BlockState state = this.level.getBlockState(pos);
         if(state.getBlock() instanceof LawnChairBlock) {
-            Direction d = state.get(LawnChairBlock.FACING);
-            passenger.setPosition(pos.getX() + d.getOffsetX() + 0.5D, pos.getY(), pos.getZ() + d.getOffsetZ() + 0.5D);
+            Direction d = state.getValue(LawnChairBlock.FACING);
+            passenger.setPos(pos.getX() + d.getStepX() + 0.5D, pos.getY(), pos.getZ() + d.getStepZ() + 0.5D);
         }
         super.removePassenger(passenger);
     }
 
     @Override
     protected void addPassenger(Entity passenger) {
-        BlockPos pos = this.getBlockPos();
-        BlockState state = this.world.getBlockState(pos);
+        BlockPos pos = this.blockPosition();
+        BlockState state = this.level.getBlockState(pos);
         if(state.getBlock() instanceof LawnChairBlock) {
-            Direction d = state.get(LawnChairBlock.FACING);
-            passenger.setBodyYaw(d.getHorizontal() * 90F);
+            Direction d = state.getValue(LawnChairBlock.FACING);
+            passenger.setYBodyRot(d.get2DDataValue() * 90F);
         }
         super.addPassenger(passenger);
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound tag) {
+    protected void readAdditionalSaveData(CompoundTag tag) {
 
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound tag) {
+    protected void addAdditionalSaveData(CompoundTag tag) {
 
     }
 
     @Override
-    public Packet<?> createSpawnPacket() {
+    public Packet<?> getAddEntityPacket() {
         return S2CEntitySpawnPacket.createPacket(this);
     }
 }

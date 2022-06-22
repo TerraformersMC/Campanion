@@ -1,9 +1,10 @@
 package com.terraformersmc.campanion.entity;
 
-import net.minecraft.network.PacketByteBuf;
+
+import net.minecraft.network.FriendlyByteBuf;
 
 public interface AdditionalSpawnDataEntity {
-	void writeToBuffer(PacketByteBuf buffer);
+	void writeToBuffer(FriendlyByteBuf buffer);
 
-	void readFromBuffer(PacketByteBuf buffer);
+	void readFromBuffer(FriendlyByteBuf buffer);
 }

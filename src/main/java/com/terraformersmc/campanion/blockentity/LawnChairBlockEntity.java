@@ -2,13 +2,12 @@ package com.terraformersmc.campanion.blockentity;
 
 import com.terraformersmc.campanion.entity.CampanionEntities;
 import com.terraformersmc.campanion.entity.LawnChairEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-
 import java.util.List;
 import java.util.UUID;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 public class LawnChairBlockEntity extends SerializableBlockEntity {
 
@@ -24,13 +23,13 @@ public class LawnChairBlockEntity extends SerializableBlockEntity {
 		if (this.cachedEntity != null && this.cachedEntity.isAlive()) {
 			return this.cachedEntity;
 		}
-		assert this.world != null;
-		List<LawnChairEntity> entities = this.world.getEntitiesByType(CampanionEntities.LAWN_CHAIR, new Box(this.pos).expand(2, 2, 2), e -> e.getBlockPos().equals(this.pos) && e.getUuid().equals(this.entityUUID));
+		assert this.level != null;
+		List<LawnChairEntity> entities = this.level.getEntities(CampanionEntities.LAWN_CHAIR, new AABB(this.worldPosition).inflate(2, 2, 2), e -> e.blockPosition().equals(this.worldPosition) && e.getUUID().equals(this.entityUUID));
 		if (entities.isEmpty()) {
-			this.cachedEntity = new LawnChairEntity(this.world, this.pos);
-			this.world.spawnEntity(this.cachedEntity);
-			this.entityUUID = this.cachedEntity.getUuid();
-			this.markDirty();
+			this.cachedEntity = new LawnChairEntity(this.level, this.worldPosition);
+			this.level.addFreshEntity(this.cachedEntity);
+			this.entityUUID = this.cachedEntity.getUUID();
+			this.setChanged();
 			this.sync();
 			return this.cachedEntity;
 		}
@@ -38,21 +37,21 @@ public class LawnChairBlockEntity extends SerializableBlockEntity {
 	}
 
 	@Override
-	public void fromTag(NbtCompound tag) {
-		this.entityUUID = tag.getUuid("EntityUUID");
+	public void fromTag(CompoundTag tag) {
+		this.entityUUID = tag.getUUID("EntityUUID");
 		this.cachedEntity = null;
 	}
 
 	@Override
-	public void toTag(NbtCompound tag) {
-		tag.putUuid("EntityUUID", this.entityUUID);
+	public void toTag(CompoundTag tag) {
+		tag.putUUID("EntityUUID", this.entityUUID);
 	}
 
-	public void fromClientTag(NbtCompound tag) {
+	public void fromClientTag(CompoundTag tag) {
 		fromTag(tag);
 	}
 
-	public void toClientTag(NbtCompound tag) {
+	public void toClientTag(CompoundTag tag) {
 		toTag(tag);
 	}
 }

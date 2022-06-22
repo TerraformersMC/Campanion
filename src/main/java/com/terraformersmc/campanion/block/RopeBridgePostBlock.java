@@ -5,75 +5,74 @@ import com.terraformersmc.campanion.blockentity.RopeBridgePostBlockEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.ropebridge.RopeBridge;
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.tag.ItemTags;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 
 	private static final String CLICKED_POSITION_KEY = "ClickedPosition";
 
-	public RopeBridgePostBlock(Settings settings) {
+	public RopeBridgePostBlock(Properties settings) {
 		super(settings);
 	}
 
 	@Override
-	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new RopeBridgePostBlockEntity(pos, state);
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		BlockEntity entity = world.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePostBlockEntity) {
 			RopeBridgePostBlockEntity be = (RopeBridgePostBlockEntity) entity;
-			ItemStack stack = player.getStackInHand(hand);
-			if (!world.isClient) {
+			ItemStack stack = player.getItemInHand(hand);
+			if (!world.isClientSide) {
 				if (stack.getItem() == CampanionItems.ROPE) {
-					NbtCompound tag = stack.getOrCreateNbt();
+					CompoundTag tag = stack.getOrCreateTag();
 					if (tag.contains(CLICKED_POSITION_KEY, 4)) {
-						BlockPos clickedPos = BlockPos.fromLong(tag.getLong(CLICKED_POSITION_KEY));
+						BlockPos clickedPos = BlockPos.of(tag.getLong(CLICKED_POSITION_KEY));
 						tag.remove(CLICKED_POSITION_KEY);
 						RopeBridge bridge = new RopeBridge(clickedPos, pos);
-						Optional<Text> reason = bridge.getFailureReason();
+						Optional<Component> reason = bridge.getFailureReason();
 						if (!reason.isPresent() && !player.isCreative()) {
-							float xzDist = (float) Math.sqrt(pos.getSquaredDistance(clickedPos));
+							float xzDist = (float) Math.sqrt(pos.distSqr(clickedPos));
 							int itemsToUse = Math.round(xzDist / RopeBridge.BLOCKS_PER_ROPE);
 							if (stack.getCount() < itemsToUse) {
-								reason = Optional.of(new TranslatableText("message.campanion.rope_bridge.ropes", itemsToUse - stack.getCount()));
+								reason = Optional.of(new TranslatableComponent("message.campanion.rope_bridge.ropes", itemsToUse - stack.getCount()));
 							} else {
-								stack.decrement(itemsToUse);
+								stack.shrink(itemsToUse);
 							}
 						}
 						if (reason.isPresent()) {
-							player.sendMessage(reason.get(), false);
-							return ActionResult.SUCCESS;
+							player.displayClientMessage(reason.get(), false);
+							return InteractionResult.SUCCESS;
 						} else {
 							List<Pair<BlockPos, List<RopeBridgePlank>>> planks = bridge.generateBlocks(world);
-							long failed = planks.stream().map(Pair::getLeft).filter(p -> !world.canPlayerModifyAt(player, p)).count();
+							long failed = planks.stream().map(Pair::getLeft).filter(p -> !world.mayInteract(player, p)).count();
 							if (failed > 1) {
-								player.sendMessage(new TranslatableText("message.campanion.rope_bridge.no_permission", failed), true);
-								return ActionResult.SUCCESS;
+								player.displayClientMessage(new TranslatableComponent("message.campanion.rope_bridge.no_permission", failed), true);
+								return InteractionResult.SUCCESS;
 							}
 							if (player.isCreative()) {
 
@@ -81,8 +80,8 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 								for (Pair<BlockPos, ?> pair : planks) {
 									BlockPos planksPos = pair.getLeft();
 									if (!world.getBlockState(planksPos).getMaterial().isReplaceable() && world.getBlockState(planksPos).getBlock() != CampanionBlocks.ROPE_BRIDGE_POST) {
-										player.sendMessage(new TranslatableText("message.campanion.rope_bridge.obstructed", planksPos.getX(), planksPos.getY(), planksPos.getZ(), new TranslatableText(world.getBlockState(planksPos).getBlock().getTranslationKey())), false);
-										return ActionResult.PASS;
+										player.displayClientMessage(new TranslatableComponent("message.campanion.rope_bridge.obstructed", planksPos.getX(), planksPos.getY(), planksPos.getZ(), new TranslatableComponent(world.getBlockState(planksPos).getBlock().getDescriptionId())), false);
+										return InteractionResult.PASS;
 									}
 								}
 
@@ -90,14 +89,14 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 									BlockPos left = pair.getLeft();
 									BlockEntity blockEntityTwo = world.getBlockEntity(left);
 									if (!(blockEntityTwo instanceof RopeBridgePlanksBlockEntity)) {
-										world.setBlockState(left, CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState());
+										world.setBlockAndUpdate(left, CampanionBlocks.ROPE_BRIDGE_PLANKS.defaultBlockState());
 										blockEntityTwo = world.getBlockEntity(left);
 									}
 									if (blockEntityTwo instanceof RopeBridgePlanksBlockEntity) {
 										for (RopeBridgePlank plank : pair.getRight()) {
 											((RopeBridgePlanksBlockEntity) blockEntityTwo).addPlank(plank);
 										}
-										blockEntityTwo.markDirty();
+										blockEntityTwo.setChanged();
 										((RopeBridgePlanksBlockEntity) blockEntityTwo).sync();
 									}
 								});
@@ -109,23 +108,23 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 									((RopeBridgePostBlockEntity) blockEntityTwo).getLinkedPositions().add(pos);
 								}
 							}
-							entity.markDirty();
+							entity.setChanged();
 							be.sync();
 						}
 					} else {
 						tag.putLong(CLICKED_POSITION_KEY, pos.asLong());
 					}
 				}
-				if (stack.isIn(ItemTags.PLANKS) && this.incrementBridge(world, player, be, pos, true) && !player.isCreative()) {
-					stack.decrement(1);
+				if (stack.is(ItemTags.PLANKS) && this.incrementBridge(world, player, be, pos, true) && !player.isCreative()) {
+					stack.shrink(1);
 				}
 			}
 		}
-		return ActionResult.CONSUME;
+		return InteractionResult.CONSUME;
 	}
 
 	@Override
-	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
 		BlockEntity entity = world.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePostBlockEntity) {
 			for (BlockPos position : ((RopeBridgePostBlockEntity) entity).getLinkedPositions()) {
@@ -134,30 +133,30 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 					((RopeBridgePostBlockEntity) other).getLinkedPositions().remove(pos);
 					((RopeBridgePostBlockEntity) other).getGhostPlanks().remove(pos);
 
-					if (!world.isClient) {
-						other.markDirty();
+					if (!world.isClientSide) {
+						other.setChanged();
 						((RopeBridgePostBlockEntity) other).sync();
 					}
 				}
 			}
 		}
-		super.onStateReplaced(state, world, pos, newState, moved);
+		super.onRemove(state, world, pos, newState, moved);
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-		if (facing == Direction.DOWN && !world.getBlockState(pos.down()).isSideSolidFullSquare(world, pos, Direction.UP)) {
-			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+	public BlockState updateShape(BlockState state, Direction facing, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+		if (facing == Direction.DOWN && !world.getBlockState(pos.below()).isFaceSturdy(world, pos, Direction.UP)) {
+			world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 		}
-		return super.getStateForNeighborUpdate(state, facing, neighborState, world, pos, neighborPos);
+		return super.updateShape(state, facing, neighborState, world, pos, neighborPos);
 	}
 
 	@Override
-	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-		return world.getBlockState(pos.down()).isSideSolidFullSquare(world, pos, Direction.UP);
+	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+		return world.getBlockState(pos.below()).isFaceSturdy(world, pos, Direction.UP);
 	}
 
-	private boolean incrementBridge(World world, PlayerEntity player, RopeBridgePostBlockEntity blockEntity, BlockPos pos, boolean generateLinked) {
+	private boolean incrementBridge(Level world, Player player, RopeBridgePostBlockEntity blockEntity, BlockPos pos, boolean generateLinked) {
 		BlockPos otherPos = null;
 		List<Pair<BlockPos, List<RopeBridgePlank>>> list = null;
 		for (Map.Entry<BlockPos, List<Pair<BlockPos, List<RopeBridgePlank>>>> entry : blockEntity.getGhostPlanks().entrySet()) {
@@ -189,10 +188,10 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 					if (!(be instanceof RopeBridgePlanksBlockEntity)) {
 						BlockState state = world.getBlockState(planksPos);
 						if (!state.getMaterial().isReplaceable()) {
-							player.sendMessage(new TranslatableText("message.campanion.rope_bridge.obstructed", planksPos.getX(), planksPos.getY(), planksPos.getZ(), new TranslatableText(world.getBlockState(planksPos).getBlock().getTranslationKey())), false);
+							player.displayClientMessage(new TranslatableComponent("message.campanion.rope_bridge.obstructed", planksPos.getX(), planksPos.getY(), planksPos.getZ(), new TranslatableComponent(world.getBlockState(planksPos).getBlock().getDescriptionId())), false);
 							return false;
 						}
-						world.setBlockState(planksPos, CampanionBlocks.ROPE_BRIDGE_PLANKS.getDefaultState());
+						world.setBlockAndUpdate(planksPos, CampanionBlocks.ROPE_BRIDGE_PLANKS.defaultBlockState());
 						be = world.getBlockEntity(planksPos);
 					}
 
@@ -201,7 +200,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 						RopeBridgePlank plank = planks.get(0);
 						planksBlockEntity.addPlank(plank);
 						planks.remove(plank);
-						planksBlockEntity.markDirty();
+						planksBlockEntity.setChanged();
 						planksBlockEntity.sync();
 						if (plank.isMaster()) {
 							i++;
@@ -214,25 +213,25 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 			list.removeIf(p -> p.getRight().isEmpty());
 		}
 		if (list.isEmpty()) {
-			if (!world.isClient) {
+			if (!world.isClientSide) {
 				blockEntity.getLinkedPositions().remove(otherPos);
 				blockEntity.getGhostPlanks().remove(otherPos);
 
-				blockEntity.markDirty();
+				blockEntity.setChanged();
 				blockEntity.sync();
 
 				BlockEntity other = world.getBlockEntity(otherPos);
 				if (other instanceof RopeBridgePostBlockEntity) {
 					((RopeBridgePostBlockEntity) other).getLinkedPositions().remove(pos);
 					((RopeBridgePostBlockEntity) other).getGhostPlanks().remove(pos);
-					other.markDirty();
+					other.setChanged();
 					((RopeBridgePostBlockEntity) other).sync();
 				}
 			}
-			player.sendMessage(new TranslatableText("message.campanion.rope_bridge.finished"), false);
+			player.displayClientMessage(new TranslatableComponent("message.campanion.rope_bridge.finished"), false);
 		} else {
 			double counted = list.stream().flatMap(p -> p.getRight().stream()).filter(RopeBridgePlank::isMaster).count();
-			player.sendMessage(new TranslatableText("message.campanion.rope_bridge.constructed", Math.round(counted / RopeBridge.PLANKS_PER_ITEM) + 1), true);
+			player.displayClientMessage(new TranslatableComponent("message.campanion.rope_bridge.constructed", Math.round(counted / RopeBridge.PLANKS_PER_ITEM) + 1), true);
 		}
 		return true;
 	}
