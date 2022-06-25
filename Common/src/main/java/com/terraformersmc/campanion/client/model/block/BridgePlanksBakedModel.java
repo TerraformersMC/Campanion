@@ -4,6 +4,7 @@ import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.blockentity.RopeBridgePlanksBlockEntity;
 import com.terraformersmc.campanion.client.renderer.RopeBridgePlankRenderer;
 import com.terraformersmc.campanion.platform.Services;
+import com.terraformersmc.campanion.platform.services.ClientServices;
 import com.terraformersmc.campanion.platform.services.rendering.BlockModelCreatedData;
 import com.terraformersmc.campanion.platform.services.rendering.BlockModelPartCreator;
 import com.terraformersmc.campanion.ropebridge.RopeBridge;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-public class BridgePlanksBakedModel implements BakedModel {
+public abstract class BridgePlanksBakedModel implements BakedModel {
 
 	public static final Material[] PLANKS = IntStream.range(0, RopeBridge.PLANK_VARIANT_TEXTURES)
 			.mapToObj(i -> new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Campanion.MOD_ID, "ropebridge/plank" + i)))
@@ -95,8 +96,8 @@ public class BridgePlanksBakedModel implements BakedModel {
 	}
 
 	public static BridgePlanksBakedModel createStaticModel(List<RopeBridgePlank> planks) {
-		BridgePlanksBakedModel planksModel = Services.CLIENT_PLATFORM.createPlanksModel();
-		BlockModelPartCreator emitter = Services.CLIENT_PLATFORM.blockModelCreator();
+		BridgePlanksBakedModel planksModel = ClientServices.CLIENT_PLATFORM.createPlanksModel();
+		BlockModelPartCreator emitter = ClientServices.CLIENT_PLATFORM.blockModelCreator();
 		for (RopeBridgePlank plank : planks) {
 			RopeBridgePlankRenderer.emitAllQuads(plank, true, emitter);
 		}

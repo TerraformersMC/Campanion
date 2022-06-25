@@ -2,7 +2,10 @@ package com.terraformersmc.campanion.platform.services;
 
 import com.terraformersmc.campanion.platform.services.rendering.BlockModelPartCreator;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -43,5 +46,7 @@ public interface IPlatformHelper {
 	<T extends BlockEntity> Function<Type<?>, BlockEntityType<T>> createBlockEntity(BiFunction<BlockPos, BlockState, T> function, Block... blocks);
 
 	CreativeModeTab createItemGroup(String name, Supplier<ItemStack> stack);
+
+	TagKey<Item> getShearsTag();
 
 }

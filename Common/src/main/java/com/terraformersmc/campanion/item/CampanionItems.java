@@ -1,5 +1,6 @@
 package com.terraformersmc.campanion.item;
 
+import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.entity.CampanionEntities;
 import java.util.LinkedHashMap;
 import java.util.Map;

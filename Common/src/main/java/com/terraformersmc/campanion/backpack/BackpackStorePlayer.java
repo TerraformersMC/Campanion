@@ -3,6 +3,7 @@ package com.terraformersmc.campanion.backpack;
 import com.terraformersmc.campanion.item.BackpackItem;
 import com.terraformersmc.campanion.mixin.InvokerEntity;
 import com.terraformersmc.campanion.network.S2CSyncBackpackContents;
+import com.terraformersmc.campanion.platform.Services;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +23,7 @@ public interface BackpackStorePlayer {
 	default void syncChanges() {
 		Player player = (Player) this;
 		if(!player.level.isClientSide) {
-			((ServerPlayer) player).connection.send(S2CSyncBackpackContents.createPacket(this.getBackpackStacks()));
+			Services.NETWORK.sendToPlayer(new S2CSyncBackpackContents(this.getBackpackStacks()), (ServerPlayer) player);
 		}
 	}
 

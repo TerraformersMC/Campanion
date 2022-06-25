@@ -22,7 +22,7 @@ import static com.terraformersmc.campanion.block.CampanionBlocks.*;
 
 public class CampanionBlockEntities {
 
-	private static final Map<ResourceLocation, BlockEntityType<? extends BlockEntity>> BLOCK_ENTITY_TYPES = new LinkedHashMap<>();
+	private static final Map<ResourceLocation, BlockEntityType<?>> BLOCK_ENTITY_TYPES = new LinkedHashMap<>();
 
 	public static final BlockEntityType<RopeBridgePlanksBlockEntity> ROPE_BRIDGE_PLANK = add("rope_bridge_planks", RopeBridgePlanksBlockEntity::new, CampanionBlocks.ROPE_BRIDGE_PLANKS);
 	public static final BlockEntityType<RopeBridgePostBlockEntity> ROPE_BRIDGE_POST = add("rope_bridge_post", RopeBridgePostBlockEntity::new, CampanionBlocks.ROPE_BRIDGE_POST);
@@ -63,7 +63,7 @@ public class CampanionBlockEntities {
 //		}
 //	}
 
-	public static Map<ResourceLocation, BlockEntityType<? extends BlockEntity>> getBlockEntityTypes() {
+	public static Map<ResourceLocation, BlockEntityType<?>> getBlockEntityTypes() {
 		return BLOCK_ENTITY_TYPES;
 	}
 

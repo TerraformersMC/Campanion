@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Wolf.class)
 public abstract class MixinWolfEntity extends TamableAnimal implements HowlingEntity {
 
-	private static final EntityDataAccessor<Boolean> HOWLING;
+	private static final EntityDataAccessor<Boolean> HOWLING = SynchedEntityData.defineId(Wolf.class, EntityDataSerializers.BOOLEAN);
 
 	private float howlAnimationProgress;
 	//For when I want to animate this
@@ -39,8 +39,8 @@ public abstract class MixinWolfEntity extends TamableAnimal implements HowlingEn
 		}
 	}
 
-	@Inject(method = "initGoals", at = @At("HEAD"), cancellable = true)
-	protected void initGoals(CallbackInfo callbackInfo) {
+	@Inject(method = "registerGoals", at = @At("HEAD"), cancellable = true)
+	protected void registerGoals(CallbackInfo callbackInfo) {
 		this.goalSelector.addGoal(5, new HowlGoal(this));
 	}
 
@@ -63,13 +63,10 @@ public abstract class MixinWolfEntity extends TamableAnimal implements HowlingEn
 		return this.lastHowlAnimationProgress + (this.howlAnimationProgress - this.lastHowlAnimationProgress) * delta;
 	}
 
-	@Inject(method = "initDataTracker", at = @At("TAIL"), cancellable = true)
-	protected void initDataTracker(CallbackInfo callbackInfo) {
+	@Inject(method = "defineSynchedData", at = @At("TAIL"), cancellable = true)
+	protected void defineSynchedData(CallbackInfo callbackInfo) {
 		this.entityData.define(HOWLING, false);
 	}
 
-	static {
-		HOWLING = SynchedEntityData.defineId(Wolf.class, EntityDataSerializers.BOOLEAN);
-	}
 
 }

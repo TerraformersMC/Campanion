@@ -1,5 +1,6 @@
 package com.terraformersmc.campanion.tag;
 
+import com.terraformersmc.campanion.Campanion;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;

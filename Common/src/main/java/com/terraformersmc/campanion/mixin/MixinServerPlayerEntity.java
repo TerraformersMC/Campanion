@@ -9,13 +9,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayer.class)
 public class MixinServerPlayerEntity {
-	@Inject(method = "onSpawn", at = @At("TAIL"))
-	public void onSpawn(CallbackInfo info) {
+	@Inject(method = "initInventoryMenu", at = @At("TAIL"))
+	public void initInventoryMenu(CallbackInfo info) {
 		((BackpackStorePlayer) this).syncChanges();
 	}
 
-	@Inject(method = "copyFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;clone(Lnet/minecraft/entity/player/PlayerInventory;)V"))
-	public void onCopyFrom(ServerPlayer oldPlayer, boolean alive, CallbackInfo info) {
+	@Inject(method = "restoreFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;replaceWith(Lnet/minecraft/world/entity/player/Inventory;)V"))
+	public void restoreFrom(ServerPlayer oldPlayer, boolean alive, CallbackInfo info) {
 		((BackpackStorePlayer) this).setBackpackStacks(((BackpackStorePlayer) oldPlayer).getBackpackStacks());
 	}
 }

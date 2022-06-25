@@ -10,6 +10,8 @@ import com.terraformersmc.campanion.entity.SkippingStoneEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.network.C2SOpenBackpack;
 import com.terraformersmc.campanion.network.C2SRotateHeldItem;
+import com.terraformersmc.campanion.network.S2CEntitySpawnGrapplingHookPacket;
+import com.terraformersmc.campanion.network.S2CSyncBackpackContents;
 import com.terraformersmc.campanion.platform.Services;
 import com.terraformersmc.campanion.stat.CampanionStats;
 import com.terraformersmc.campanion.tag.CampanionBlockTags;
@@ -17,17 +19,13 @@ import com.terraformersmc.campanion.tag.CampanionItemTags;
 import net.minecraft.Util;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.AbstractProjectileDispenseBehavior;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class Campanion {
 
@@ -44,9 +42,8 @@ public class Campanion {
 		CampanionConfigManager.initializeConfig();
 
 		CampanionCriteria.loadClass();
-		CampanionStats.loadClass();
 
-		registerServerboundPackets();
+		registerPackets();
 
 		DispenserBlock.registerBehavior(CampanionItems.SKIPPING_STONE, new AbstractProjectileDispenseBehavior() {
 			@Override
@@ -70,8 +67,11 @@ public class Campanion {
 		CampanionItemTags.load();
     }
 
-	public static void registerServerboundPackets() {
-		ServerPlayNetworking.registerGlobalReceiver(C2SOpenBackpack.ID, C2SOpenBackpack::onPacket);
-		ServerPlayNetworking.registerGlobalReceiver(C2SRotateHeldItem.ID, C2SRotateHeldItem::onPacket);
+	public static void registerPackets() {
+		Services.NETWORK.registerServerBound(C2SOpenBackpack.class, C2SOpenBackpack::new, C2SOpenBackpack::handle);
+		Services.NETWORK.registerServerBound(C2SRotateHeldItem.class, C2SRotateHeldItem::new, C2SRotateHeldItem::handle);
+
+		Services.NETWORK.registerClientBound(S2CSyncBackpackContents.class, S2CSyncBackpackContents::encode, S2CSyncBackpackContents::decode, S2CSyncBackpackContents::handle);
+		Services.NETWORK.<S2CEntitySpawnGrapplingHookPacket>registerClientBound(S2CEntitySpawnGrapplingHookPacket.class, S2CEntitySpawnGrapplingHookPacket::encode, S2CEntitySpawnGrapplingHookPacket::decode, S2CEntitySpawnGrapplingHookPacket::handle);
 	}
 }

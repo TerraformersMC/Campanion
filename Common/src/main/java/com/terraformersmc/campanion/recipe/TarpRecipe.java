@@ -1,10 +1,11 @@
 package com.terraformersmc.campanion.recipe;
 
 import com.terraformersmc.campanion.item.CampanionItems;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+import com.terraformersmc.campanion.platform.Services;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -12,7 +13,6 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import java.util.Random;
 
 public class TarpRecipe extends CustomRecipe {
 	public TarpRecipe(ResourceLocation id) {
@@ -25,7 +25,7 @@ public class TarpRecipe extends CustomRecipe {
 		int shearAmount = 0;
 		for (int i = 0; i < inv.getContainerSize(); i++) {
 			ItemStack stack = inv.getItem(i);
-			if(stack.is(ConventionalItemTags.SHEARS)) {
+			if(stack.is(Services.PLATFORM.getShearsTag())) {
 				shearAmount++;
 			} else if(stack.is(ItemTags.WOOL)) {
 				woolAmount++;
@@ -47,7 +47,7 @@ public class TarpRecipe extends CustomRecipe {
 		list.add(Ingredient.of(ItemTags.WOOL));
 		list.add(Ingredient.of(ItemTags.WOOL));
 
-		list.add(Ingredient.of(ConventionalItemTags.SHEARS));
+		list.add(Ingredient.of(Services.PLATFORM.getShearsTag()));
 		return list;
 	}
 
@@ -57,7 +57,7 @@ public class TarpRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public ItemStack craft(CraftingContainer inv) {
+	public ItemStack assemble(CraftingContainer inv) {
 		return this.getResultItem();
 	}
 
@@ -72,7 +72,7 @@ public class TarpRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public NonNullList<ItemStack> getRemainder(CraftingContainer inventory) {
+	public NonNullList<ItemStack> getRemainingItems(CraftingContainer inventory) {
 		NonNullList<ItemStack> defaultedList = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
 
 		for(int i = 0; i < defaultedList.size(); ++i) {
@@ -81,9 +81,9 @@ public class TarpRecipe extends CustomRecipe {
 			if (item.hasCraftingRemainingItem()) {
 				defaultedList.set(i, new ItemStack(item.getCraftingRemainingItem()));
 			}
-			if(stack.is(ConventionalItemTags.SHEARS)) {
+			if(stack.is(Services.PLATFORM.getShearsTag())) {
 				ItemStack copy = stack.copy();
-				if (!copy.hurt(1, new Random(), null)) {
+				if (!copy.hurt(1, RandomSource.create(), null)) {
 					defaultedList.set(i, copy);
 				}
 			}

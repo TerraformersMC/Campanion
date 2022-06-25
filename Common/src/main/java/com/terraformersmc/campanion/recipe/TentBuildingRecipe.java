@@ -51,7 +51,7 @@ public class TentBuildingRecipe extends CustomRecipe {
 	}
 
 	@Override
-	public ItemStack craft(CraftingContainer inv) {
+	public ItemStack assemble(CraftingContainer inv) {
 		StructureTemplate structure = STRUCTURE_CACHE.get();
 		STRUCTURE_CACHE.set(null);
 

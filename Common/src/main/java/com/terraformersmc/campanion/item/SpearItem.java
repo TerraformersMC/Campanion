@@ -2,10 +2,8 @@ package com.terraformersmc.campanion.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.terraformersmc.campanion.entity.SpearEntity;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
-import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -28,6 +26,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 
+import java.util.function.Supplier;
+
 public class SpearItem extends TridentItem {
 
 	private final Multimap<Attribute, AttributeModifier> attributeModifiers;
@@ -45,8 +45,10 @@ public class SpearItem extends TridentItem {
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", this.attackDamage, AttributeModifier.Operation.ADDITION));
 		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", attackSpeed, AttributeModifier.Operation.ADDITION));
-		builder.put(ReachEntityAttributes.REACH, new AttributeModifier("Reach", 1.5, AttributeModifier.Operation.ADDITION));
-		builder.put(ReachEntityAttributes.ATTACK_RANGE, new AttributeModifier("Attack range", 1.5, AttributeModifier.Operation.ADDITION));
+
+		//TODO: add reach+attack range attribute for fabric and forge
+//		builder.put(ReachEntityAttributes.REACH, new AttributeModifier("Reach", 1.5, AttributeModifier.Operation.ADDITION));
+//		builder.put(ReachEntityAttributes.ATTACK_RANGE, new AttributeModifier("Attack range", 1.5, AttributeModifier.Operation.ADDITION));
 		this.attributeModifiers = builder.build();
 	}
 

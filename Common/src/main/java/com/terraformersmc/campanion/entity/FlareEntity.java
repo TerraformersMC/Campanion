@@ -1,8 +1,6 @@
 package com.terraformersmc.campanion.entity;
 
 import com.terraformersmc.campanion.block.CampanionBlocks;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -31,14 +29,12 @@ public class FlareEntity extends ThrowableItemProjectile {
 		return Items.SNOWBALL;
 	}
 
-	@Environment(EnvType.CLIENT)
 	private ParticleOptions getParticleParameters() {
 		ItemStack itemStack = this.getItemRaw();
 		return itemStack.isEmpty() ? ParticleTypes.LAVA : new ItemParticleOption(ParticleTypes.ITEM, itemStack);
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
 	public void handleEntityEvent(byte status) {
 		//Status 3 just means it was just destroyed
 		if (status == 3) {

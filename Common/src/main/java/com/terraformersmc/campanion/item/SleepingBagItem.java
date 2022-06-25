@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -32,8 +31,8 @@ public class SleepingBagItem extends Item implements DyeableLeatherItem {
 
 	public static final Component CANT_SLEEP_DAY = Player.BedSleepingProblem.NOT_POSSIBLE_NOW.getMessage();
 	public static final Component NOT_SAFE = Player.BedSleepingProblem.NOT_SAFE.getMessage();
-	public static final Component NOT_ON_GROUND = new TranslatableComponent("item.campanion.sleeping_bag.not_on_ground");
-	public static final Component TOO_WET = new TranslatableComponent("item.campanion.sleeping_bag.too_wet");
+	public static final Component NOT_ON_GROUND = Component.translatable("item.campanion.sleeping_bag.not_on_ground");
+	public static final Component TOO_WET = Component.translatable("item.campanion.sleeping_bag.too_wet");
 
 	public SleepingBagItem(Properties settings) {
 		super(settings);
@@ -96,7 +95,7 @@ public class SleepingBagItem extends Item implements DyeableLeatherItem {
 	}
 
 	public static Optional<ItemStack> getUsingStack(LivingEntity user) {
-		if (user.getPose() == Pose.SLEEPING || user.isSleeping()) {
+		if (user.getPose() == Pose.SLEEPING || user.getSleepingPos().isPresent()) {
 			for (InteractionHand value : InteractionHand.values()) {
 				ItemStack stack = user.getItemInHand(value);
 				if (inUse(stack)) {

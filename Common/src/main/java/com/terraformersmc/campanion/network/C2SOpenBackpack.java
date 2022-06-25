@@ -11,13 +11,6 @@ import net.minecraft.world.item.ItemStack;
 import java.util.function.Supplier;
 
 public class C2SOpenBackpack {
-
-	public static void encode(C2SOpenBackpack data, FriendlyByteBuf buf) {
-	}
-	public static C2SOpenBackpack decode(FriendlyByteBuf buf) {
-		return new C2SOpenBackpack();
-	}
-
 	public static void handle(Supplier<MinecraftServer> server, ServerPlayer player, C2SOpenBackpack packet) {
 		ItemStack stack = player.getItemBySlot(EquipmentSlot.CHEST);
 

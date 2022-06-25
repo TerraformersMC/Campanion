@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -78,6 +79,6 @@ public class LawnChairEntity extends Entity {
 
     @Override
     public Packet<?> getAddEntityPacket() {
-        return S2CEntitySpawnGrapplingHookPacket.createPacket(this);
+        return new ClientboundAddEntityPacket(this);
     }
 }

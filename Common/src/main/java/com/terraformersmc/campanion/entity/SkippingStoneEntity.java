@@ -2,8 +2,6 @@ package com.terraformersmc.campanion.entity;
 
 import com.terraformersmc.campanion.advancement.criterion.CampanionCriteria;
 import com.terraformersmc.campanion.stat.CampanionStats;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -48,14 +46,12 @@ public class SkippingStoneEntity extends ThrowableItemProjectile {
 		super.defineSynchedData();
 	}
 
-	@Environment(EnvType.CLIENT)
 	private ParticleOptions getParticleParameters() {
 		ItemStack itemStack = this.getItemRaw();
 		return itemStack.isEmpty() ? ParticleTypes.SPLASH : new ItemParticleOption(ParticleTypes.ITEM, itemStack);
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
 	public void handleEntityEvent(byte status) {
 		if (status == 3) {
 			ParticleOptions particleEffect = this.getParticleParameters();

@@ -1,11 +1,7 @@
 package com.terraformersmc.campanion.config;
 
-import com.terraformersmc.campanion.tag.CampanionItemTags;
-import dev.emi.trinkets.api.SlotType;
-import dev.emi.trinkets.api.TrinketsApi;
-import net.fabricmc.fabric.api.util.TriState;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.resources.ResourceLocation;
+import com.terraformersmc.campanion.Campanion;
+
 import java.io.*;
 
 public class CampanionConfigManager {
@@ -16,7 +12,7 @@ public class CampanionConfigManager {
 		if (file != null) {
 			return;
 		}
-		file = new File(FabricLoader.getInstance().getConfigDirectory(), Campanion.MOD_ID + ".json");
+		file = new File("./configs/", Campanion.MOD_ID + ".json");
 	}
 
 	public static CampanionConfig initializeConfig() {
@@ -43,14 +39,14 @@ public class CampanionConfigManager {
 				config = Campanion.GSON.fromJson(br, CampanionConfig.class);
 			}
 
-			if (FabricLoader.getInstance().isModLoaded("trinkets")) {
-				TrinketsApi.registerTrinketPredicate(new ResourceLocation("campanion", "backpacks"), (stack, ref, entity) -> {
-					if (stack.is(CampanionItemTags.BACKPACKS)) {
-						return config.isTrinketsBackpacksEnabled() ? TriState.TRUE : TriState.FALSE;
-					}
-					return TriState.DEFAULT;
-				});
-			}
+//			if (FabricLoader.getInstance().isModLoaded("trinkets")) {
+//				TrinketsApi.registerTrinketPredicate(new ResourceLocation("campanion", "backpacks"), (stack, ref, entity) -> {
+//					if (stack.is(CampanionItemTags.BACKPACKS)) {
+//						return config.isTrinketsBackpacksEnabled() ? TriState.TRUE : TriState.FALSE;
+//					}
+//					return TriState.DEFAULT;
+//				});
+//			}
 		} catch (FileNotFoundException e) {
 			System.err.println("Couldn't load Campanion configuration file; reverting to defaults");
 			e.printStackTrace();

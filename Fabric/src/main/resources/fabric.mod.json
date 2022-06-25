@@ -1,38 +1,59 @@
 {
-    "schemaVersion": 1,
-    "id": "modid",
-    "version": "${version}",
-  
-    "name": "Example Mod",
-    "description": "This is an example description! Tell everyone what your mod is about!",
-    "authors": [
-      "Me!"
+  "schemaVersion": 1,
+  "id": "campanion",
+  "version": "${version}",
+  "name": "Campanion",
+  "description": "A camping companion that adds items and utilities to improve your life away from home.",
+  "authors": [
+    "Wyn Price",
+    "NeusFear",
+    "Prospector",
+    "TerraformersMC"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/campanion",
+    "sources": "https://github.com/TerraformersMC/Campanion",
+    "issues": "https://github.com/TerraformersMC/Campanion/issues"
+  },
+  "contributors": [
+    "Hephaestus-Dev",
+    "PinkGoosik",
+    "Levoment",
+    "jakobhellermann",
+    "2A5F",
+    "SirCaptainCaleb",
+    "Imbarainbow",
+    "DarkKnightComes",
+    "ph0elyx",
+    "The-Fireplace",
+    "20o",
+    "ThisIsSammy",
+    "jhbuchanan45"
+  ],
+
+  "license": "LGPL-3.0-only",
+  "icon": "assets/campanion/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.terraformersmc.campanion.CampanionFabric"
     ],
-    "contact": {
-      "homepage": "https://fabricmc.net/",
-      "sources": "https://github.com/FabricMC/fabric-example-mod"
-    },
-  
-    "license": "CC0-1.0",
-    "icon": "assets/modid/icon.png",
-  
-    "environment": "*",
-    "entrypoints": {
-      "main": [
-        "com.terraformersmc.campanion.CampanionFabric"
-      ]
-    },
-    "mixins": [
-      "modid.mixins.json"
-    ],
-  
-    "depends": {
-      "fabricloader": ">=0.14",
-      "fabric": "*",
-      "minecraft": "1.19.x",
-      "java": ">=17"
-    },
-    "suggests": {
-      "another-mod": "*"
-    }
+    "client": [
+      "com.terraformersmc.campanion.CampanionFabricClient"
+    ]
+  },
+  "mixins": [
+    "campanion.mixins.json"
+  ],
+  "accessWidener": "campanion.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.11.6",
+    "fabric": ">=0.37.0",
+    "java": ">=16",
+    "minecraft": ">=1.17"
+  },
+  "suggests": {
+    "trinkets": ">=3.1.0"
   }
+}

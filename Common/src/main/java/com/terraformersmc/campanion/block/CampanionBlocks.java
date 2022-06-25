@@ -11,7 +11,9 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CampanionBlocks {
@@ -23,6 +25,7 @@ public class CampanionBlocks {
 	public static final Block ROPE_BRIDGE_PLANKS = add("rope_bridge_planks", new RopeBridgePlanksBlock(BlockBehaviour.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(0.5F, 1.0F).dynamicShape().noOcclusion().noLootTable()), Campanion.TAB);
 	public static final Block ROPE_LADDER = add("rope_ladder", new RopeLadderBlock(BlockBehaviour.Properties.of(Material.WOOD).noOcclusion().destroyTime(0.2F).sound(SoundType.LADDER).noLootTable()), Campanion.TAB);
 
+	public static final List<Block> LAWN_CHAIRS = new ArrayList<>(16);
 	public static final Block WHITE_LAWN_CHAIR = createLawnChair("white");
 	public static final Block ORANGE_LAWN_CHAIR = createLawnChair("orange");
 	public static final Block MAGENTA_LAWN_CHAIR = createLawnChair("magenta");
@@ -42,6 +45,7 @@ public class CampanionBlocks {
 
 	public static final Block LEATHER_TANNER = add("leather_tanner", new LeatherTanner(BlockBehaviour.Properties.of(Material.WOOD).noOcclusion().sound(SoundType.WOOD)), Campanion.TAB);
 
+	public static final List<Block> TENT_SIDES = new ArrayList<>(16);
 	public static final TentSideBlock WHITE_TENT_SIDE = tentSide(DyeColor.WHITE);
 	public static final TentSideBlock ORANGE_TENT_SIDE = tentSide(DyeColor.ORANGE);
 	public static final TentSideBlock MAGENTA_TENT_SIDE = tentSide(DyeColor.MAGENTA);
@@ -59,6 +63,7 @@ public class CampanionBlocks {
 	public static final TentSideBlock RED_TENT_SIDE = tentSide(DyeColor.RED);
 	public static final TentSideBlock BLACK_TENT_SIDE = tentSide(DyeColor.BLACK);
 
+	public static final List<Block> TENT_TOPS = new ArrayList<>(16);
 	public static final TentTopBlock WHITE_TENT_TOP = tentTop(DyeColor.WHITE);
 	public static final TentTopBlock ORANGE_TENT_TOP = tentTop(DyeColor.ORANGE);
 	public static final TentTopBlock MAGENTA_TENT_TOP = tentTop(DyeColor.MAGENTA);
@@ -76,6 +81,7 @@ public class CampanionBlocks {
 	public static final TentTopBlock RED_TENT_TOP = tentTop(DyeColor.RED);
 	public static final TentTopBlock BLACK_TENT_TOP = tentTop(DyeColor.BLACK);
 
+	public static final List<Block> TOPPED_TENT_POLES = new ArrayList<>(16);
 	public static final TentTopPoleBlock WHITE_TOPPED_TENT_POLE = toppedTentPole(DyeColor.WHITE);
 	public static final TentTopPoleBlock ORANGE_TOPPED_TENT_POLE = toppedTentPole(DyeColor.ORANGE);
 	public static final TentTopPoleBlock MAGENTA_TOPPED_TENT_POLE = toppedTentPole(DyeColor.MAGENTA);
@@ -93,6 +99,7 @@ public class CampanionBlocks {
 	public static final TentTopPoleBlock RED_TOPPED_TENT_POLE = toppedTentPole(DyeColor.RED);
 	public static final TentTopPoleBlock BLACK_TOPPED_TENT_POLE = toppedTentPole(DyeColor.BLACK);
 
+	public static final List<Block> FLAT_TENT_TOPS = new ArrayList<>(16);
 	public static final TentTopFlatBlock WHITE_FLAT_TENT_TOP = tentTopFlat(DyeColor.WHITE);
 	public static final TentTopFlatBlock ORANGE_FLAT_TENT_TOP = tentTopFlat(DyeColor.ORANGE);
 	public static final TentTopFlatBlock MAGENTA_FLAT_TENT_TOP = tentTopFlat(DyeColor.MAGENTA);
@@ -155,24 +162,34 @@ public class CampanionBlocks {
 
 
 	private static TentSideBlock tentSide(DyeColor color) {
-		return add(color.getName() + "_tent_side", new TentSideBlock(BlockBehaviour.Properties.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color));
+		TentSideBlock block = add(color.getName() + "_tent_side", new TentSideBlock(BlockBehaviour.Properties.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color));
+		TENT_SIDES.add(block);
+		return block;
 	}
 
 	private static TentTopBlock tentTop(DyeColor color) {
-		return add(color.getName() + "_tent_top", new TentTopBlock(BlockBehaviour.Properties.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color));
+		TentTopBlock block = add(color.getName() + "_tent_top", new TentTopBlock(BlockBehaviour.Properties.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color));
+		TENT_TOPS.add(block);
+		return block;
 	}
 
 	private static TentTopPoleBlock toppedTentPole(DyeColor color) {
-		return add(color.getName() + "_topped_tent_pole", new TentTopPoleBlock(BlockBehaviour.Properties.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color));
+		TentTopPoleBlock block = add(color.getName() + "_topped_tent_pole", new TentTopPoleBlock(BlockBehaviour.Properties.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color));
+		TOPPED_TENT_POLES.add(block);
+		return block;
 	}
 
 	private static TentTopFlatBlock tentTopFlat(DyeColor color) {
-		return add(color.getName() + "_flat_tent_top", new TentTopFlatBlock(BlockBehaviour.Properties.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color));
+		TentTopFlatBlock block = add(color.getName() + "_flat_tent_top", new TentTopFlatBlock(BlockBehaviour.Properties.of(Material.WOOL).noOcclusion().destroyTime(1F).explosionResistance(1200F).sound(SoundType.WOOL), color));
+		FLAT_TENT_TOPS.add(block);
+		return block;
 	}
 
 
 	private static LawnChairBlock createLawnChair(String color) {
-		return add(color + "_lawn_chair", new LawnChairBlock(BlockBehaviour.Properties.of(Material.WOOD).noOcclusion().sound(SoundType.WOOD)), Campanion.TAB);
+		LawnChairBlock block = add(color + "_lawn_chair", new LawnChairBlock(BlockBehaviour.Properties.of(Material.WOOD).noOcclusion().sound(SoundType.WOOD)), Campanion.TAB);
+		LAWN_CHAIRS.add(block);
+		return block;
 	}
 
 	public static Map<ResourceLocation, Block> getBlocks() {

@@ -8,6 +8,4 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(BlockEntity.class)
 public interface InvokerBlockEntity {
-	@Invoker
-	void callWriteIdentifyingData(CompoundTag nbt);
 }

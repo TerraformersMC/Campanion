@@ -3,6 +3,8 @@ package com.terraformersmc.campanion.client.model.block;
 import com.mojang.datafixers.util.Pair;
 import java.util.*;
 import java.util.function.Function;
+
+import com.terraformersmc.campanion.platform.services.ClientServices;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
@@ -28,6 +30,6 @@ public class BridgePlanksUnbakedModel implements UnbakedModel {
 
     @Override
     public BakedModel bake(ModelBakery loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer, ResourceLocation modelId) {
-        return new BridgePlanksBakedModel();
+        return ClientServices.CLIENT_PLATFORM.createPlanksModel();
     }
 }

@@ -43,13 +43,13 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 	}
 
 	@Shadow
-	private int sleepTimer;
+	private int sleepCounter;
 
 	@Override
 	public void sleepWithoutSpawnPoint(BlockPos pos) {
 		this.resetStat(Stats.CUSTOM.get(Stats.TIME_SINCE_REST));
 		super.startSleeping(pos);
-		this.sleepTimer = 0;
+		this.sleepCounter = 0;
 		if (this.level instanceof ServerLevel) {
 			((ServerLevel) this.level).updateSleepingPlayerList();
 		}
@@ -65,8 +65,8 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 		this.backpackStacks = stacks;
 	}
 
-	@Inject(method = "isBlockBreakingRestricted(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/GameMode;)Z", at = @At("HEAD"), cancellable = true)
-	public void isBlockBreakingRestricted(Level world, BlockPos pos, GameType gameMode, CallbackInfoReturnable<Boolean> info) {
+	@Inject(method = "blockActionRestricted(Lnet/minecraft/world/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/GameMode;)Z", at = @At("HEAD"), cancellable = true)
+	public void blockActionRestricted(Level world, BlockPos pos, GameType gameMode, CallbackInfoReturnable<Boolean> info) {
 		if(world.getBlockState(pos).getBlock() instanceof BaseTentBlock) {
 			int slotIndex = -1;
 			Player player = (Player) (Object) this;
@@ -82,14 +82,14 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 		}
 	}
 
-	@Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-	public void writeCustomDataToNbt(CompoundTag tag, CallbackInfo info) {
+	@Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+	public void addAdditionalSaveData(CompoundTag tag, CallbackInfo info) {
 		tag.put("_campanion_backpack", ContainerHelper.saveAllItems(new CompoundTag(), this.backpackStacks));
 		tag.putInt("_campanion_backpack_size", this.backpackStacks.size());
 	}
 
-	@Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-	public void readCustomDataFromNbt(CompoundTag tag, CallbackInfo info) {
+	@Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+	public void readAdditionalSaveData(CompoundTag tag, CallbackInfo info) {
 		this.backpackStacks.clear();
 		for (int i = 0; i < tag.getInt("_campanion_backpack_size"); i++) {
 			this.backpackStacks.add(ItemStack.EMPTY);

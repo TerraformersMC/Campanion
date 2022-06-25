@@ -19,10 +19,10 @@ public abstract class MixinPlayerInventory {
 	public Player player;
 
 	@Shadow
-	public abstract ItemStack getStack(int slot);
+	public abstract ItemStack getItem(int slot);
 
-	@Inject(method = "setStack", at = @At("HEAD"))
-	public void onSetStack(int slot, ItemStack stack, CallbackInfo info) {
+	@Inject(method = "setItem", at = @At("HEAD"))
+	public void setItem(int slot, ItemStack stack, CallbackInfo info) {
 		int capacity = BackpackStorePlayer.getStackCapacity(stack);
 		if (slot == 38 && !this.player.level.isClientSide) {
 			((BackpackStorePlayer) this.player).changeBackpackCapacity(capacity);
@@ -30,7 +30,7 @@ public abstract class MixinPlayerInventory {
 	}
 
 	@Inject(method = "dropAll", at = @At("HEAD"))
-	public void onDropAll(CallbackInfo info) {
+	public void dropAll(CallbackInfo info) {
 		((BackpackStorePlayer) this.player).changeBackpackCapacity(0);
 	}
 

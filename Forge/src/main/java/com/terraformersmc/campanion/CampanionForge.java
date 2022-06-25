@@ -1,16 +1,13 @@
 package com.terraformersmc.campanion;
 
-import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.block.CampanionBlocks;
 import com.terraformersmc.campanion.blockentity.CampanionBlockEntities;
+import com.terraformersmc.campanion.data.ForgeDataGenerators;
 import com.terraformersmc.campanion.entity.CampanionEntities;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.recipe.CampanionRecipeSerializers;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -19,7 +16,6 @@ import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @Mod(Campanion.MOD_ID)
 public class CampanionForge {
@@ -29,6 +25,10 @@ public class CampanionForge {
 
 		FMLJavaModLoadingContext context = FMLJavaModLoadingContext.get();
 		IEventBus modEventBus = context.getModEventBus();
+
+
+
+		modEventBus.addListener(ForgeDataGenerators::gatherDataGens);
 
 		modEventBus.addListener((RegisterEvent event) -> {
 			event.register(ForgeRegistries.Keys.SOUND_EVENTS, createHelperConsumer(CampanionSoundEvents.getSounds()));

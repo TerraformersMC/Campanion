@@ -3,6 +3,7 @@ package com.terraformersmc.campanion.recipe;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.terraformersmc.campanion.Campanion;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;

@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Enchantment.class)
 public class MixinEnchantment {
-	@Inject(method = "isAcceptableItem", at = @At("HEAD"), cancellable = true)
-	private void isAcceptableItem(ItemStack stack, CallbackInfoReturnable<Boolean> info) {
+	@Inject(method = "canEnchant", at = @At("HEAD"), cancellable = true)
+	private void canEnchant(ItemStack stack, CallbackInfoReturnable<Boolean> info) {
 		//Note by default, all trident enchantments will be enabled.
 		if(stack.getItem() instanceof SpearItem) {
 			//Non trident enchantments we want to have

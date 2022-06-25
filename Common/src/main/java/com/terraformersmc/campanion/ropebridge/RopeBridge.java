@@ -1,15 +1,14 @@
 package com.terraformersmc.campanion.ropebridge;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.*;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 public class RopeBridge {
 
@@ -83,13 +82,13 @@ public class RopeBridge {
 
 		double theta = Math.abs(Math.atan((this.to.y() - this.from.y()) / xzDist));
 		if (this.to.equals(this.from)) {
-			return Optional.of(new TranslatableComponent("message.campanion.rope_bridge.same_position"));
+			return Optional.of(Component.translatable("message.campanion.rope_bridge.same_position"));
 		}
 		if (theta > LIMITING_ANGLE) {
-			return Optional.of(new TranslatableComponent("message.campanion.rope_bridge.angle", Math.round(theta * 1800D / Math.PI) / 10D, Math.round(LIMITING_ANGLE * 1800D / Math.PI) / 10F));
+			return Optional.of(Component.translatable("message.campanion.rope_bridge.angle", Math.round(theta * 1800D / Math.PI) / 10D, Math.round(LIMITING_ANGLE * 1800D / Math.PI) / 10F));
 		}
 		if (xzDist > LIMITING_XZ_DIST) {
-			return Optional.of(new TranslatableComponent("message.campanion.rope_bridge.length", Math.round(xzDist * 10D) / 10D, Math.round(LIMITING_XZ_DIST * 10D) / 10D));
+			return Optional.of(Component.translatable("message.campanion.rope_bridge.length", Math.round(xzDist * 10D) / 10D, Math.round(LIMITING_XZ_DIST * 10D) / 10D));
 		}
 		return Optional.empty();
 	}

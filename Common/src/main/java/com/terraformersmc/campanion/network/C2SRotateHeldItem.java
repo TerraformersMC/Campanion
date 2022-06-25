@@ -18,13 +18,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import java.util.function.Supplier;
 
 public class C2SRotateHeldItem {
-	public static void encode(C2SRotateHeldItem data, FriendlyByteBuf buf) {
-	}
-	public static C2SRotateHeldItem decode(FriendlyByteBuf buf) {
-		return new C2SRotateHeldItem();
-	}
-
-	public static void handle(Supplier<MinecraftServer> server, ServerPlayer player, C2SOpenBackpack packet) {
+	public static void handle(Supplier<MinecraftServer> server, ServerPlayer player, C2SRotateHeldItem packet) {
 		ItemStack stack = player.getMainHandItem();
 		if (stack.getItem() instanceof PlaceableTentItem && stack.getOrCreateTag().contains("Blocks", 9)) {
 			for (Tag block : stack.getOrCreateTag().getList("Blocks", 10)) {

@@ -25,9 +25,14 @@ public interface OmniNetwork {
 	void sendToAllAround(Object packet, ServerLevel level, BlockPos pos);
 
 	<P> void registerClientBound(Class<P> clazz, BiConsumer<P, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, P> decoder, S2CHandler<P> handler);
+	default <P> void registerClientBound(Class<P> clazz,  Supplier<P> creator, S2CHandler<P> handler) {
+		this.registerClientBound(clazz, (p, buf) -> {}, buf -> creator.get(), handler);
+	}
 
 	<P> void registerServerBound(Class<P> clazz, BiConsumer<P, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, P> decoder, C2SHandler<P> handler);
-
+	default <P> void registerServerBound(Class<P> clazz,  Supplier<P> creator, C2SHandler<P> handler) {
+		this.registerServerBound(clazz, (p, buf) -> {}, buf -> creator.get(), handler);
+	}
 	interface C2SHandler<P> {
 		void handle(Supplier<MinecraftServer> server, ServerPlayer player, P packet);
 	}

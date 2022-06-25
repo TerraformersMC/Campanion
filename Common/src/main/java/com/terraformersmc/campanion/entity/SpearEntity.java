@@ -1,14 +1,10 @@
 package com.terraformersmc.campanion.entity;
 
 import com.terraformersmc.campanion.item.SpearItem;
-import com.terraformersmc.campanion.network.S2CEntitySpawnGrapplingHookPacket;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -26,6 +22,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -47,7 +44,6 @@ public class SpearEntity extends AbstractArrow {
 		this.entityData.set(ENCHANTMENT_GLINT, stack.hasFoil());
 	}
 
-	@Environment(EnvType.CLIENT)
 	public SpearEntity(Level world, double x, double y, double z, SpearItem item) {
 		super(item.getType(), x, y, z, world);
 		this.spearStack = new ItemStack(item);
@@ -59,18 +55,14 @@ public class SpearEntity extends AbstractArrow {
 		this.entityData.define(ENCHANTMENT_GLINT, false);
 	}
 
-	@Override
-	public Packet<?> getAddEntityPacket() {
-		return S2CEntitySpawnGrapplingHookPacket.createPacket(this);
-	}
 
 	@Override
 	protected ItemStack getPickupItem() {
 		return this.spearStack.copy();
 	}
 
-	@Environment(EnvType.CLIENT)
-	public boolean method_23751() {
+
+	public boolean isEnchanted() {
 		return this.entityData.get(ENCHANTMENT_GLINT);
 	}
 
@@ -168,7 +160,6 @@ public class SpearEntity extends AbstractArrow {
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
 	public boolean shouldRender(double cameraX, double cameraY, double cameraZ) {
 		return true;
 	}

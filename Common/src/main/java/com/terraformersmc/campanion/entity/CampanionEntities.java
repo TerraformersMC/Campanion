@@ -1,5 +1,6 @@
 package com.terraformersmc.campanion.entity;
 
+import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.SpearItem;
 import net.minecraft.resources.ResourceLocation;

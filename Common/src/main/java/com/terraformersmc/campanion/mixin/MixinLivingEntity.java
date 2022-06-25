@@ -2,6 +2,7 @@ package com.terraformersmc.campanion.mixin;
 
 import com.terraformersmc.campanion.item.BackpackItem;
 import com.terraformersmc.campanion.item.SleepingBagItem;
+import net.minecraft.util.RandomSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,17 +27,17 @@ public abstract class MixinLivingEntity extends Entity {
 		super(type, world);
 	}
 
-	@Inject(method = "isSleepingInBed", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "isSleeping", at = @At("HEAD"), cancellable = true)
 	protected void isSleepingInBed(CallbackInfoReturnable<Boolean> callbackInfo) {
 		if (SleepingBagItem.getUsingStack((LivingEntity) (Object) this).isPresent()) {
 			callbackInfo.setReturnValue(true);
 		}
 	}
 
-	@Inject(method = "wakeUp", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "stopSleeping", at = @At("HEAD"), cancellable = true)
 	protected void wakeUp(CallbackInfo callbackInfo) {
 		for (InteractionHand value : InteractionHand.values()) {
-			ItemStack item = this.getStackInHand(value);
+			ItemStack item = this.getItemInHand(value);
 			if (SleepingBagItem.inUse(item)) {
 				item.hurtAndBreak(1, (LivingEntity) (Object) this, e -> e.broadcastBreakEvent(value));
 				SleepingBagItem.setInUse(item, false);
@@ -44,8 +45,8 @@ public abstract class MixinLivingEntity extends Entity {
 		}
 	}
 
-	@Inject(method = "getPreferredEquipmentSlot", at = @At("HEAD"), cancellable = true)
-	private static void onGetPreferredEquipmentSlot(ItemStack stack, CallbackInfoReturnable<EquipmentSlot> info) {
+	@Inject(method = "getEquipmentSlotForItem", at = @At("HEAD"), cancellable = true)
+	private static void getEquipmentSlotForItem(ItemStack stack, CallbackInfoReturnable<EquipmentSlot> info) {
 		Item item = stack.getItem();
 		if (item instanceof BackpackItem) {
 			info.setReturnValue(EquipmentSlot.CHEST);
@@ -53,12 +54,12 @@ public abstract class MixinLivingEntity extends Entity {
 	}
 
 	@Shadow
-	public ItemStack getStackInHand(InteractionHand hand) {
+	public ItemStack getItemInHand(InteractionHand hand) {
 		return null;
 	}
 
 	@Shadow
-	public Random getRandom() {
+	public RandomSource getRandom() {
 		return null;
 	}
 }

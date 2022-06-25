@@ -1,7 +1,6 @@
 package com.terraformersmc.campanion.mixin;
 
 import com.terraformersmc.campanion.item.SpearItem;
-import net.minecraft.enchantment.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
@@ -18,8 +17,8 @@ import java.util.List;
 
 @Mixin(EnchantmentHelper.class)
 public class MixinEnchantmentHelper {
-	@Inject(method = "getPossibleEntries(ILnet/minecraft/item/ItemStack;Z)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
-	private static void onGetPossibleEntries(int power, ItemStack stack, boolean hasTreasure, CallbackInfoReturnable<List<EnchantmentInstance>> info) {
+	@Inject(method = "getAvailableEnchantmentResults(ILnet/minecraft/world/item/ItemStack;Z)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
+	private static void getAvailableEnchantmentResults(int power, ItemStack stack, boolean hasTreasure, CallbackInfoReturnable<List<EnchantmentInstance>> info) {
 		if (stack.getItem() instanceof SpearItem) {
 			List<EnchantmentInstance> currentEnchantments = info.getReturnValue();
 			List<EnchantmentInstance> enchantments = new ArrayList<>();

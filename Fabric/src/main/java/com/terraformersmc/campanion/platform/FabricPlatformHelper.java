@@ -7,10 +7,13 @@ import com.terraformersmc.campanion.platform.services.IPlatformHelper;
 import com.terraformersmc.campanion.platform.services.rendering.BlockModelPartCreator;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -55,4 +58,8 @@ public class FabricPlatformHelper implements IPlatformHelper {
 		return FabricItemGroupBuilder.build(new ResourceLocation(Campanion.MOD_ID, name), stack);
 	}
 
+	@Override
+	public TagKey<Item> getShearsTag() {
+		return ConventionalItemTags.SHEARS;
+	}
 }

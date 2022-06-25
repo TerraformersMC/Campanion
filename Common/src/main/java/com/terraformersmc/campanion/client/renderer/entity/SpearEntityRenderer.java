@@ -31,7 +31,7 @@ public class SpearEntityRenderer extends EntityRenderer<SpearEntity> {
 		matrixStack.pushPose();
 		matrixStack.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(g, spear.yRotO, spear.getYRot()) - 90.0F));
 		matrixStack.mulPose(Vector3f.ZP.rotationDegrees(Mth.lerp(g, spear.xRotO, spear.getXRot()) + 90.0F));
-		VertexConsumer vertexConsumer = ItemRenderer.getArmorFoilBuffer(vertexConsumerProvider, model.renderType(this.getTextureLocation(spear)), false, spear.method_23751());
+		VertexConsumer vertexConsumer = ItemRenderer.getArmorFoilBuffer(vertexConsumerProvider, model.renderType(this.getTextureLocation(spear)), false, spear.isEnchanted());
 		model.renderToBuffer(matrixStack, vertexConsumer, i, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 		matrixStack.scale(2.0F, -2.0F, -2.0F);
 		matrixStack.popPose();

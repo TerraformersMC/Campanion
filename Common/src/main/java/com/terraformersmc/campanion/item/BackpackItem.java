@@ -1,15 +1,11 @@
 package com.terraformersmc.campanion.item;
 
 import com.terraformersmc.campanion.backpack.BackpackStorePlayer;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -23,14 +19,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class BackpackItem extends Item {
 
 	private static final Component BACKPACK_HAS_ITEMS1 =
-		new TranslatableComponent("message.campanion.backpack.hasitems1")
+		Component.translatable("message.campanion.backpack.hasitems1")
 			.setStyle(Style.EMPTY.withColor(ChatFormatting.RED));
 	private static final Component BACKPACK_HAS_ITEMS2 =
-		new TranslatableComponent("message.campanion.backpack.hasitems2")
+		Component.translatable("message.campanion.backpack.hasitems2")
 			.setStyle(Style.EMPTY.withColor(ChatFormatting.RED));
 
 	public final Type type;

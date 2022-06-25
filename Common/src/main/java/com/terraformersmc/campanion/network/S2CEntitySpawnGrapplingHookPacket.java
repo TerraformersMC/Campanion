@@ -1,27 +1,15 @@
 package com.terraformersmc.campanion.network;
 
-import com.terraformersmc.campanion.entity.AdditionalSpawnDataEntity;
 import com.terraformersmc.campanion.entity.CampanionEntities;
 import com.terraformersmc.campanion.entity.GrapplingHookEntity;
-import io.netty.buffer.Unpooled;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 
-import javax.swing.*;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public record S2CEntitySpawnGrapplingHookPacket(
 	UUID uuid,
@@ -65,8 +53,8 @@ public record S2CEntitySpawnGrapplingHookPacket(
 		);
 	}
 
-	public static void handle(S2CEntitySpawnGrapplingHookPacket packet) {
-		ClientLevel world = Minecraft.getInstance().level;
+	public static void handle(Supplier<Minecraft> minecraft, S2CEntitySpawnGrapplingHookPacket packet) {
+		ClientLevel world = minecraft.get().level;
 		GrapplingHookEntity entity = CampanionEntities.GRAPPLING_HOOK.create(world);
 		if (world != null && entity != null) {
 			entity.setPos(packet.x, packet.y, packet.z);

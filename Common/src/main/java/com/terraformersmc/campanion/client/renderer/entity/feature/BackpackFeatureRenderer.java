@@ -19,13 +19,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Objects;
 import java.util.function.Supplier;
 
-@OnlyIn(Dist.CLIENT)
 public class BackpackFeatureRenderer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
 	public BackpackFeatureRenderer(RenderLayerParent<T, M> context) {

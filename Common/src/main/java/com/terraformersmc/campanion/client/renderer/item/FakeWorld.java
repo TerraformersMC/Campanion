@@ -34,7 +34,7 @@ public class FakeWorld extends ClientLevel {
 				new ClientLevel.ClientLevelData(CLIENT.level.getLevelData().getDifficulty(), CLIENT.level.getLevelData().isDifficultyLocked(), CLIENT.level.getLevelData().isHardcore()),
 				CLIENT.level.dimension(), CLIENT.level.dimensionTypeRegistration(), 3, 3, CLIENT::getProfiler,
 				CLIENT.levelRenderer, CLIENT.level.isDebug(),
-				((AccessorBiomeAccess) CLIENT.level.getBiomeManager()).getSeed());
+				((AccessorBiomeAccess) CLIENT.level.getBiomeManager()).getBiomeZoomSeed());
 		updatePositioning(basePos, lightOverride);
 		PlaceableTentItem tent = (PlaceableTentItem) stack.getItem();
 		tent.traverseBlocks(stack, (pos, state, tag) -> {

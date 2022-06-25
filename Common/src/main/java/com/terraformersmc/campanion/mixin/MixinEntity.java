@@ -14,7 +14,7 @@ public class MixinEntity implements CollideAxisEntity {
 	private boolean collidedX;
 	private boolean collidedZ;
 
-	@Inject(method = "adjustMovementForCollisions(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;", at = @At("RETURN"))
+	@Inject(method = "collide(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;", at = @At("RETURN"))
 	public void adjustMovementForCollisions(Vec3 movement, CallbackInfoReturnable<Vec3> info) {
 		Vec3 vec3d = info.getReturnValue();
 		this.collidedX = !Mth.equal(movement.x, vec3d.x);

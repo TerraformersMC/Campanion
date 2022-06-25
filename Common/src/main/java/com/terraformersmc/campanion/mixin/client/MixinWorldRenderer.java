@@ -5,16 +5,15 @@ import com.mojang.math.Matrix4f;
 import com.terraformersmc.campanion.client.renderer.item.BuiltTentItemRenderer;
 import com.terraformersmc.campanion.client.util.TentPreviewImmediate;
 import com.terraformersmc.campanion.item.PlaceableTentItem;
-import com.terraformersmc.campanion.item.TentBagItem;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.*;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -38,17 +37,17 @@ public class MixinWorldRenderer {
 
 	@Final
 	@Shadow
-	private RenderBuffers bufferBuilders;
+	private RenderBuffers renderBuffers;
 
 	@Final
 	@Shadow
-	private Minecraft client;
+	private Minecraft minecraft;
 
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", ordinal = 11, shift = At.Shift.BEFORE))
-	public void render(PoseStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightmapTextureManager, Matrix4f matrix4f, CallbackInfo info) {
+	@Inject(method = "renderLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", ordinal = 11, shift = At.Shift.BEFORE))
+	public void renderLevel(PoseStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightmapTextureManager, Matrix4f matrix4f, CallbackInfo info) {
 		TentPreviewImmediate immediate = TentPreviewImmediate.STORAGE;
 
-		for (Player player : this.client.level.players()) {
+		for (Player player : this.minecraft.level.players()) {
 			if (player != null) {
 				ItemStack stack = player.getMainHandItem();
 				if (stack.getItem() instanceof PlaceableTentItem) {
@@ -62,21 +61,21 @@ public class MixinWorldRenderer {
 							matrices.pushPose();
 							matrices.translate(-d.x, -d.y, -d.z);
 
-							List<BlockPos> list = tent.getErrorPosition(this.client.level, placePos, stack);
+							List<BlockPos> list = tent.getErrorPosition(this.minecraft.level, placePos, stack);
 							TentPreviewImmediate.STORAGE.setApplyModifiers(!list.isEmpty());
 							BuiltTentItemRenderer.INSTANCE.render(stack, matrices, placePos, immediate, -1);
 
 							for (BlockPos pos : list) {
 								matrices.pushPose();
 								matrices.translate(pos.getX() - placePos.getX(), pos.getY() - placePos.getY(), pos.getZ() - placePos.getZ());
-								if (this.client.level.getBlockState(pos).getMaterial() == Material.AIR) {
+								if (this.minecraft.level.getBlockState(pos).getMaterial() == Material.AIR) {
 									BlockState stone = Blocks.STONE.defaultBlockState();
-									Minecraft.getInstance().getBlockRenderer().renderBatched(stone, pos, this.client.level, matrices, immediate.getBuffer(ItemBlockRenderTypes.getChunkRenderType(stone)), false, new Random());
+									Minecraft.getInstance().getBlockRenderer().renderBatched(stone, pos, this.minecraft.level, matrices, immediate.getBuffer(ItemBlockRenderTypes.getChunkRenderType(stone)), false, RandomSource.create());
 								} else {
 									float scale = 1.03F;
 									matrices.scale(scale, scale, scale);
 									matrices.translate(-0.5 * scale + 0.5, -0.5 * scale + 0.5, -0.5 * scale + 0.5);
-									BuiltTentItemRenderer.renderFakeBlock(this.client.level, pos, BlockPos.ZERO, matrices, immediate);
+									BuiltTentItemRenderer.renderFakeBlock(this.minecraft.level, pos, BlockPos.ZERO, matrices, immediate);
 								}
 								matrices.popPose();
 							}

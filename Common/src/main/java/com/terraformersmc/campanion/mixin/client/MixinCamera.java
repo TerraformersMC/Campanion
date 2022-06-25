@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Camera.class)
 public class MixinCamera {
-    @Inject(method = "update", at = @At("TAIL"))
-    public void update(BlockGetter area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo info) {
+    @Inject(method = "setup", at = @At("TAIL"))
+    public void setup(BlockGetter area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo info) {
         if(focusedEntity instanceof LivingEntity && ((LivingEntity) focusedEntity).isSleeping()) {
             this.setRotation(focusedEntity.getViewYRot(tickDelta), 0.0F);
         }

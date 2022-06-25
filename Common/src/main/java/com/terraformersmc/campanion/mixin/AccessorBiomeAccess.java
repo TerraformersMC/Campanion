@@ -7,5 +7,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(BiomeManager.class)
 public interface AccessorBiomeAccess {
 	@Accessor
-	long getSeed();
+	long getBiomeZoomSeed();
 }
