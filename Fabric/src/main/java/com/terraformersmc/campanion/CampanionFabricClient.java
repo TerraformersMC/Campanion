@@ -14,6 +14,8 @@ import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.SleepingBagItem;
 import com.terraformersmc.campanion.item.TentBagItem;
 import com.terraformersmc.campanion.network.C2SOpenBackpack;
+import com.terraformersmc.campanion.network.S2CEntitySpawnGrapplingHookPacket;
+import com.terraformersmc.campanion.network.S2CSyncBackpackContents;
 import com.terraformersmc.campanion.platform.Services;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -52,6 +54,10 @@ public class CampanionFabricClient implements ClientModInitializer {
 			}
 			return null;
 		});
+
+
+		Services.NETWORK.registerClientBound(S2CSyncBackpackContents.class, S2CSyncBackpackContents::encode, S2CSyncBackpackContents::decode, S2CSyncBackpackContents::handle);
+		Services.NETWORK.registerClientBound(S2CEntitySpawnGrapplingHookPacket.class, S2CEntitySpawnGrapplingHookPacket::encode, S2CEntitySpawnGrapplingHookPacket::decode, S2CEntitySpawnGrapplingHookPacket::handle);
 	}
 
 	private static void registerKeybinds() {

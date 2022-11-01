@@ -63,7 +63,7 @@ public class ForgeOmniNetwork implements OmniNetwork {
 	public <P> void registerClientBound(Class<P> clazz, BiConsumer<P, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, P> decoder, S2CHandler<P> handler) {
 		NETWORK.registerMessage(this.getNextId(), clazz, encoder, decoder, (packet, supplier) -> {
 			NetworkEvent.Context context = supplier.get();
-			context.enqueueWork(() -> handler.handle(Minecraft::getInstance, packet));
+			context.enqueueWork(() -> handler.handle(() -> Minecraft::getInstance, packet));
 			context.setPacketHandled(true);
 		});
 	}

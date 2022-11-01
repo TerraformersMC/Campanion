@@ -91,7 +91,7 @@ public class FabricOmniNetwork implements OmniNetwork {
 		this.clazzToDataMap.put(clazz, new PacketData<>(location, encoder));
 		ClientPlayNetworking.registerGlobalReceiver(location, (client, packetListener, buf, responseSender) -> {
 			P packet = decoder.apply(buf);
-			client.execute(() -> handler.handle(() -> client, packet));
+			client.execute(() -> handler.handle(() -> () -> client, packet));
 		});
 	}
 

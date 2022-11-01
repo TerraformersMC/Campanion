@@ -12,7 +12,7 @@ public class CampanionConfigManager {
 		if (file != null) {
 			return;
 		}
-		file = new File("./configs/", Campanion.MOD_ID + ".json");
+		file = new File("./config/", Campanion.MOD_ID + ".json");
 	}
 
 	public static CampanionConfig initializeConfig() {

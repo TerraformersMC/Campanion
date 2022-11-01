@@ -10,10 +10,7 @@ import com.terraformersmc.campanion.entity.SkippingStoneEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.network.C2SOpenBackpack;
 import com.terraformersmc.campanion.network.C2SRotateHeldItem;
-import com.terraformersmc.campanion.network.S2CEntitySpawnGrapplingHookPacket;
-import com.terraformersmc.campanion.network.S2CSyncBackpackContents;
 import com.terraformersmc.campanion.platform.Services;
-import com.terraformersmc.campanion.stat.CampanionStats;
 import com.terraformersmc.campanion.tag.CampanionBlockTags;
 import com.terraformersmc.campanion.tag.CampanionItemTags;
 import net.minecraft.Util;
@@ -70,8 +67,5 @@ public class Campanion {
 	public static void registerPackets() {
 		Services.NETWORK.registerServerBound(C2SOpenBackpack.class, C2SOpenBackpack::new, C2SOpenBackpack::handle);
 		Services.NETWORK.registerServerBound(C2SRotateHeldItem.class, C2SRotateHeldItem::new, C2SRotateHeldItem::handle);
-
-		Services.NETWORK.registerClientBound(S2CSyncBackpackContents.class, S2CSyncBackpackContents::encode, S2CSyncBackpackContents::decode, S2CSyncBackpackContents::handle);
-		Services.NETWORK.<S2CEntitySpawnGrapplingHookPacket>registerClientBound(S2CEntitySpawnGrapplingHookPacket.class, S2CEntitySpawnGrapplingHookPacket::encode, S2CEntitySpawnGrapplingHookPacket::decode, S2CEntitySpawnGrapplingHookPacket::handle);
 	}
 }

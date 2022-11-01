@@ -53,8 +53,8 @@ public record S2CEntitySpawnGrapplingHookPacket(
 		);
 	}
 
-	public static void handle(Supplier<Minecraft> minecraft, S2CEntitySpawnGrapplingHookPacket packet) {
-		ClientLevel world = minecraft.get().level;
+	public static void handle(Supplier<Supplier<Minecraft>> minecraft, S2CEntitySpawnGrapplingHookPacket packet) {
+		ClientLevel world = minecraft.get().get().level;
 		GrapplingHookEntity entity = CampanionEntities.GRAPPLING_HOOK.create(world);
 		if (world != null && entity != null) {
 			entity.syncPacketPositionCodec(packet.x, packet.y, packet.z);

@@ -38,7 +38,7 @@ public interface OmniNetwork {
 	}
 
 	interface S2CHandler<P> {
-		void handle(Supplier<Minecraft> client, P packet);
+		void handle(Supplier<Supplier<Minecraft>> client, P packet);
 	}
 
 	enum PacketType {

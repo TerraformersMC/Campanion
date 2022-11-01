@@ -29,8 +29,8 @@ public record S2CSyncBackpackContents(NonNullList<ItemStack> stacks) {
 		return new S2CSyncBackpackContents(stacks);
 	}
 
-	public static void handle(Supplier<Minecraft> client, S2CSyncBackpackContents packet) {
-		LocalPlayer player = client.get().player;
+	public static void handle(Supplier<Supplier<Minecraft>> client, S2CSyncBackpackContents packet) {
+		LocalPlayer player = client.get().get().player;
 		if (player != null) {
 			NonNullList<ItemStack> list = ((BackpackStorePlayer) player).getBackpackStacks();
 			list.clear();
