@@ -50,10 +50,10 @@ public class RopeBridgePlankRenderer {
 		float hl = (float) (RopeBridge.PLANK_LENGTH / 2D); //half length
 		float hw = (float) (RopeBridge.PLANK_WIDTH / 2D); //half width
 		drawDoubleSided(emitter,
-			m -> add(emitter, stack, translucent, -hw, 0, -hl, sprite.getU1(), minV, 0, m, 0),
-			m -> add(emitter, stack, translucent, -hw, 0,  hl, sprite.getU0(), minV, 0, m, 0),
-			m -> add(emitter, stack, translucent,  hw, 0,  hl, sprite.getU0(), maxV, 0, m, 0),
-			m -> add(emitter, stack, translucent,  hw, 0, -hl, sprite.getU1(), maxV, 0, m, 0)
+			m -> add(emitter, stack, translucent, -hw, 0, -hl, sprite.getU1(), minV, 0, -m, 0),
+			m -> add(emitter, stack, translucent, -hw, 0,  hl, sprite.getU0(), minV, 0, -m, 0),
+			m -> add(emitter, stack, translucent,  hw, 0,  hl, sprite.getU0(), maxV, 0, -m, 0),
+			m -> add(emitter, stack, translucent,  hw, 0, -hl, sprite.getU1(), maxV, 0, -m, 0)
 		);
 
 		stack.popPose();
@@ -100,10 +100,10 @@ public class RopeBridgePlankRenderer {
 		float maxV = rope.getV(ropeStart + plank.distToPrevious()*16F);
 
 		drawDoubleSided(emitter,
-			m -> add(emitter, stack, translucent, 0, 0, 0, maxU, minV, 0, -m*modifier, 0),
-			m -> add(emitter, stack, translucent, 0, 0,  modifier*-RopeBridge.ROPE_WIDTH/16F, minU, minV, 0, -m*modifier, 0),
-			m -> add(emitter, stack, translucent,  plank.distToPrevious(), 0,  modifier*-RopeBridge.ROPE_WIDTH/16F, minU, maxV, 0, -m*modifier, 0),
-			m -> add(emitter, stack, translucent,  plank.distToPrevious(), 0, 0, maxU, maxV, 0, -m*modifier, 0)
+			m -> add(emitter, stack, translucent, 0, 0, 0, maxU, minV, 0, m*modifier, 0),
+			m -> add(emitter, stack, translucent, 0, 0,  modifier*-RopeBridge.ROPE_WIDTH/16F, minU, minV, 0, m*modifier, 0),
+			m -> add(emitter, stack, translucent,  plank.distToPrevious(), 0,  modifier*-RopeBridge.ROPE_WIDTH/16F, minU, maxV, 0, m*modifier, 0),
+			m -> add(emitter, stack, translucent,  plank.distToPrevious(), 0, 0, maxU, maxV, 0, m*modifier, 0)
 		);
 
 		stack.popPose();

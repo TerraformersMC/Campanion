@@ -57,14 +57,14 @@ public record S2CEntitySpawnGrapplingHookPacket(
 		ClientLevel world = minecraft.get().level;
 		GrapplingHookEntity entity = CampanionEntities.GRAPPLING_HOOK.create(world);
 		if (world != null && entity != null) {
-			entity.setPos(packet.x, packet.y, packet.z);
+			entity.syncPacketPositionCodec(packet.x, packet.y, packet.z);
 			entity.setPosRaw(packet.x, packet.y, packet.z);
 			entity.setXRot(packet.xRot);
 			entity.getViewYRot(packet.yRot);
 			entity.setId(packet.id);
 			entity.setUUID(packet.uuid);
 
-			if(packet.hasGrapplingPlayer && world.getEntity(packet.id) instanceof Player player) {
+			if(packet.hasGrapplingPlayer && world.getEntity(packet.grapplingPlayerId) instanceof Player player) {
 				entity.setPlayer(player);
 			}
 			world.putNonPlayerEntity(packet.id, entity);
