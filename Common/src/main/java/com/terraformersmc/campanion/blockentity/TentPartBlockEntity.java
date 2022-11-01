@@ -1,6 +1,5 @@
 package com.terraformersmc.campanion.blockentity;
 
-import com.terraformersmc.campanion.mixin.InvokerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;

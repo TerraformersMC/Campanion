@@ -115,7 +115,7 @@ public class BaseTentBlock extends Block implements EntityBlock {
 						tag.put("BlockState", NbtUtils.writeBlockState(world.getBlockState(off)));
 						BlockEntity entity = world.getBlockEntity(off);
 						if (entity != null) {
-							tag.put("BlockEntityData", entity.saveWithoutMetadata());
+							tag.put("BlockEntityData", entity.saveWithId());
 						}
 						list.add(tag);
 						world.removeBlockEntity(off); // if we want block entities to drop items, remove this line
