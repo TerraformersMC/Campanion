@@ -3,7 +3,6 @@ package com.terraformersmc.campanion.network;
 import com.terraformersmc.campanion.entity.CampanionEntities;
 import com.terraformersmc.campanion.entity.GrapplingHookEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -51,23 +50,5 @@ public record S2CEntitySpawnGrapplingHookPacket(
 			buffer.readByte(), buffer.readByte(),
 			buffer.readBoolean(), buffer.readVarInt()
 		);
-	}
-
-	public static void handle(Supplier<Supplier<Minecraft>> minecraft, S2CEntitySpawnGrapplingHookPacket packet) {
-		ClientLevel world = minecraft.get().get().level;
-		GrapplingHookEntity entity = CampanionEntities.GRAPPLING_HOOK.create(world);
-		if (world != null && entity != null) {
-			entity.syncPacketPositionCodec(packet.x, packet.y, packet.z);
-			entity.setPosRaw(packet.x, packet.y, packet.z);
-			entity.setXRot(packet.xRot);
-			entity.getViewYRot(packet.yRot);
-			entity.setId(packet.id);
-			entity.setUUID(packet.uuid);
-
-			if(packet.hasGrapplingPlayer && world.getEntity(packet.grapplingPlayerId) instanceof Player player) {
-				entity.setPlayer(player);
-			}
-			world.putNonPlayerEntity(packet.id, entity);
-		}
 	}
 }

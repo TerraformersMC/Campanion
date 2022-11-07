@@ -14,16 +14,23 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.chunk.LevelChunk;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
+
 public class FabricOmniNetwork implements OmniNetwork {
 
 	private int packetIncrementor;
 
 	private final Map<Class<?>, PacketData<?>> clazzToDataMap = new HashMap<>();
+
+	// This is ugly sure, but I don't have time to do it nice
+	private final List<Supplier<Runnable>> clientRegistrablePoints = new ArrayList<>();
 
 	@Override
 	public Packet<?> toVanillaPacket(Object packet, PacketType type) {
@@ -86,9 +93,14 @@ public class FabricOmniNetwork implements OmniNetwork {
 	}
 
 	@Override
-	public <P> void registerClientBound(Class<P> clazz, BiConsumer<P, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, P> decoder, S2CHandler<P> handler) {
+	public <P> void registerClientBound(Class<P> clazz, BiConsumer<P, FriendlyByteBuf> encoder) {
 		ResourceLocation location = this.getNextResourceLocation();
 		this.clazzToDataMap.put(clazz, new PacketData<>(location, encoder));
+	}
+
+	@Override
+	public <P> void registerClientBoundHandler(Class<P> clazz, Function<FriendlyByteBuf, P> decoder, S2CHandler<P> handler) {
+		ResourceLocation location = this.clazzToDataMap.get(clazz).location;
 		ClientPlayNetworking.registerGlobalReceiver(location, (client, packetListener, buf, responseSender) -> {
 			P packet = decoder.apply(buf);
 			client.execute(() -> handler.handle(() -> () -> client, packet));

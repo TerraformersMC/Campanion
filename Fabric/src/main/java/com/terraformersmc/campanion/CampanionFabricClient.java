@@ -55,9 +55,8 @@ public class CampanionFabricClient implements ClientModInitializer {
 			return null;
 		});
 
+		CampanionClient.registerClientPacketHandlers();
 
-		Services.NETWORK.registerClientBound(S2CSyncBackpackContents.class, S2CSyncBackpackContents::encode, S2CSyncBackpackContents::decode, S2CSyncBackpackContents::handle);
-		Services.NETWORK.registerClientBound(S2CEntitySpawnGrapplingHookPacket.class, S2CEntitySpawnGrapplingHookPacket::encode, S2CEntitySpawnGrapplingHookPacket::decode, S2CEntitySpawnGrapplingHookPacket::handle);
 	}
 
 	private static void registerKeybinds() {

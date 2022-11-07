@@ -10,6 +10,7 @@ import com.terraformersmc.campanion.sound.CampanionSoundEvents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
@@ -26,8 +27,6 @@ public class CampanionForge {
 		FMLJavaModLoadingContext context = FMLJavaModLoadingContext.get();
 		IEventBus modEventBus = context.getModEventBus();
 
-
-
 		modEventBus.addListener(ForgeDataGenerators::gatherDataGens);
 
 		modEventBus.addListener((RegisterEvent event) -> {
@@ -39,6 +38,8 @@ public class CampanionForge {
 			event.register(ForgeRegistries.Keys.ENTITY_TYPES, createHelperConsumer(CampanionEntities.getEntityTypes()));
 			event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, createHelperConsumer(CampanionRecipeSerializers.getRecipeSerializers()));
 		});
+
+		modEventBus.addListener((FMLClientSetupEvent event) -> CampanionClient.registerClientPacketHandlers());
 	}
 
 	private <T> Consumer<RegisterEvent.RegisterHelper<T>> createHelperConsumer(Map<ResourceLocation, T> map) {

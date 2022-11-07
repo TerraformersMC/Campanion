@@ -24,9 +24,14 @@ public interface OmniNetwork {
 	void sendToAllInDimension(Object packet, ServerLevel level);
 	void sendToAllAround(Object packet, ServerLevel level, BlockPos pos);
 
-	<P> void registerClientBound(Class<P> clazz, BiConsumer<P, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, P> decoder, S2CHandler<P> handler);
-	default <P> void registerClientBound(Class<P> clazz,  Supplier<P> creator, S2CHandler<P> handler) {
-		this.registerClientBound(clazz, (p, buf) -> {}, buf -> creator.get(), handler);
+	<P> void registerClientBound(Class<P> clazz, BiConsumer<P, FriendlyByteBuf> encoder);
+	default <P> void registerClientBound(Class<P> clazz) {
+		this.registerClientBound(clazz, (p, buf) -> {});
+	}
+
+	<P> void registerClientBoundHandler(Class<P> clazz, Function<FriendlyByteBuf, P> decoder, S2CHandler<P> handler);
+	default <P> void registerClientBoundHandler(Class<P> clazz, Supplier<P> creator, S2CHandler<P> handler) {
+		this.registerClientBoundHandler(clazz, creator::get, handler);
 	}
 
 	<P> void registerServerBound(Class<P> clazz, BiConsumer<P, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, P> decoder, C2SHandler<P> handler);
