@@ -3,9 +3,9 @@ plugins {
     id 'fabric-loom' version '0.12-SNAPSHOT'
 }
 
-apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.5/ferry.gradle'
-
 archivesBaseName = "${mod_name}-fabric-${minecraft_version}"
+
+apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.5/ferry.gradle'
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
