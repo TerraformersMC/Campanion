@@ -17,11 +17,13 @@ public class CampanionFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         Campanion.init();
+		Campanion.registerDispenserBehavior();
 
 		register(Registry.SOUND_EVENT, CampanionSoundEvents.getSounds());
 		register(Registry.ITEM, CampanionItems.getItems());
 		register(Registry.BLOCK, CampanionBlocks.getBlocks());
 		register(Registry.ITEM, CampanionBlocks.getItemBlocks());
+		CampanionBlocks.registerItemBlocks();
 		register(Registry.BLOCK_ENTITY_TYPE, CampanionBlockEntities.getBlockEntityTypes());
 		register(Registry.ENTITY_TYPE, CampanionEntities.getEntityTypes());
 		register(Registry.RECIPE_SERIALIZER, CampanionRecipeSerializers.getRecipeSerializers());

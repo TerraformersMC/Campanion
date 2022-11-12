@@ -132,7 +132,6 @@ public class CampanionBlocks {
 	private static <B extends Block> B add(String name, B block, BlockItem item) {
 		add(name, block);
 		if (item != null) {
-			item.registerBlocks(Item.BY_BLOCK, item);
 			ITEMS.put(new ResourceLocation(Campanion.MOD_ID, name), item);
 		}
 		return block;
@@ -144,9 +143,12 @@ public class CampanionBlocks {
 	}
 
 	private static <I extends BlockItem> I add(String name, I item) {
-		item.registerBlocks(Item.BY_BLOCK, item);
 		ITEMS.put(new ResourceLocation(Campanion.MOD_ID, name), item);
 		return item;
+	}
+
+	public static void registerItemBlocks() {
+		ITEMS.values().forEach(item -> ((BlockItem) item).registerBlocks(Item.BY_BLOCK, item));
 	}
 
 //	public static void register() {

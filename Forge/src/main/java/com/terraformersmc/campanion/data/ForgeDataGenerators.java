@@ -1,7 +1,7 @@
 package com.terraformersmc.campanion.data;
 
 import net.minecraft.data.DataGenerator;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.data.event.GatherDataEvent;
 
 public class ForgeDataGenerators {
 	public static void gatherDataGens(GatherDataEvent event) {

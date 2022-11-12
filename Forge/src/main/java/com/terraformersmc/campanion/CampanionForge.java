@@ -1,16 +1,24 @@
 package com.terraformersmc.campanion;
 
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.terraformersmc.campanion.block.CampanionBlocks;
 import com.terraformersmc.campanion.blockentity.CampanionBlockEntities;
+import com.terraformersmc.campanion.client.BridgePlanksUnbakedGeometry;
 import com.terraformersmc.campanion.data.ForgeDataGenerators;
 import com.terraformersmc.campanion.entity.CampanionEntities;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.recipe.CampanionRecipeSerializers;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
+import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
@@ -37,9 +45,19 @@ public class CampanionForge {
 			event.register(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, createHelperConsumer(CampanionBlockEntities.getBlockEntityTypes()));
 			event.register(ForgeRegistries.Keys.ENTITY_TYPES, createHelperConsumer(CampanionEntities.getEntityTypes()));
 			event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, createHelperConsumer(CampanionRecipeSerializers.getRecipeSerializers()));
+
+		});
+
+		modEventBus.addListener((FMLCommonSetupEvent event) -> {
+			CampanionBlocks.registerItemBlocks();
+			Campanion.registerDispenserBehavior();
 		});
 
 		modEventBus.addListener((FMLClientSetupEvent event) -> CampanionClient.registerClientPacketHandlers());
+
+		modEventBus.addListener((ModelEvent.RegisterGeometryLoaders event) ->
+			event.register("bridge_planks", (IGeometryLoader<BridgePlanksUnbakedGeometry>) (jsonObject, deserializationContext) -> new BridgePlanksUnbakedGeometry())
+		);
 	}
 
 	private <T> Consumer<RegisterEvent.RegisterHelper<T>> createHelperConsumer(Map<ResourceLocation, T> map) {

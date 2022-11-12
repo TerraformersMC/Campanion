@@ -44,6 +44,12 @@ public class Campanion {
 
 		registerPackets();
 
+
+		CampanionBlockTags.load();
+		CampanionItemTags.load();
+    }
+
+	public static void registerDispenserBehavior() {
 		DispenserBlock.registerBehavior(CampanionItems.SKIPPING_STONE, new AbstractProjectileDispenseBehavior() {
 			@Override
 			protected Projectile getProjectile(Level world, Position position, ItemStack stack) {
@@ -62,9 +68,9 @@ public class Campanion {
 			}
 		});
 
-		CampanionBlockTags.load();
-		CampanionItemTags.load();
-    }
+	}
+
+
 
 	public static void registerPackets() {
 		Services.NETWORK.registerServerBound(C2SOpenBackpack.class, C2SOpenBackpack::new, C2SOpenBackpack::handle);
