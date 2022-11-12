@@ -65,7 +65,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 		this.backpackStacks = stacks;
 	}
 
-	@Inject(method = "blockActionRestricted(Lnet/minecraft/world/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/GameMode;)Z", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "blockActionRestricted(Lnet/minecraft/world/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/GameType;)Z", at = @At("HEAD"), cancellable = true)
 	public void blockActionRestricted(Level world, BlockPos pos, GameType gameMode, CallbackInfoReturnable<Boolean> info) {
 		if(world.getBlockState(pos).getBlock() instanceof BaseTentBlock) {
 			int slotIndex = -1;

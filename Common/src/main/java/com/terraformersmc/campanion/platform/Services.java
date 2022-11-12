@@ -1,10 +1,8 @@
 package com.terraformersmc.campanion.platform;
 
-import com.terraformersmc.campanion.platform.services.IClientPlatformHelper;
-import com.terraformersmc.campanion.platform.services.IPlatformHelper;
 import com.terraformersmc.campanion.Campanion;
+import com.terraformersmc.campanion.platform.services.IPlatformHelper;
 import com.terraformersmc.campanion.platform.services.OmniNetwork;
-import net.minecraftforge.api.distmarker.Dist;
 
 import java.util.ServiceLoader;
 

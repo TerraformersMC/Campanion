@@ -16,3 +16,50 @@ dependencies {
     implementation project(":Common")
 }
 
+loom {
+	runs {
+		client {
+			client()
+			setConfigName("Fabric Client")
+			ideConfigGenerated(true)
+			runDir("run")
+		}
+		server {
+			server()
+			setConfigName("Fabric Server")
+			ideConfigGenerated(true)
+			runDir("run")
+		}
+	}
+}
+
+
+processResources {
+	from project(":Common").sourceSets.main.resources
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile) {
+	source(project(":Common").sourceSets.main.allSource)
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			groupId project.group
+			artifactId project.archivesBaseName
+			version project.version
+			from components.java
+		}
+	}
+
+	repositories {
+		maven {
+			url "file://" + System.getenv("local_maven")
+		}
+	}
+}
