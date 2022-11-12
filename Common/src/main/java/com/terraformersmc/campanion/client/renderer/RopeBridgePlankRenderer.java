@@ -184,7 +184,7 @@ public class RopeBridgePlankRenderer {
 
 	private static void drawCube(BlockModelPartCreator emitter, CubeRenderCallback callback) {
 		int[] vertex1 = new int[]{1, -1, -1, 1};
-		int[] vertex2 = new int[]{-1, -1, 1, 1};
+		int[] vertex2 = new int[]{1, 1, -1, -1};
 
 		for (Direction d : Direction.values()) {
 			int[] x = new int[4];
@@ -231,17 +231,17 @@ public class RopeBridgePlankRenderer {
 
 	private static void drawDoubleSided(BlockModelPartCreator emitter, VertexConsumer v1, VertexConsumer v2, VertexConsumer v3, VertexConsumer v4) {
 		emitter.beginQuad();
-		v1.apply(1);
-		v2.apply(1);
-		v3.apply(1);
-		v4.apply(1);
+		v1.apply(-1);
+		v2.apply(-1);
+		v3.apply(-1);
+		v4.apply(-1);
 		emitter.finishQuad();
 
 		emitter.beginQuad();
-		v4.apply(-1);
-		v3.apply(-1);
-		v2.apply(-1);
-		v1.apply(-1);
+		v4.apply(1);
+		v3.apply(1);
+		v2.apply(1);
+		v1.apply(1);
 		emitter.finishQuad();
 	}
 

@@ -22,7 +22,7 @@ public class FabricBlockModelPartCreator implements BlockModelPartCreator {
 
 		this.meshBuilder = renderer.meshBuilder();
 		this.emitter = this.meshBuilder.getEmitter();
-		this.material = renderer.materialFinder().blendMode(0, BlendMode.DEFAULT).find();
+		this.material = renderer.materialFinder().blendMode(0, BlendMode.CUTOUT).find();
 	}
 
 
@@ -38,25 +38,25 @@ public class FabricBlockModelPartCreator implements BlockModelPartCreator {
 
 	@Override
 	public BlockModelPartCreator position(float x, float y, float z) {
-		this.emitter.pos(3 - this.currentVertex, x, y, z);
+		this.emitter.pos(this.currentVertex, x, y, z);
 		return this;
 	}
 
 	@Override
 	public BlockModelPartCreator uv(float u, float v) {
-		this.emitter.sprite(3 - this.currentVertex, 0, u ,v);
+		this.emitter.sprite(this.currentVertex, 0, u ,v);
 		return this;
 	}
 
 	@Override
 	public BlockModelPartCreator colour(int colour) {
-		this.emitter.spriteColor(3 - this.currentVertex, 0, colour);
+		this.emitter.spriteColor(this.currentVertex, 0, colour);
 		return this;
 	}
 
 	@Override
 	public BlockModelPartCreator normal(float x, float y, float z) {
-		this.emitter.normal(3 - this.currentVertex, x, y, z);
+		this.emitter.normal(this.currentVertex, x, y, z);
 		return this;
 	}
 

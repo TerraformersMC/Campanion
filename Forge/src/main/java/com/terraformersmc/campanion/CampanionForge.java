@@ -11,6 +11,7 @@ import com.terraformersmc.campanion.entity.CampanionEntities;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.recipe.CampanionRecipeSerializers;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.model.geometry.IGeometryLoader;
@@ -53,7 +54,9 @@ public class CampanionForge {
 			Campanion.registerDispenserBehavior();
 		});
 
-		modEventBus.addListener((FMLClientSetupEvent event) -> CampanionClient.registerClientPacketHandlers());
+		modEventBus.addListener((FMLClientSetupEvent event) -> {
+			CampanionClient.registerClientPacketHandlers();
+		});
 
 		modEventBus.addListener((ModelEvent.RegisterGeometryLoaders event) ->
 			event.register("bridge_planks", (IGeometryLoader<BridgePlanksUnbakedGeometry>) (jsonObject, deserializationContext) -> new BridgePlanksUnbakedGeometry())

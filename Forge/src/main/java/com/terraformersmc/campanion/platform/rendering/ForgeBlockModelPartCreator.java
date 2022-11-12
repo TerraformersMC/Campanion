@@ -12,11 +12,6 @@ import java.util.List;
 
 public class ForgeBlockModelPartCreator implements BlockModelPartCreator {
 
-	private static final int POSITION_INDEX = 0;
-	private static final int COLOUR_INDEX = 1;
-	private static final int UV_INDEX = 2;
-	private static final int NORMAL_INDEX = 4; //Not 3, as 3 is for lighting uv
-
 	private QuadBakingVertexConsumer builder;
 
 	private int currentVertex = 0;
@@ -68,6 +63,7 @@ public class ForgeBlockModelPartCreator implements BlockModelPartCreator {
 		if(this.currentVertex > 4) {
 			throw new RuntimeException("Tried finishing more than 4 vertices");
 		}
+		this.builder.endVertex();
 	}
 
 	@Override
@@ -78,7 +74,6 @@ public class ForgeBlockModelPartCreator implements BlockModelPartCreator {
 		if(this.currentVertex != 4) {
 			throw new RuntimeException("Tried to finish with " + this.currentVertex + " number of vertices");
 		}
-		this.builder.endVertex();
 		this.builder = null;
 	}
 

@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
@@ -33,5 +34,10 @@ public class ForgeBridgePlanksBakedModel extends BridgePlanksBakedModel {
 		return this.getData(level, pos, ForgeBlockModelCreatedData.class).map(data ->
 			modelData.derive().with(CREATED_DATA, data).build()
 		).orElse(modelData);
+	}
+
+	@Override
+	public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
+		return ChunkRenderTypeSet.of(RenderType.cutout());
 	}
 }
