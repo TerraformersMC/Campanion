@@ -54,9 +54,8 @@ public class CampanionForge {
 			Campanion.registerDispenserBehavior();
 		});
 
-		modEventBus.addListener((FMLClientSetupEvent event) -> {
-			CampanionClient.registerClientPacketHandlers();
-		});
+		CampanionForgeClient.registerEvents(modEventBus);
+		modEventBus.addListener((FMLClientSetupEvent event) -> CampanionForgeClient.init());
 
 		modEventBus.addListener((ModelEvent.RegisterGeometryLoaders event) ->
 			event.register("bridge_planks", (IGeometryLoader<BridgePlanksUnbakedGeometry>) (jsonObject, deserializationContext) -> new BridgePlanksUnbakedGeometry())

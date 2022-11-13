@@ -17,7 +17,6 @@ public class CampanionKeybinds {
         "key.categories.gameplay"
     );
 
-	//TODO: add this to forge
 	public static void onClientTick() {
 		LocalPlayer player = Minecraft.getInstance().player;
 		if(player != null && CampanionKeybinds.OPEN_BACKPACK_KEY.isDown()) {

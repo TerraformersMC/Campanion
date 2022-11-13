@@ -1,5 +1,6 @@
 {
   "ambientocclusion": false,
+  "render_type": "cutout",
   "textures": {
     "particle": "campanion:block/rope_ladder",
     "texture": "campanion:block/rope_ladder"
