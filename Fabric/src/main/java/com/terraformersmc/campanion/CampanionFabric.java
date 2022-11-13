@@ -6,6 +6,7 @@ import com.terraformersmc.campanion.entity.CampanionEntities;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.recipe.CampanionRecipeSerializers;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
+import com.terraformersmc.campanion.stat.CampanionStats;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +19,7 @@ public class CampanionFabric implements ModInitializer {
     public void onInitialize() {
         Campanion.init();
 		Campanion.registerDispenserBehavior();
+		CampanionStats.loadClass();
 
 		register(Registry.SOUND_EVENT, CampanionSoundEvents.getSounds());
 		register(Registry.ITEM, CampanionItems.getItems());

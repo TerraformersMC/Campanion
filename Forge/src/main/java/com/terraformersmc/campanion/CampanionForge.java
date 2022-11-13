@@ -11,6 +11,7 @@ import com.terraformersmc.campanion.entity.CampanionEntities;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.recipe.CampanionRecipeSerializers;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
+import com.terraformersmc.campanion.stat.CampanionStats;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ModelEvent;
@@ -46,12 +47,12 @@ public class CampanionForge {
 			event.register(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, createHelperConsumer(CampanionBlockEntities.getBlockEntityTypes()));
 			event.register(ForgeRegistries.Keys.ENTITY_TYPES, createHelperConsumer(CampanionEntities.getEntityTypes()));
 			event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, createHelperConsumer(CampanionRecipeSerializers.getRecipeSerializers()));
-
 		});
 
 		modEventBus.addListener((FMLCommonSetupEvent event) -> {
 			CampanionBlocks.registerItemBlocks();
 			Campanion.registerDispenserBehavior();
+			CampanionStats.loadClass();
 		});
 
 		CampanionForgeClient.registerEvents(modEventBus);

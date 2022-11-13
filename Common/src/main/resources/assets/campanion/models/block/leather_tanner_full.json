@@ -4,7 +4,8 @@
 		"wood": "block/stripped_oak_log",
 		"leather": "item/leather"
 	},
-	"elements": [
+  "render_type": "cutout",
+  "elements": [
 		{
 			"from": [2, -2.16478, 5.15224],
 			"to": [3, 17.83522, 6.15224],

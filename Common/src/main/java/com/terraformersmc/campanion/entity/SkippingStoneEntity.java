@@ -72,8 +72,8 @@ public class SkippingStoneEntity extends ThrowableItemProjectile {
 				this.remove(RemovalReason.DISCARDED);
 			} else {
 				this.entityData.set(NUMBER_OF_SKIPS, this.entityData.get(NUMBER_OF_SKIPS) + 1);
-				if (getOwner() instanceof Player) {
-					((Player) getOwner()).awardStat(CampanionStats.STONE_SKIPS);
+				if (getOwner() instanceof Player player) {
+					player.awardStat(CampanionStats.STONE_SKIPS);
 				}
 				this.push(0, (0.5 + -vel.y()) / 1.5, 0);
 			}

@@ -1,6 +1,5 @@
 {
   "parent": "item/generated",
-  "render_type": "cutout",
   "textures": {
     "layer0": "campanion:item/leather_tanner"
   }

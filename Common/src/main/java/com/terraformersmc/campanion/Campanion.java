@@ -13,6 +13,7 @@ import com.terraformersmc.campanion.network.C2SRotateHeldItem;
 import com.terraformersmc.campanion.network.S2CEntitySpawnGrapplingHookPacket;
 import com.terraformersmc.campanion.network.S2CSyncBackpackContents;
 import com.terraformersmc.campanion.platform.Services;
+import com.terraformersmc.campanion.stat.CampanionStats;
 import com.terraformersmc.campanion.tag.CampanionBlockTags;
 import com.terraformersmc.campanion.tag.CampanionItemTags;
 import net.minecraft.Util;
@@ -43,7 +44,6 @@ public class Campanion {
 		CampanionCriteria.loadClass();
 
 		registerPackets();
-
 
 		CampanionBlockTags.load();
 		CampanionItemTags.load();
