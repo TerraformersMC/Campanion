@@ -5,7 +5,8 @@ plugins {
 
 archivesBaseName = "${mod_name}-fabric-${minecraft_version}"
 
-apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.5/ferry.gradle'
+apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.5/fabric-mod.gradle'
+apply from: 'https://raw.githubusercontent.com/Wyn-Price/GradleScripts/2.5/multiproject-ferry/loader.gradle'
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
@@ -33,7 +34,6 @@ loom {
 	}
 }
 
-
 processResources {
 	from project(":Common").sourceSets.main.resources
 	inputs.property "version", project.version
@@ -45,21 +45,4 @@ processResources {
 
 tasks.withType(JavaCompile) {
 	source(project(":Common").sourceSets.main.allSource)
-}
-
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			groupId project.group
-			artifactId project.archivesBaseName
-			version project.version
-			from components.java
-		}
-	}
-
-	repositories {
-		maven {
-			url "file://" + System.getenv("local_maven")
-		}
-	}
 }

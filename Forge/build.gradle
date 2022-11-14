@@ -17,6 +17,8 @@ apply plugin: 'maven-publish'
 
 archivesBaseName = "${mod_name}-forge-${minecraft_version}"
 
+apply from: 'https://raw.githubusercontent.com/Wyn-Price/GradleScripts/2.5/multiproject-ferry/loader.gradle'
+
 minecraft {
     mappings channel: 'official', version: minecraft_version
     
