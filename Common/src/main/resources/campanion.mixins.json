@@ -33,5 +33,5 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "refmap": "campanion-refmap.json"
+  "refmap": "campanion.refmap.json"
 }

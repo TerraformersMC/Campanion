@@ -76,7 +76,7 @@ minecraft {
 }
 
 mixin {
-	add sourceSets.main, "modid.refmap.json"
+	add sourceSets.main, "campanion.refmap.json"
 	config "campanion.mixins.json"
 }
 
@@ -84,7 +84,8 @@ sourceSets.main.resources.srcDir 'src/generated/resources'
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    compileOnly project(":Common")
+	annotationProcessor  group:'org.spongepowered', name:'mixin', version:'0.8.5', classifier: 'processor'
+	compileOnly project(":Common")
 }
 
 tasks.withType(JavaCompile) {

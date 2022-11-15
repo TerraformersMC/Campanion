@@ -1,11 +1,10 @@
-
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
+	id 'fabric-loom' version '0.12-SNAPSHOT'
+	id 'maven-publish'
+	id 'idea'
 }
-
 archivesBaseName = "${mod_name}-fabric-${minecraft_version}"
 
-apply from: 'https://raw.githubusercontent.com/TerraformersMC/GradleScripts/2.5/fabric-mod.gradle'
 apply from: 'https://raw.githubusercontent.com/Wyn-Price/GradleScripts/2.5/multiproject-ferry/loader.gradle'
 
 dependencies {
@@ -32,6 +31,10 @@ loom {
 			runDir("run")
 		}
 	}
+}
+
+jar {
+	rename "${archivesBaseName}-refmap.json", 'campanion.refmap.json'
 }
 
 processResources {
