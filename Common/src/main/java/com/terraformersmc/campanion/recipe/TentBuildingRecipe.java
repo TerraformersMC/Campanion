@@ -1,6 +1,5 @@
 package com.terraformersmc.campanion.recipe;
 
-import com.terraformersmc.campanion.item.AccessorStructure;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.TentBagItem;
 import com.terraformersmc.campanion.item.TentItem;

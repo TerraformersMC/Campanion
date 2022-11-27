@@ -2,15 +2,6 @@ package com.terraformersmc.campanion.mixin;
 
 import com.terraformersmc.campanion.item.BackpackItem;
 import com.terraformersmc.campanion.item.SleepingBagItem;
-import net.minecraft.util.RandomSource;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Random;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -19,6 +10,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity extends Entity {
@@ -27,7 +23,7 @@ public abstract class MixinLivingEntity extends Entity {
 		super(type, world);
 	}
 
-	@Inject(method = "isSleeping", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "checkBedExists", at = @At("HEAD"), cancellable = true)
 	protected void isSleepingInBed(CallbackInfoReturnable<Boolean> callbackInfo) {
 		if (SleepingBagItem.getUsingStack((LivingEntity) (Object) this).isPresent()) {
 			callbackInfo.setReturnValue(true);
@@ -37,7 +33,7 @@ public abstract class MixinLivingEntity extends Entity {
 	@Inject(method = "stopSleeping", at = @At("HEAD"), cancellable = true)
 	protected void wakeUp(CallbackInfo callbackInfo) {
 		for (InteractionHand value : InteractionHand.values()) {
-			ItemStack item = this.getItemInHand(value);
+			ItemStack item = ((LivingEntity) (Object) this).getItemInHand(value);
 			if (SleepingBagItem.inUse(item)) {
 				item.hurtAndBreak(1, (LivingEntity) (Object) this, e -> e.broadcastBreakEvent(value));
 				SleepingBagItem.setInUse(item, false);
@@ -53,13 +49,4 @@ public abstract class MixinLivingEntity extends Entity {
 		}
 	}
 
-	@Shadow
-	public ItemStack getItemInHand(InteractionHand hand) {
-		return null;
-	}
-
-	@Shadow
-	public RandomSource getRandom() {
-		return null;
-	}
 }

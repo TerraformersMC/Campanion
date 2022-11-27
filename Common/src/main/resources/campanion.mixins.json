@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AccessorBiomeAccess",
+    "AccessorStructureTemplate",
     "InvokerCriteria",
     "InvokerEntity",
     "MixinEnchantment",
@@ -15,7 +16,6 @@
     "MixinPlayerInventory",
     "MixinPlayerManager",
     "MixinServerPlayerEntity",
-    "MixinStructure",
     "MixinWolfEntity"
   ],
   "client": [

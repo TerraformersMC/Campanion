@@ -17,19 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public class MixinMinecraftClient {
 
-	@Shadow
-	public LocalPlayer player;
-
-	@Shadow
-	@Final
-	public Options options;
-
 	@Inject(method = "handleKeybinds", at = @At("HEAD"), cancellable = true)
 	public void handleKeybinds(CallbackInfo info) {
-		if (this.player != null && this.options.keyAttack.isDown()) {
-			ItemStack stack = this.player.getMainHandItem();
+		Minecraft self = Minecraft.getInstance();
+		if (self.player != null && self.options.keyAttack.isDown()) {
+			ItemStack stack = self.player.getMainHandItem();
 			if (stack.getItem() instanceof PlaceableTentItem && ((PlaceableTentItem) stack.getItem()).hasBlocks(stack)) {
-				if (this.options.keyAttack.consumeClick()) {
+				if (self.options.keyAttack.consumeClick()) {
 					Services.NETWORK.sendToServer(new C2SRotateHeldItem());
 				}
 				info.cancel();

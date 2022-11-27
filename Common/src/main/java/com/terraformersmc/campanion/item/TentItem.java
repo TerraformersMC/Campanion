@@ -3,6 +3,7 @@ package com.terraformersmc.campanion.item;
 import java.util.Objects;
 
 import com.terraformersmc.campanion.Campanion;
+import com.terraformersmc.campanion.mixin.AccessorStructureTemplate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
@@ -44,7 +45,7 @@ public class TentItem extends PlaceableTentItem {
 	public static void initNbt(ItemStack stack, StructureTemplate structure) {
 		Vec3i size = structure.getSize();
 		ListTag list = new ListTag();
-		for (StructureTemplate.StructureBlockInfo info : ((AccessorStructure) structure).getBlocks().get(0).blocks()) {
+		for (StructureTemplate.StructureBlockInfo info : ((AccessorStructureTemplate) structure).getPalettes().get(0).blocks()) {
 			CompoundTag tag = new CompoundTag();
 			tag.put("Pos", NbtUtils.writeBlockPos(info.pos.offset(-size.getX() / 2, 0, -size.getZ() / 2)));
 			tag.put("BlockState", NbtUtils.writeBlockState(info.state));

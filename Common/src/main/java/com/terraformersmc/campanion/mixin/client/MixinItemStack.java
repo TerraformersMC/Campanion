@@ -11,9 +11,6 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ItemStack.class)
 public abstract class MixinItemStack implements CampanionRenderWorldStasher {
-	@Shadow
-	public abstract Item getItem();
-
 	private FakeWorld campanionRenderWorld = null;
 
 	@Override
@@ -23,7 +20,8 @@ public abstract class MixinItemStack implements CampanionRenderWorldStasher {
 
 	@Override
 	public FakeWorld getCampanionRenderWorld(ItemStack stack, BlockPos basePos, int lightOverride) {
-		if ((this.getItem() instanceof PlaceableTentItem)) {
+		ItemStack self = (ItemStack) (Object) this;
+		if ((self.getItem() instanceof PlaceableTentItem)) {
 			if (this.campanionRenderWorld == null) {
 				this.campanionRenderWorld = new FakeWorld(stack, basePos, lightOverride);
 			} else {
