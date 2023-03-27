@@ -7,6 +7,7 @@ import java.io.*;
 public class CampanionConfigManager {
 	private static File file;
 	private static CampanionConfig config;
+	private static boolean TrinketsEnabled = false;
 
 	private static void prepareBiomeConfigFile() {
 		if (file != null) {
@@ -69,4 +70,13 @@ public class CampanionConfigManager {
 	public static CampanionConfig getConfig() {
 		return config;
 	}
+	
+	public static boolean IsTrinketsEnabled() {
+		return TrinketsEnabled;
+	}
+
+	public static void setTrinketsSupport(boolean value){
+		TrinketsEnabled = value;
+	}
+}
 }
