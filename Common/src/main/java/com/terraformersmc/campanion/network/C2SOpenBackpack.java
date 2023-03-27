@@ -22,6 +22,11 @@ public class C2SOpenBackpack {
 //				stack = component.getEquipped(itemStack -> itemStack.getItem() instanceof BackpackItem).get(0).getB();
 //			}
 //		}
+		
+		if (CampanionConfigManager.IsTrinketsEnabled()) {
+			ItemStack temp = TrinketSupportFunc.apply(player);
+			if (temp != null) stack = temp;
+		}
 
 		if (stack.getItem() instanceof BackpackItem) {
 			BackpackItem.Type type = ((BackpackItem) stack.getItem()).type;
