@@ -18,6 +18,27 @@ public class CampanionFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         Campanion.init();
+		
+		CampanionConfigManager.setTrinketsSupport(FabricLoader.getInstance().isModLoaded("trinkets") && CampanionConfigManager.getConfig().isTrinketsBackpacksEnabled());
+		//Support for trinkets
+		if (CampanionConfigManager.IsTrinketsEnabled()) {
+			TrinketsApi.registerTrinketPredicate(new ResourceLocation("campanion", "backpacks"), (stack, ref, entity) -> {
+				if (stack.is(CampanionItemTags.BACKPACKS)) {
+					return CampanionConfigManager.getConfig().isTrinketsBackpacksEnabled() ? TriState.TRUE : TriState.FALSE;
+				}
+				return TriState.DEFAULT;
+			});
+
+			C2SOpenBackpack.TrinketSupportFunc = (player) -> {
+				TrinketComponent component = TrinketsApi.getTrinketComponent(player).orElse(null);
+				if (component != null && component.isEquipped(itemStack -> itemStack.getItem() instanceof BackpackItem)) {
+					return component.getEquipped(itemStack -> itemStack.getItem() instanceof BackpackItem).get(0).getB();
+				}
+				return null;
+			};
+		}
+
+		
 		Campanion.registerDispenserBehavior();
 		CampanionStats.loadClass();
 

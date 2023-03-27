@@ -47,6 +47,15 @@ subprojects {
 			name = 'BlameJared Maven (CrT / Bookshelf)'
 			url = 'https://maven.blamejared.com'
 		}
+		
+		maven {
+			name = "TerraformersMC"
+			url = "https://maven.terraformersmc.com/"
+		}
+		maven {
+			name = "Ladysnake Libs"
+			url = "https://ladysnake.jfrog.io/artifactory/mods"
+		}
 	}
 
 	tasks.withType(JavaCompile).configureEach {
