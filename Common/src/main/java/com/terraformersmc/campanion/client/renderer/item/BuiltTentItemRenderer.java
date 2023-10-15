@@ -28,7 +28,7 @@ public enum BuiltTentItemRenderer {
 		if (!stack.hasTag() || !stack.getOrCreateTag().contains("Blocks")) {
 			return false;
 		}
-		FakeWorld fakeWorld = ((CampanionRenderWorldStasher)(Object) stack).getCampanionRenderWorld(stack, basePos, lightOverride);
+		FakeWorld fakeWorld = ((CampanionRenderWorldStasher) (Object) stack).getCampanionRenderWorld(stack, basePos, lightOverride);
 		fakeWorld.blockStateMap.forEach((pos, state) -> {
 			matrices.pushPose();
 			matrices.translate(pos.getX(), pos.getY(), pos.getZ());

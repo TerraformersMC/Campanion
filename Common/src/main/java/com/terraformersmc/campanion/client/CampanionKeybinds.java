@@ -11,15 +11,15 @@ import org.lwjgl.glfw.GLFW;
 
 public class CampanionKeybinds {
 	public static final KeyMapping OPEN_BACKPACK_KEY = new KeyMapping(
-        String.format("%s.%s", Campanion.MOD_ID, "open_backpack"),
-        InputConstants.Type.KEYSYM,
-        GLFW.GLFW_KEY_B,
-        "key.categories.gameplay"
-    );
+		String.format("%s.%s", Campanion.MOD_ID, "open_backpack"),
+		InputConstants.Type.KEYSYM,
+		GLFW.GLFW_KEY_B,
+		"key.categories.gameplay"
+	);
 
 	public static void onClientTick() {
 		LocalPlayer player = Minecraft.getInstance().player;
-		if(player != null && CampanionKeybinds.OPEN_BACKPACK_KEY.isDown()) {
+		if (player != null && CampanionKeybinds.OPEN_BACKPACK_KEY.isDown()) {
 			Services.NETWORK.sendToServer(new C2SOpenBackpack());
 		}
 	}

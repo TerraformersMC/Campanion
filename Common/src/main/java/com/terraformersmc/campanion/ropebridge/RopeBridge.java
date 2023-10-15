@@ -1,6 +1,7 @@
 package com.terraformersmc.campanion.ropebridge;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -132,8 +133,11 @@ public class RopeBridge {
 		double deltaX = this.to.x() - this.from.x();
 		double deltaZ = this.to.z() - this.from.z();
 
-		BlockPos fromPos = new BlockPos(this.from);
-		BlockPos toPos = new BlockPos(this.to);
+		BlockPos fromPos = BlockPos.containing(this.from);
+		BlockPos toPos = BlockPos.containing(this.to);
+
+		// BlockPos fromPos = new BlockPos(this.from);
+		// BlockPos toPos = new BlockPos(this.to);
 
 		int index = 0;
 		int offset = world.random.nextInt(PLANKS_PER_ROPE);
@@ -143,7 +147,8 @@ public class RopeBridge {
 			double d = (double) i / this.totalPlanks;
 			double nextD = Math.min((double) (i + 1) / this.totalPlanks, 1D);
 
-			BlockPos pos = new BlockPos(calculatedPosition);
+			BlockPos pos = BlockPos.containing(calculatedPosition);
+			//BlockPos pos = new BlockPos(calculatedPosition);
 			float ropesSubtract = 0;
 			boolean flat = pos.equals(fromPos) || pos.equals(toPos);
 			if (pos.equals(fromPos.below()) || pos.equals(toPos.below())) {
@@ -163,13 +168,13 @@ public class RopeBridge {
 				}
 
 				map.computeIfAbsent(pos, p -> new LinkedList<>()).add(
-						Pair.of(index + (master ? 0F : 0.5F),
-								new RopeBridgePlank(
-										fromPos, toPos, vec3d, this.angle, tiltAngle, (float) newPos.subtract(calculatedPosition).length(),
-										ropesSubtract, world.random.nextInt(128), flat, master,
-										(offset + index) % PLANKS_PER_ROPE == 0, i == 0 || i == this.totalPlanks
-								)
+					Pair.of(index + (master ? 0F : 0.5F),
+						new RopeBridgePlank(
+							fromPos, toPos, vec3d, this.angle, tiltAngle, (float) newPos.subtract(calculatedPosition).length(),
+							ropesSubtract, world.random.nextInt(128), flat, master,
+							(offset + index) % PLANKS_PER_ROPE == 0, i == 0 || i == this.totalPlanks
 						)
+					)
 				);
 
 			}

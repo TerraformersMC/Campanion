@@ -3,7 +3,6 @@ package com.terraformersmc.campanion.client.model.block;
 import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.blockentity.RopeBridgePlanksBlockEntity;
 import com.terraformersmc.campanion.client.renderer.RopeBridgePlankRenderer;
-import com.terraformersmc.campanion.platform.Services;
 import com.terraformersmc.campanion.platform.services.ClientServices;
 import com.terraformersmc.campanion.platform.services.rendering.BlockModelCreatedData;
 import com.terraformersmc.campanion.platform.services.rendering.BlockModelPartCreator;
@@ -24,6 +23,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,22 +33,22 @@ import java.util.stream.IntStream;
 public abstract class BridgePlanksBakedModel implements BakedModel {
 
 	public static final Material[] PLANKS = IntStream.range(0, RopeBridge.PLANK_VARIANT_TEXTURES)
-			.mapToObj(i -> new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Campanion.MOD_ID, "ropebridge/plank" + i)))
-			.toArray(Material[]::new);
+		.mapToObj(i -> new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Campanion.MOD_ID, "ropebridge/plank" + i)))
+		.toArray(Material[]::new);
 	public static final Material ROPE = new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Campanion.MOD_ID, "ropebridge/rope"));
 	public static final Material STOPPER = new Material(InventoryMenu.BLOCK_ATLAS, new ResourceLocation(Campanion.MOD_ID, "ropebridge/stopper"));
 
 	private BlockModelCreatedData staticData;
 
 	protected <T extends BlockModelCreatedData> Optional<T> getData(BlockAndTintGetter blockView, BlockPos pos, Class<T> expectedClass) {
-		if(this.staticData != null) {
-			if(expectedClass.isInstance(this.staticData)) {
+		if (this.staticData != null) {
+			if (expectedClass.isInstance(this.staticData)) {
 				return Optional.of((T) this.staticData);
 			}
 		}
 		if (blockView.getBlockEntity(pos) instanceof RopeBridgePlanksBlockEntity blockEntity) {
 			BlockModelCreatedData data = blockEntity.getModelCreatedData();
-			if(expectedClass.isInstance(data)) {
+			if (expectedClass.isInstance(data)) {
 				return Optional.of((T) data);
 			}
 		}
@@ -56,7 +56,7 @@ public abstract class BridgePlanksBakedModel implements BakedModel {
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction face, RandomSource random) {
+	public @NotNull List<BakedQuad> getQuads(BlockState state, Direction face, @NotNull RandomSource random) {
 		return new ArrayList<>();
 	}
 
@@ -81,17 +81,17 @@ public abstract class BridgePlanksBakedModel implements BakedModel {
 	}
 
 	@Override
-	public TextureAtlasSprite getParticleIcon() {
+	public @NotNull TextureAtlasSprite getParticleIcon() {
 		return Minecraft.getInstance().getBlockRenderer().getBlockModel(Blocks.OAK_PLANKS.defaultBlockState()).getParticleIcon();
 	}
 
 	@Override
-	public ItemTransforms getTransforms() {
+	public @NotNull ItemTransforms getTransforms() {
 		return ItemTransforms.NO_TRANSFORMS;
 	}
 
 	@Override
-	public ItemOverrides getOverrides() {
+	public @NotNull ItemOverrides getOverrides() {
 		return ItemOverrides.EMPTY;
 	}
 

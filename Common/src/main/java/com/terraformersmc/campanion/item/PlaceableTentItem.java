@@ -1,10 +1,6 @@
 package com.terraformersmc.campanion.item;
 
 import com.terraformersmc.campanion.blockentity.TentPartBlockEntity;
-import org.apache.logging.log4j.util.TriConsumer;
-
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -24,6 +20,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.apache.logging.log4j.util.TriConsumer;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class PlaceableTentItem extends Item {
 	public PlaceableTentItem(Properties settings) {
@@ -45,7 +46,7 @@ public abstract class PlaceableTentItem extends Item {
 	public abstract void onPlaceTent(ItemStack stack);
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player user, @NotNull InteractionHand hand) {
 		ItemStack stack = user.getItemInHand(hand);
 		HitResult result = user.pick(10, 0, true);
 		if (result instanceof BlockHitResult && result.getType() == HitResult.Type.BLOCK) {
@@ -88,7 +89,7 @@ public abstract class PlaceableTentItem extends Item {
 				for (int y = -1; y <= 2 * changeSize.y(); y++) {
 					for (int z = Mth.floor(-changeSize.z); z <= Mth.floor(changeSize.z); z++) {
 						BlockPos blockPos = new BlockPos(pos.offset(x, y, z));
-						if (y != -1 == !world.getBlockState(blockPos).getMaterial().isReplaceable()) {
+						if (y != -1 == !world.getBlockState(blockPos).canBeReplaced()) {
 							list.add(blockPos);
 						}
 					}

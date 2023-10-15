@@ -10,15 +10,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Wolf.class)
 public class MixinWolfEntityClient {
 
-    @Inject(method = "handleEntityEvent", at = @At("HEAD"), cancellable = true)
-    public void handleEntityEvent(byte status, CallbackInfo callbackInfo) {
-        HowlingEntity thiz = (HowlingEntity) (Object) this;
-        if (status == 64) {
-            thiz.setHowling(true);
-            callbackInfo.cancel();
-        } else {
-            thiz.setHowling(false);
-        }
-    }
+	@Inject(method = "handleEntityEvent", at = @At("HEAD"), cancellable = true)
+	public void handleEntityEvent(byte status, CallbackInfo callbackInfo) {
+		HowlingEntity thiz = (HowlingEntity) this;
+		if (status == 64) {
+			thiz.setHowling(true);
+			callbackInfo.cancel();
+		} else {
+			thiz.setHowling(false);
+		}
+	}
 
 }

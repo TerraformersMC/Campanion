@@ -9,7 +9,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class SkippingStoneEntity extends ThrowableItemProjectile {
 
@@ -36,7 +36,7 @@ public class SkippingStoneEntity extends ThrowableItemProjectile {
 	}
 
 	@Override
-	protected Item getDefaultItem() {
+	protected @NotNull Item getDefaultItem() {
 		return Items.SNOWBALL;
 	}
 
@@ -56,18 +56,18 @@ public class SkippingStoneEntity extends ThrowableItemProjectile {
 		if (status == 3) {
 			ParticleOptions particleEffect = this.getParticleParameters();
 			for (int i = 0; i < 8; ++i) {
-				this.level.addParticle(particleEffect, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+				this.level().addParticle(particleEffect, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
 			}
 		}
 	}
 
 	@Override
 	protected void doWaterSplashEffect() {
-		if (!this.level.isClientSide) {
+		if (!this.level().isClientSide) {
 			Vec3 vel = this.getDeltaMovement();
 			double squaredHorizontalVelocity = (vel.x() * vel.x()) + (vel.z() * vel.z());
 
-			this.level.broadcastEntityEvent(this, (byte) 3);
+			this.level().broadcastEntityEvent(this, (byte) 3);
 			if (vel.y() * vel.y() > squaredHorizontalVelocity || this.random.nextInt(3) == 0) {
 				this.remove(RemovalReason.DISCARDED);
 			} else {
@@ -84,21 +84,21 @@ public class SkippingStoneEntity extends ThrowableItemProjectile {
 	public void onHit(HitResult hitResult) {
 		if (hitResult.getType() == HitResult.Type.ENTITY) {
 			Entity entity = ((EntityHitResult) hitResult).getEntity();
-			entity.hurt(DamageSource.thrown(this, this.getOwner()), this.entityData.get(NUMBER_OF_SKIPS) + 1);
+			entity.hurt(this.damageSources().thrown(this, this.getOwner()), this.entityData.get(NUMBER_OF_SKIPS) + 1);
 			Entity owner = getOwner();
 			if (!entity.isAlive() && owner != null) {
 				CampanionCriteria.KILLED_WITH_STONE.trigger((ServerPlayer) owner, entity, this.entityData.get(NUMBER_OF_SKIPS));
 			}
 		}
 
-		if (!this.level.isClientSide) {
+		if (!this.level().isClientSide) {
 			this.remove(RemovalReason.DISCARDED);
-			this.level.broadcastEntityEvent(this, (byte) 3);
+			this.level().broadcastEntityEvent(this, (byte) 3);
 		}
 	}
 
 	@Override
-	public void remove(RemovalReason reason) {
+	public void remove(@NotNull RemovalReason reason) {
 		if (getOwner() instanceof ServerPlayer) {
 			CampanionCriteria.STONE_SKIPS.trigger((ServerPlayer) getOwner(), this.entityData.get(NUMBER_OF_SKIPS));
 		}

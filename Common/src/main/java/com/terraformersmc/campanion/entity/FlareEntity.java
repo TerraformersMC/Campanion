@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
+import org.jetbrains.annotations.NotNull;
 
 public class FlareEntity extends ThrowableItemProjectile {
 
@@ -25,7 +26,7 @@ public class FlareEntity extends ThrowableItemProjectile {
 	}
 
 	@Override
-	protected Item getDefaultItem() {
+	protected @NotNull Item getDefaultItem() {
 		return Items.SNOWBALL;
 	}
 
@@ -40,7 +41,7 @@ public class FlareEntity extends ThrowableItemProjectile {
 		if (status == 3) {
 			ParticleOptions particleEffect = this.getParticleParameters();
 			for (int i = 0; i < 8; ++i) {
-				this.level.addParticle(particleEffect, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
+				this.level().addParticle(particleEffect, this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D);
 			}
 		}
 	}
@@ -55,12 +56,12 @@ public class FlareEntity extends ThrowableItemProjectile {
 		if (hitResult.getType().equals(HitResult.Type.BLOCK)) {
 			if (!getBlockStateOn().isAir()) {
 				BlockPos pos = getOnPos().above();
-				if (level.getBlockState(pos).isAir()) {
-					level.setBlockAndUpdate(pos, CampanionBlocks.FLARE_BLOCK.defaultBlockState());
+				if (level().getBlockState(pos).isAir()) {
+					level().setBlockAndUpdate(pos, CampanionBlocks.FLARE_BLOCK.defaultBlockState());
 				}
-				if (!this.level.isClientSide) {
+				if (!this.level().isClientSide) {
 					this.remove(RemovalReason.DISCARDED);
-					this.level.broadcastEntityEvent(this, (byte) 3);
+					this.level().broadcastEntityEvent(this, (byte) 3);
 				}
 			} else {
 				this.setDeltaMovement(0, -0.1, 0);

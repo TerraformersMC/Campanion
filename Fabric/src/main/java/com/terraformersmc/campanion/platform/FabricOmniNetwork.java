@@ -1,7 +1,7 @@
 package com.terraformersmc.campanion.platform;
+
 import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.platform.services.OmniNetwork;
-import net.fabricmc.fabric.api.client.networking.v1.ClientLoginNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

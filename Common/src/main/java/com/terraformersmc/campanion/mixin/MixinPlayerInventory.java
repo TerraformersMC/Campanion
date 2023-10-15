@@ -1,13 +1,10 @@
 package com.terraformersmc.campanion.mixin;
 
 import com.terraformersmc.campanion.backpack.BackpackStorePlayer;
-import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -19,7 +16,7 @@ public abstract class MixinPlayerInventory {
 	public void setItem(int slot, ItemStack stack, CallbackInfo info) {
 		Player player = ((Inventory) (Object) this).player;
 		int capacity = BackpackStorePlayer.getStackCapacity(stack);
-		if (slot == 38 && !player.level.isClientSide) {
+		if (slot == 38 && !player.level().isClientSide) {
 			((BackpackStorePlayer) player).changeBackpackCapacity(capacity);
 		}
 	}

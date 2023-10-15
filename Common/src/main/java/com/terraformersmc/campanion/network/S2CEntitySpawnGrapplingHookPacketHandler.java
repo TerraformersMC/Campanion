@@ -16,7 +16,7 @@ public class S2CEntitySpawnGrapplingHookPacketHandler {
 
 	public static void handle(Supplier<Supplier<Minecraft>> minecraft, S2CEntitySpawnGrapplingHookPacket packet) {
 		ClientLevel level = minecraft.get().get().level;
-		if(level == null) {
+		if (level == null) {
 			return;
 		}
 		GrapplingHookEntity entity = CampanionEntities.GRAPPLING_HOOK.create(level);
@@ -30,7 +30,7 @@ public class S2CEntitySpawnGrapplingHookPacketHandler {
 		entity.setId(packet.id());
 		entity.setUUID(packet.uuid());
 
-		if(packet.hasGrapplingPlayer() && level.getEntity(packet.grapplingPlayerId()) instanceof Player player) {
+		if (packet.hasGrapplingPlayer() && level.getEntity(packet.grapplingPlayerId()) instanceof Player player) {
 			entity.setPlayer(player);
 		}
 		level.putNonPlayerEntity(packet.id(), entity);

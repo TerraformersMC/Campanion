@@ -17,6 +17,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,27 +29,27 @@ public class RopeBridgePlanksBlock extends Block implements EntityBlock {
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
 		return new RopeBridgePlanksBlockEntity(pos, state);
 	}
 
 	@Override
-	public RenderShape getRenderShape(BlockState state) {
+	public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
 		return RenderShape.MODEL;
 	}
 
 	@Override
-	public VoxelShape getOcclusionShape(BlockState STATE, BlockGetter view, BlockPos pos) {
+	public @NotNull VoxelShape getOcclusionShape(@NotNull BlockState STATE, @NotNull BlockGetter view, @NotNull BlockPos pos) {
 		return Shapes.empty();
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, BlockGetter view, BlockPos pos) {
+	public boolean propagatesSkylightDown(@NotNull BlockState state, @NotNull BlockGetter view, @NotNull BlockPos pos) {
 		return true;
 	}
 
 	@Override
-	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+	public void tick(@NotNull BlockState state, ServerLevel world, @NotNull BlockPos pos, @NotNull RandomSource random) {
 		BlockEntity entity = world.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			RopeBridgePlanksBlockEntity be = (RopeBridgePlanksBlockEntity) entity;
@@ -90,12 +91,12 @@ public class RopeBridgePlanksBlock extends Block implements EntityBlock {
 						BlockEntity be = world.getBlockEntity(off);
 						if (be instanceof RopeBridgePlanksBlockEntity) {
 							((RopeBridgePlanksBlockEntity) be).getPlanks()
-									.stream()
-									.filter(plank -> brokenLines.contains(Pair.of(plank.from(), plank.to())))
-									.forEach(plank -> {
-										plank.setBroken();
-										neighbours.add(off);
-									});
+								.stream()
+								.filter(plank -> brokenLines.contains(Pair.of(plank.from(), plank.to())))
+								.forEach(plank -> {
+									plank.setBroken();
+									neighbours.add(off);
+								});
 						}
 					}
 				}
@@ -108,7 +109,7 @@ public class RopeBridgePlanksBlock extends Block implements EntityBlock {
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+	public void onRemove(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull BlockState newState, boolean moved) {
 		BlockEntity entity = world.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			for (RopeBridgePlank plank : ((RopeBridgePlanksBlockEntity) entity).getPlanks()) {
@@ -120,7 +121,7 @@ public class RopeBridgePlanksBlock extends Block implements EntityBlock {
 	}
 
 	@Override
-	public VoxelShape getInteractionShape(BlockState state, BlockGetter view, BlockPos pos) {
+	public @NotNull VoxelShape getInteractionShape(@NotNull BlockState state, BlockGetter view, @NotNull BlockPos pos) {
 		BlockEntity entity = view.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			return ((RopeBridgePlanksBlockEntity) entity).getRaytraceShape();
@@ -129,7 +130,7 @@ public class RopeBridgePlanksBlock extends Block implements EntityBlock {
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+	public @NotNull VoxelShape getCollisionShape(@NotNull BlockState state, BlockGetter view, @NotNull BlockPos pos, @NotNull CollisionContext context) {
 		BlockEntity entity = view.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			return ((RopeBridgePlanksBlockEntity) entity).getCollisionShape();
@@ -138,7 +139,7 @@ public class RopeBridgePlanksBlock extends Block implements EntityBlock {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+	public @NotNull VoxelShape getShape(@NotNull BlockState state, BlockGetter view, @NotNull BlockPos pos, @NotNull CollisionContext context) {
 		BlockEntity entity = view.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePlanksBlockEntity) {
 			return ((RopeBridgePlanksBlockEntity) entity).getOutlineShape();

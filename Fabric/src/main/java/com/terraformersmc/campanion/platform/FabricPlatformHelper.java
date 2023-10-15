@@ -1,16 +1,12 @@
 package com.terraformersmc.campanion.platform;
 
 import com.mojang.datafixers.types.Type;
-import com.terraformersmc.campanion.Campanion;
-import com.terraformersmc.campanion.platform.rendering.FabricBlockModelPartCreator;
 import com.terraformersmc.campanion.platform.services.IPlatformHelper;
-import com.terraformersmc.campanion.platform.services.rendering.BlockModelPartCreator;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -55,7 +51,8 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
 	@Override
 	public CreativeModeTab createItemGroup(String name, Supplier<ItemStack> stack) {
-		return FabricItemGroupBuilder.build(new ResourceLocation(Campanion.MOD_ID, name), stack);
+		return FabricItemGroup.builder().icon(stack).build();
+		//new ResourceLocation(Campanion.MOD_ID, name)
 	}
 
 	@Override

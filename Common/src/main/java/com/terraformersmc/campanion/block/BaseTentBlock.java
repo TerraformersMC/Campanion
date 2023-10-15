@@ -3,8 +3,6 @@ package com.terraformersmc.campanion.block;
 import com.terraformersmc.campanion.blockentity.TentPartBlockEntity;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.TentBagItem;
-import java.util.HashMap;
-import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -29,6 +27,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BaseTentBlock extends Block implements EntityBlock {
 
@@ -45,12 +47,12 @@ public class BaseTentBlock extends Block implements EntityBlock {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, BlockGetter view, BlockPos pos) {
+	public boolean propagatesSkylightDown(@NotNull BlockState state, @NotNull BlockGetter view, @NotNull BlockPos pos) {
 		return true;
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public @NotNull InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
 		BlockEntity blockEntity = world.getBlockEntity(pos);
 		ItemStack stack = player.getItemInHand(hand);
 		if (!world.isClientSide && stack.getItem() instanceof DyeItem && blockEntity instanceof TentPartBlockEntity && this.color != null) {
@@ -79,7 +81,7 @@ public class BaseTentBlock extends Block implements EntityBlock {
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+	public void onRemove(BlockState state, @NotNull Level world, @NotNull BlockPos pos, BlockState newState, boolean moved) {
 		if (state.getBlock().getClass() == newState.getBlock().getClass()) {
 			return;
 		}
@@ -87,7 +89,7 @@ public class BaseTentBlock extends Block implements EntityBlock {
 	}
 
 	@Override
-	public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+	public void playerWillDestroy(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, Player player) {
 		int slotIndex = -1;
 		for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
 			ItemStack stack = player.getInventory().getItem(i);
@@ -135,7 +137,7 @@ public class BaseTentBlock extends Block implements EntityBlock {
 
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
 		return new TentPartBlockEntity(pos, state);
 	}
 

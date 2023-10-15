@@ -46,7 +46,7 @@ public abstract class MixinWolfEntity extends TamableAnimal implements HowlingEn
 
 	@Override
 	public void setHowling(boolean howling) {
-		if(howling) {
+		if (howling) {
 			this.howlAnimationProgress = 0.0F;
 			this.lastHowlAnimationProgress = 0.0F;
 		}

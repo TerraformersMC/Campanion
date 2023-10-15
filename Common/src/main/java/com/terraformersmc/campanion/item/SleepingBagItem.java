@@ -3,8 +3,6 @@ package com.terraformersmc.campanion.item;
 import com.terraformersmc.campanion.advancement.criterion.CampanionCriteria;
 import com.terraformersmc.campanion.entity.SleepNoSetSpawnPlayer;
 import com.terraformersmc.campanion.stat.CampanionStats;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,7 +12,6 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.monster.Monster;
@@ -22,10 +19,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Optional;
 
 public class SleepingBagItem extends Item implements DyeableLeatherItem {
 
@@ -45,22 +46,23 @@ public class SleepingBagItem extends Item implements DyeableLeatherItem {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+	public @NotNull InteractionResultHolder<ItemStack> use(Level world, Player user, @NotNull InteractionHand hand) {
 		ItemStack stack = user.getItemInHand(hand);
 		if (!world.isClientSide) {
 			BlockPos pos = user.blockPosition();
 			if (!BedBlock.canSetSpawn(world)) {
-				world.explode(null, DamageSource.badRespawnPointExplosion(), null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0F, true, Explosion.BlockInteraction.DESTROY);
+				Vec3 vec3 = pos.getCenter();
+				world.explode(null, world.damageSources().badRespawnPointExplosion(vec3), null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0F, true, Level.ExplosionInteraction.BLOCK);
 				stack.hurtAndBreak(25, user, e -> e.broadcastBreakEvent(hand));
 			} else if (world.isDay()) {
 				user.displayClientMessage(CANT_SLEEP_DAY, true);
-			} else if (!user.isOnGround()) {
+			} else if (!user.onGround()) {
 				user.displayClientMessage(NOT_ON_GROUND, true);
 			} else if (world.dimensionType().hasSkyLight()) {
 				if (!user.isCreative()) {
 					List<Monster> list = world.getEntitiesOfClass(Monster.class,
-							new AABB(pos).move(0.5D, 0.0D, 0.5D).inflate(8.0D, 5.0D, 8.0D),
-							hostileEntity -> hostileEntity.isPreventingPlayerRest(user));
+						new AABB(pos).move(0.5D, 0.0D, 0.5D).inflate(8.0D, 5.0D, 8.0D),
+						hostileEntity -> hostileEntity.isPreventingPlayerRest(user));
 					if (!list.isEmpty()) {
 						user.displayClientMessage(NOT_SAFE, true);
 						return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);

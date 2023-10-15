@@ -2,8 +2,6 @@ package com.terraformersmc.campanion.client.renderer.item;
 
 import com.terraformersmc.campanion.item.PlaceableTentItem;
 import com.terraformersmc.campanion.mixin.AccessorBiomeAccess;
-import java.util.HashMap;
-import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LightTexture;
@@ -16,6 +14,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FakeWorld extends ClientLevel {
 
@@ -31,10 +33,10 @@ public class FakeWorld extends ClientLevel {
 
 	public FakeWorld(ItemStack stack, BlockPos basePos, int lightOverride) {
 		super(CLIENT.player.connection,
-				new ClientLevel.ClientLevelData(CLIENT.level.getLevelData().getDifficulty(), CLIENT.level.getLevelData().isDifficultyLocked(), CLIENT.level.getLevelData().isHardcore()),
-				CLIENT.level.dimension(), CLIENT.level.dimensionTypeRegistration(), 3, 3, CLIENT::getProfiler,
-				CLIENT.levelRenderer, CLIENT.level.isDebug(),
-				((AccessorBiomeAccess) CLIENT.level.getBiomeManager()).getBiomeZoomSeed());
+			new ClientLevel.ClientLevelData(CLIENT.level.getLevelData().getDifficulty(), CLIENT.level.getLevelData().isDifficultyLocked(), CLIENT.level.getLevelData().isHardcore()),
+			CLIENT.level.dimension(), CLIENT.level.dimensionTypeRegistration(), 3, 3, CLIENT::getProfiler,
+			CLIENT.levelRenderer, CLIENT.level.isDebug(),
+			((AccessorBiomeAccess) CLIENT.level.getBiomeManager()).getBiomeZoomSeed());
 		updatePositioning(basePos, lightOverride);
 		PlaceableTentItem tent = (PlaceableTentItem) stack.getItem();
 		tent.traverseBlocks(stack, (pos, state, tag) -> {
@@ -52,7 +54,7 @@ public class FakeWorld extends ClientLevel {
 	}
 
 	@Override
-	public int getBrightness(LightLayer type, BlockPos pos) {
+	public int getBrightness(@NotNull LightLayer type, @NotNull BlockPos pos) {
 		if (this.blockLight == -1 || this.skyLight == -1) {
 			return CLIENT.level.getBrightness(type, this.basePos);
 		}
@@ -63,12 +65,12 @@ public class FakeWorld extends ClientLevel {
 	}
 
 	@Override
-	public BlockState getBlockState(BlockPos pos) {
+	public @NotNull BlockState getBlockState(@NotNull BlockPos pos) {
 		return this.blockStateMap.getOrDefault(pos, Blocks.AIR.defaultBlockState());
 	}
 
 	@Override
-	public BlockEntity getBlockEntity(BlockPos pos) {
+	public BlockEntity getBlockEntity(@NotNull BlockPos pos) {
 		return this.blockEntityMap.computeIfAbsent(pos, p -> {
 			if (this.blockEntityTagMap.containsKey(p)) {
 				BlockEntity entity = BlockEntity.loadStatic(pos, getBlockState(pos), this.blockEntityTagMap.get(p));
@@ -85,7 +87,7 @@ public class FakeWorld extends ClientLevel {
 
 
 	@Override
-	public FluidState getFluidState(BlockPos pos) {
+	public @NotNull FluidState getFluidState(@NotNull BlockPos pos) {
 		return Fluids.EMPTY.defaultFluidState();
 	}
 

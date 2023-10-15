@@ -1,7 +1,7 @@
 package com.terraformersmc.campanion.tag;
 
 import com.terraformersmc.campanion.Campanion;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -27,7 +27,7 @@ public class CampanionItemTags {
 	public static final TagKey<Item> MRE_COMPONENTS = get("mre_components");
 
 	private static TagKey<Item> get(String id) {
-		return TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(Campanion.MOD_ID, id));
+		return TagKey.create(Registries.ITEM, new ResourceLocation(Campanion.MOD_ID, id));
 	}
 
 	public static void load() {

@@ -9,6 +9,8 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collections;
 
 /**
@@ -17,16 +19,16 @@ import java.util.Collections;
  */
 public class SleepingBagModel<T extends LivingEntity> extends HumanoidModel<T> {
 
-    public SleepingBagModel(ModelPart root) {
-        super(root);
-    }
+	public SleepingBagModel(ModelPart root) {
+		super(root);
+	}
 
 	public SleepingBagModel() {
 		this(getTexturedModelData().bakeRoot());
 	}
 
 	public static LayerDefinition getTexturedModelData() {
-		MeshDefinition modelData = HumanoidModel.createMesh(new CubeDeformation(1/16F), 0);
+		MeshDefinition modelData = HumanoidModel.createMesh(new CubeDeformation(1 / 16F), 0);
 		PartDefinition root = modelData.getRoot();
 
 		CubeListBuilder head = CubeListBuilder.create().texOffs(16, 16);
@@ -42,9 +44,9 @@ public class SleepingBagModel<T extends LivingEntity> extends HumanoidModel<T> {
 		return LayerDefinition.create(modelData, 64, 64);
 	}
 
-    @Override
-    protected Iterable<ModelPart> bodyParts() {
-        return Collections.emptyList();
-    }
+	@Override
+	protected @NotNull Iterable<ModelPart> bodyParts() {
+		return Collections.emptyList();
+	}
 }
 

@@ -1,7 +1,6 @@
 package com.terraformersmc.campanion.blockentity;
 
 import com.terraformersmc.campanion.client.renderer.RopeBridgePlankRenderer;
-import com.terraformersmc.campanion.platform.Services;
 import com.terraformersmc.campanion.platform.services.ClientServices;
 import com.terraformersmc.campanion.platform.services.rendering.BlockModelCreatedData;
 import com.terraformersmc.campanion.platform.services.rendering.BlockModelPartCreator;
@@ -51,7 +50,7 @@ public class RopeBridgePlanksBlockEntity extends SerializableBlockEntity {
 	public BlockModelCreatedData getModelCreatedData() {
 		BlockModelPartCreator creator = ClientServices.CLIENT_PLATFORM.blockModelCreator();
 
-		if(this.planks.isEmpty() || this.forceRenderStopper()) {
+		if (this.planks.isEmpty() || this.forceRenderStopper()) {
 			RopeBridgePlankRenderer.generateDefaultStoppers(creator);
 		}
 		for (RopeBridgePlank plank : this.planks) {

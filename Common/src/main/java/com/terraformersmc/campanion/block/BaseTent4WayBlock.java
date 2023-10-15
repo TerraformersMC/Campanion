@@ -14,9 +14,9 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseTent4WayBlock extends BaseTentBlock {
-
 	protected static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
 	private final VoxelShape northShape;
@@ -43,19 +43,14 @@ public abstract class BaseTent4WayBlock extends BaseTentBlock {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
-		switch (state.getValue(FACING)) {
-			case NORTH:
-				return this.northShape;
-			case EAST:
-				return this.eastShape;
-			case SOUTH:
-				return this.southShape;
-			case WEST:
-				return this.westShape;
-			default:
-				return super.getShape(state, view, pos, context);
-		}
+	public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter view, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+		return switch (state.getValue(FACING)) {
+			case NORTH -> this.northShape;
+			case EAST -> this.eastShape;
+			case SOUTH -> this.southShape;
+			case WEST -> this.westShape;
+			default -> super.getShape(state, view, pos, context);
+		};
 	}
 
 	@Override
@@ -64,12 +59,12 @@ public abstract class BaseTent4WayBlock extends BaseTentBlock {
 	}
 
 	@Override
-	public BlockState rotate(BlockState state, Rotation rotation) {
+	public @NotNull BlockState rotate(BlockState state, Rotation rotation) {
 		return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
 	}
 
 	@Override
-	public BlockState mirror(BlockState state, Mirror mirror) {
+	public @NotNull BlockState mirror(BlockState state, Mirror mirror) {
 		return state.rotate(mirror.getRotation(state.getValue(FACING)));
 	}
 

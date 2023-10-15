@@ -13,7 +13,6 @@ import com.terraformersmc.campanion.network.C2SRotateHeldItem;
 import com.terraformersmc.campanion.network.S2CEntitySpawnGrapplingHookPacket;
 import com.terraformersmc.campanion.network.S2CSyncBackpackContents;
 import com.terraformersmc.campanion.platform.Services;
-import com.terraformersmc.campanion.stat.CampanionStats;
 import com.terraformersmc.campanion.tag.CampanionBlockTags;
 import com.terraformersmc.campanion.tag.CampanionItemTags;
 import net.minecraft.Util;
@@ -24,6 +23,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +35,7 @@ public class Campanion {
 
 	public static CreativeModeTab TAB;
 
-    public static void init() {
+	public static void init() {
 		TAB = Services.PLATFORM.createItemGroup("items", () -> CampanionItems.SMORE.asItem().getDefaultInstance());
 
 
@@ -47,12 +47,12 @@ public class Campanion {
 
 		CampanionBlockTags.load();
 		CampanionItemTags.load();
-    }
+	}
 
 	public static void registerDispenserBehavior() {
 		DispenserBlock.registerBehavior(CampanionItems.SKIPPING_STONE, new AbstractProjectileDispenseBehavior() {
 			@Override
-			protected Projectile getProjectile(Level world, Position position, ItemStack stack) {
+			protected @NotNull Projectile getProjectile(@NotNull Level world, @NotNull Position position, @NotNull ItemStack stack) {
 				return Util.make(new SkippingStoneEntity(world, position.x(), position.y(), position.z()), (snowballEntity) -> {
 					snowballEntity.setItem(stack);
 				});
@@ -61,7 +61,7 @@ public class Campanion {
 
 		DispenserBlock.registerBehavior(CampanionItems.FLARE, new AbstractProjectileDispenseBehavior() {
 			@Override
-			protected Projectile getProjectile(Level world, Position position, ItemStack stack) {
+			protected @NotNull Projectile getProjectile(@NotNull Level world, @NotNull Position position, @NotNull ItemStack stack) {
 				return Util.make(new FlareEntity(world, position.x(), position.y(), position.z()), (flareEntity) -> {
 					flareEntity.setItem(stack);
 				});
@@ -69,8 +69,6 @@ public class Campanion {
 		});
 
 	}
-
-
 
 	public static void registerPackets() {
 		Services.NETWORK.registerServerBound(C2SOpenBackpack.class, C2SOpenBackpack::new, C2SOpenBackpack::handle);

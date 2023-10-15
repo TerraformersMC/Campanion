@@ -1,7 +1,5 @@
 package com.terraformersmc.campanion.item;
 
-import java.util.Objects;
-
 import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.mixin.AccessorStructureTemplate;
 import net.minecraft.core.BlockPos;
@@ -15,6 +13,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class TentItem extends PlaceableTentItem {
 
@@ -35,7 +36,7 @@ public class TentItem extends PlaceableTentItem {
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+	public void inventoryTick(@NotNull ItemStack stack, @NotNull Level world, @NotNull Entity entity, int slot, boolean selected) {
 		if (!hasBlocks(stack) && world instanceof ServerLevel) {
 			initNbt(stack, Objects.requireNonNull(((ServerLevel) world).getStructureManager().get(((TentItem) stack.getItem()).getStructure()).orElseThrow()));
 		}
@@ -47,10 +48,10 @@ public class TentItem extends PlaceableTentItem {
 		ListTag list = new ListTag();
 		for (StructureTemplate.StructureBlockInfo info : ((AccessorStructureTemplate) structure).getPalettes().get(0).blocks()) {
 			CompoundTag tag = new CompoundTag();
-			tag.put("Pos", NbtUtils.writeBlockPos(info.pos.offset(-size.getX() / 2, 0, -size.getZ() / 2)));
-			tag.put("BlockState", NbtUtils.writeBlockState(info.state));
-			if (info.nbt != null && !info.nbt.isEmpty()) {
-				tag.put("BlockEntityData", info.nbt);
+			tag.put("Pos", NbtUtils.writeBlockPos(info.pos().offset(-size.getX() / 2, 0, -size.getZ() / 2)));
+			tag.put("BlockState", NbtUtils.writeBlockState(info.state()));
+			if (info.nbt() != null && !info.nbt().isEmpty()) {
+				tag.put("BlockEntityData", info.nbt());
 			}
 			list.add(tag);
 		}

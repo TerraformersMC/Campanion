@@ -2,12 +2,13 @@ package com.terraformersmc.campanion.blockentity;
 
 import com.terraformersmc.campanion.entity.CampanionEntities;
 import com.terraformersmc.campanion.entity.LawnChairEntity;
-import java.util.List;
-import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+
+import java.util.List;
+import java.util.UUID;
 
 public class LawnChairBlockEntity extends SerializableBlockEntity {
 

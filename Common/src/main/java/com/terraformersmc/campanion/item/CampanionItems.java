@@ -2,14 +2,14 @@ package com.terraformersmc.campanion.item;
 
 import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.entity.CampanionEntities;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class CampanionItems {
 

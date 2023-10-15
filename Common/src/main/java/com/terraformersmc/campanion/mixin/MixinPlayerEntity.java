@@ -8,15 +8,6 @@ import com.terraformersmc.campanion.entity.SleepNoSetSpawnPlayer;
 import com.terraformersmc.campanion.item.BackpackItem;
 import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.item.TentBagItem;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.sql.SQLSyntaxErrorException;
-import java.util.concurrent.Callable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -31,6 +22,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
 public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoSetSpawnPlayer, GrapplingHookUser, BackpackStorePlayer {
@@ -50,8 +47,8 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 		this.resetStat(Stats.CUSTOM.get(Stats.TIME_SINCE_REST));
 		super.startSleeping(pos);
 		this.sleepCounter = 0;
-		if (this.level instanceof ServerLevel) {
-			((ServerLevel) this.level).updateSleepingPlayerList();
+		if (this.level() instanceof ServerLevel) {
+			((ServerLevel) this.level()).updateSleepingPlayerList();
 		}
 	}
 
@@ -67,7 +64,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 
 	@Inject(method = "blockActionRestricted(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/GameType;)Z", at = @At("HEAD"), cancellable = true)
 	public void blockActionRestricted(Level world, BlockPos pos, GameType gameMode, CallbackInfoReturnable<Boolean> info) {
-		if(world.getBlockState(pos).getBlock() instanceof BaseTentBlock) {
+		if (world.getBlockState(pos).getBlock() instanceof BaseTentBlock) {
 			int slotIndex = -1;
 			Player player = (Player) (Object) this;
 			for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
@@ -76,7 +73,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 					slotIndex = i;
 				}
 			}
-			if(!gameMode.isCreative() && slotIndex == -1) {
+			if (!gameMode.isCreative() && slotIndex == -1) {
 				info.setReturnValue(true);
 			}
 		}
@@ -98,7 +95,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements SleepNoS
 
 		//If there are stacks in the old format, then put them in the new format
 		ItemStack stack = this.getItemBySlot(EquipmentSlot.CHEST);
-		if(stack.getItem() instanceof BackpackItem && stack.getOrCreateTag().contains("Inventory", 10)) {
+		if (stack.getItem() instanceof BackpackItem && stack.getOrCreateTag().contains("Inventory", 10)) {
 			ContainerHelper.loadAllItems(stack.getOrCreateTag().getCompound("Inventory"), this.backpackStacks);
 			stack.getTag().remove("Inventory");
 		}

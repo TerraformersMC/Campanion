@@ -1,6 +1,5 @@
 package com.terraformersmc.campanion.mixin.client;
 
-import com.mojang.math.Vector3f;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.CampfireSmokeParticle;
 import net.minecraft.client.particle.TextureSheetParticle;
@@ -9,6 +8,7 @@ import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
+import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -28,13 +28,13 @@ public abstract class MixinCampfireSmokeParticle extends TextureSheetParticle {
 
 	@Inject(method = "<init>", at = @At(value = "RETURN"))
 	private void campanion$setColor(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, boolean bl, CallbackInfo ci) {
-		BlockPos pos = new BlockPos(x, y, z);
+		BlockPos pos = BlockPos.containing(x, y, z);
 		float[] currColor;
 		Vector3f color = new Vector3f(0, 0, 0);
 		boolean recolor = false;
 
 		//The y position can be up to 2 blocks too high (almost never exactly two), so we do this twice just to be sure we're at the campfire.
-		if(!(world.getBlockState(pos).getBlock() instanceof CampfireBlock)) {
+		if (!(world.getBlockState(pos).getBlock() instanceof CampfireBlock)) {
 			pos = pos.below();
 		}
 

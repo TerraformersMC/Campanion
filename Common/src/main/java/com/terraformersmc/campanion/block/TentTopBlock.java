@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 public class TentTopBlock extends BaseTentBlock {
 
@@ -31,7 +32,7 @@ public class TentTopBlock extends BaseTentBlock {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+	public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter view, @NotNull BlockPos pos, @NotNull CollisionContext context) {
 		switch (state.getValue(AXIS)) {
 			case X:
 				return XSHAPE;
@@ -48,7 +49,7 @@ public class TentTopBlock extends BaseTentBlock {
 	}
 
 	@Override
-	public BlockState rotate(BlockState state, Rotation rotation) {
+	public @NotNull BlockState rotate(@NotNull BlockState state, @NotNull Rotation rotation) {
 		if (rotation == Rotation.NONE || rotation == Rotation.CLOCKWISE_180) {
 			return state;
 		}

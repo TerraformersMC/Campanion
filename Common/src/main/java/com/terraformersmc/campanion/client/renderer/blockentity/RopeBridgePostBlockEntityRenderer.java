@@ -5,11 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.terraformersmc.campanion.blockentity.RopeBridgePostBlockEntity;
 import com.terraformersmc.campanion.client.model.block.BridgePlanksBakedModel;
 import com.terraformersmc.campanion.ropebridge.RopeBridgePlank;
-import net.minecraft.util.RandomSource;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.List;
-import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -18,34 +13,40 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class RopeBridgePostBlockEntityRenderer implements BlockEntityRenderer<RopeBridgePostBlockEntity> {
 
-    private static final ThreadLocal<ModelBlockRenderer> RENDERER = ThreadLocal.withInitial(() -> Minecraft.getInstance().getBlockRenderer().getModelRenderer());
+	private static final ThreadLocal<ModelBlockRenderer> RENDERER = ThreadLocal.withInitial(() -> Minecraft.getInstance().getBlockRenderer().getModelRenderer());
 
-    private static final RandomSource RND =  RandomSource.create();
-    public RopeBridgePostBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
-    }
+	private static final RandomSource RND = RandomSource.create();
 
-    @Override
-    public void render(RopeBridgePostBlockEntity blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
-        VertexConsumer buffer = vertexConsumers.getBuffer(RenderType.translucent());
-
-        blockEntity.getGhostPlanks().forEach((pos, pairs) -> {
-            for (Pair<BlockPos, List<RopeBridgePlank>> pair : pairs) {
-                BlockPos deltaPos = pair.getLeft().subtract(blockEntity.getBlockPos());
-                matrices.pushPose();
-                matrices.translate(deltaPos.getX(), deltaPos.getY(), deltaPos.getZ());
-
-                RENDERER.get().tesselateBlock(blockEntity.getLevel(), BridgePlanksBakedModel.createStaticModel(pair.getRight()), Blocks.AIR.defaultBlockState(), BlockPos.ZERO.above(500), matrices, buffer, false, RND, 0, BlockPos.ZERO.equals(deltaPos) ? overlay : OverlayTexture.NO_OVERLAY);
-                matrices.popPose();
-            }
-        });
-    }
+	public RopeBridgePostBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
+	}
 
 	@Override
-	public boolean shouldRenderOffScreen(RopeBridgePostBlockEntity $$0) {
+	public void render(RopeBridgePostBlockEntity blockEntity, float tickDelta, @NotNull PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+		VertexConsumer buffer = vertexConsumers.getBuffer(RenderType.translucent());
+
+		blockEntity.getGhostPlanks().forEach((pos, pairs) -> {
+			for (Pair<BlockPos, List<RopeBridgePlank>> pair : pairs) {
+				BlockPos deltaPos = pair.getLeft().subtract(blockEntity.getBlockPos());
+				matrices.pushPose();
+				matrices.translate(deltaPos.getX(), deltaPos.getY(), deltaPos.getZ());
+
+				RENDERER.get().tesselateBlock(blockEntity.getLevel(), BridgePlanksBakedModel.createStaticModel(pair.getRight()), Blocks.AIR.defaultBlockState(), BlockPos.ZERO.above(500), matrices, buffer, false, RND, 0, BlockPos.ZERO.equals(deltaPos) ? overlay : OverlayTexture.NO_OVERLAY);
+				matrices.popPose();
+			}
+		});
+	}
+
+	@Override
+	public boolean shouldRenderOffScreen(@NotNull RopeBridgePostBlockEntity blockEntity) {
 		return true;
 	}
 }

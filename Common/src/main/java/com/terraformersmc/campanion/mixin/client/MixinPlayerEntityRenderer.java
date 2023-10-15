@@ -32,7 +32,7 @@ public abstract class MixinPlayerEntityRenderer extends LivingEntityRenderer<Abs
 		SleepingBagItem.getUsingStack(entity).ifPresent(stack -> {
 			matrices.pushPose();
 
-			SleepingBagFeatureRenderer.INSTANCE.render(entity, tickDelta, matrices, vertexConsumers, light, ((DyeableLeatherItem)stack.getItem()).getColor(stack));
+			SleepingBagFeatureRenderer.INSTANCE.render(entity, tickDelta, matrices, vertexConsumers, light, ((DyeableLeatherItem) stack.getItem()).getColor(stack));
 
 			matrices.popPose();
 			info.cancel();
