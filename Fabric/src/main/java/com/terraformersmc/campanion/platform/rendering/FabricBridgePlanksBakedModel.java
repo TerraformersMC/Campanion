@@ -15,7 +15,8 @@ public class FabricBridgePlanksBakedModel extends BridgePlanksBakedModel impleme
 
 	@Override
 	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
-		this.getData(blockView, pos, FabricBlockModelCreatedData.class).ifPresent(data -> context.meshConsumer().accept(data.mesh()));
+		this.getData(blockView, pos, FabricBlockModelCreatedData.class).ifPresent(data -> data.mesh().outputTo(context.getEmitter()));
+		//this.getData(blockView, pos, FabricBlockModelCreatedData.class).ifPresent(data -> context.meshConsumer().accept(data.mesh()));
 	}
 
 	@Override

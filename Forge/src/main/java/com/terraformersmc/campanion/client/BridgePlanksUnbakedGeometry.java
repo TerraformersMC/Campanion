@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class BridgePlanksUnbakedGeometry extends BridgePlanksUnbakedModel implements IUnbakedGeometry<BridgePlanksUnbakedGeometry> {
+	
 	@Override
 	public BakedModel bake(IGeometryBakingContext context, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides, ResourceLocation modelLocation) {
 		return this.bake(bakery, spriteGetter, modelState, modelLocation);

@@ -6,6 +6,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 public class TentTopFlatBlock extends BaseTentBlock {
 	protected static final VoxelShape SHAPE = box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
@@ -15,7 +16,7 @@ public class TentTopFlatBlock extends BaseTentBlock {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+	public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter view, @NotNull BlockPos pos, @NotNull CollisionContext context) {
 		return SHAPE;
 	}
 }

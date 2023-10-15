@@ -1,13 +1,8 @@
 package com.terraformersmc.campanion.client.model.entity.backpack;
 
-import net.minecraft.client.model.*;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.LivingEntity;
 
 /**
@@ -32,7 +27,7 @@ public class CampingPackEntityModel<T extends LivingEntity> extends TorsoParente
 		CubeListBuilder bottomThing = CubeListBuilder.create().texOffs(0, 16).addBox(-3.0F, -0.3F, -1.5F, 6, 3, 3, new CubeDeformation(0.0F));
 
 		root.getChild("body").addOrReplaceChild("base", base, PartPose.offset(0.0F, 0.0F, 3.0F))
-				.addOrReplaceChild("bottom_thing", bottomThing, PartPose.offset(0.5F, 9.9F, 0.8F));
+			.addOrReplaceChild("bottom_thing", bottomThing, PartPose.offset(0.5F, 9.9F, 0.8F));
 
 		return LayerDefinition.create(modelData, 24, 24);
 	}

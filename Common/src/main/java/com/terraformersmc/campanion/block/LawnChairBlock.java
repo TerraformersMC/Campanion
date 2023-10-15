@@ -22,6 +22,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 public class LawnChairBlock extends HorizontalDirectionalBlock implements EntityBlock {
 
@@ -46,7 +47,7 @@ public class LawnChairBlock extends HorizontalDirectionalBlock implements Entity
 	}
 
 	@Override
-	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+	public void setPlacedBy(Level world, @NotNull BlockPos pos, @NotNull BlockState state, LivingEntity placer, @NotNull ItemStack itemStack) {
 		BlockEntity entity = world.getBlockEntity(pos);
 		if (entity instanceof LawnChairBlockEntity && !world.isClientSide) {
 			((LawnChairBlockEntity) entity).findOrCreateEntity();
@@ -55,7 +56,7 @@ public class LawnChairBlock extends HorizontalDirectionalBlock implements Entity
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public @NotNull InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
 		BlockEntity entity = world.getBlockEntity(pos);
 		if (entity instanceof LawnChairBlockEntity && !world.isClientSide) {
 			LawnChairEntity chairEntity = ((LawnChairBlockEntity) entity).findOrCreateEntity();
@@ -66,23 +67,18 @@ public class LawnChairBlock extends HorizontalDirectionalBlock implements Entity
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
-		switch (state.getValue(FACING)) {
-			case NORTH:
-				return NORTH_SHAPE;
-			case EAST:
-				return EAST_SHAPE;
-			case SOUTH:
-				return SOUTH_SHAPE;
-			case WEST:
-				return WEST_SHAPE;
-			default:
-				return super.getShape(state, view, pos, context);
-		}
+	public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter view, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return switch (state.getValue(FACING)) {
+            case NORTH -> NORTH_SHAPE;
+            case EAST -> EAST_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+            default -> super.getShape(state, view, pos, context);
+        };
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
 		return new LawnChairBlockEntity(pos, state);
 	}
 

@@ -7,12 +7,12 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.impl.client.keybinding.KeyBindingRegistryImpl;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.item.ItemProperties;
 
 public class CampanionFabricClient implements ClientModInitializer {
@@ -27,9 +27,8 @@ public class CampanionFabricClient implements ClientModInitializer {
 			return null;
 		});
 
-
 		CampanionClient.registerKeybindings(KeyBindingRegistryImpl::registerKeyBinding);
-		CampanionClient.registerBlockEntityRenderers(BlockEntityRendererRegistry::register);
+		CampanionClient.registerBlockEntityRenderers(BlockEntityRenderers::register);
 		CampanionClient.registerEntityRenderers(EntityRendererRegistry::register);
 		CampanionClient.registerModelPredicateProviders(ItemProperties::register);
 		CampanionClient.registerItemColours(ColorProviderRegistry.ITEM::register);

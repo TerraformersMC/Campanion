@@ -1,8 +1,6 @@
 package com.terraformersmc.campanion.block;
 
 import com.terraformersmc.campanion.item.CampanionItems;
-import java.util.ArrayList;
-import java.util.Random;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -28,9 +26,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
-import static net.minecraft.world.level.block.AbstractFurnaceBlock.LIT;
+import java.util.ArrayList;
+
 import static net.minecraft.core.Direction.*;
+import static net.minecraft.world.level.block.AbstractFurnaceBlock.LIT;
 
 public class LeatherTanner extends HorizontalDirectionalBlock {
 
@@ -58,7 +59,7 @@ public class LeatherTanner extends HorizontalDirectionalBlock {
 	}
 
 	@Override
-	public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+	public void playerWillDestroy(@NotNull Level world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
 		if (getAge(state) == 1) {
 			world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.LEATHER)));
 		} else if (getAge(state) == 2) {
@@ -68,7 +69,7 @@ public class LeatherTanner extends HorizontalDirectionalBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
 		if (getAge(state) == 0) {
 			ItemStack stack = player.getItemInHand(hand);
 			if (stack.getItem() == Items.LEATHER) {
@@ -95,16 +96,16 @@ public class LeatherTanner extends HorizontalDirectionalBlock {
 	}
 
 	public int getAge(BlockState state) {
-		return (Integer) state.getValue(AGE);
+		return state.getValue(AGE);
 	}
 
 	@Override
-	public boolean isRandomlyTicking(BlockState state) {
+	public boolean isRandomlyTicking(@NotNull BlockState state) {
 		return true;
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+	public void randomTick(@NotNull BlockState state, @NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull RandomSource random) {
 		if (getAge(state) == 1) {
 
 			float speedMultiplier = 1;
@@ -119,7 +120,7 @@ public class LeatherTanner extends HorizontalDirectionalBlock {
 			if (facing == NORTH || facing == SOUTH) {
 				blockStates.add(world.getBlockState(pos.south()));
 				blockStates.add(world.getBlockState(pos.north()));
-			} else if (facing == EAST || facing == WEST){
+			} else if (facing == EAST || facing == WEST) {
 				blockStates.add(world.getBlockState(pos.west()));
 				blockStates.add(world.getBlockState(pos.east()));
 			}
@@ -137,19 +138,14 @@ public class LeatherTanner extends HorizontalDirectionalBlock {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
-		switch (state.getValue(FACING)) {
-			case NORTH:
-				return NORTH_SHAPE;
-			case EAST:
-				return EAST_SHAPE;
-			case SOUTH:
-				return SOUTH_SHAPE;
-			case WEST:
-				return WEST_SHAPE;
-			default:
-				return super.getShape(state, view, pos, context);
-		}
+	public @NotNull VoxelShape getShape(BlockState state, @NotNull BlockGetter view, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+        return switch (state.getValue(FACING)) {
+            case NORTH -> NORTH_SHAPE;
+            case EAST -> EAST_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+            default -> super.getShape(state, view, pos, context);
+        };
 	}
 
 	static {

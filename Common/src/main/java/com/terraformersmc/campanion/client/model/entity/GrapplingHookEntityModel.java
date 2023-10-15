@@ -2,32 +2,30 @@ package com.terraformersmc.campanion.client.model.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.*;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.RenderType;
+import org.jetbrains.annotations.NotNull;
 
 public class GrapplingHookEntityModel extends Model {
 
-    private final ModelPart base;
+	private final ModelPart base;
 
-    public GrapplingHookEntityModel(ModelPart root) {
-        super(RenderType::entitySolid);
+	public GrapplingHookEntityModel(ModelPart root) {
+		super(RenderType::entitySolid);
 
-        this.base = root.getChild("base");
-    }
+		this.base = root.getChild("base");
+	}
 
 	public GrapplingHookEntityModel() {
 		this(getTexturedModelData().bakeRoot());
 	}
 
 	public static LayerDefinition getTexturedModelData() {
-		MeshDefinition modelData = HumanoidModel.createMesh(new CubeDeformation(1/16F), 0);
+		MeshDefinition modelData = HumanoidModel.createMesh(new CubeDeformation(1 / 16F), 0);
 		PartDefinition root = modelData.getRoot();
 
 		CubeListBuilder base = CubeListBuilder.create().texOffs(12, 0).addBox(-2.5F, -5.0F, -2.5F, 5, 5, 5, new CubeDeformation(0.0F));
@@ -43,7 +41,7 @@ public class GrapplingHookEntityModel extends Model {
 
 		PartDefinition baseData = root.addOrReplaceChild("base", base, PartPose.ZERO);
 		PartDefinition mainData = baseData.addOrReplaceChild("main", main, PartPose.offset(0.0F, -5.0F, 0.0F));
-		PartDefinition hookBaseData1 =  mainData.addOrReplaceChild("hook_base1", hookBase1, PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, 1.9198621771937625F, 0.0F, -0.0F));
+		PartDefinition hookBaseData1 = mainData.addOrReplaceChild("hook_base1", hookBase1, PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, 1.9198621771937625F, 0.0F, -0.0F));
 		PartDefinition hookBaseData2 = mainData.addOrReplaceChild("hook_base2", hookBase2, PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, -1.2217304763960306F, 1.5707963267948966F, -3.141592653589793F));
 		PartDefinition hookBaseData3 = mainData.addOrReplaceChild("hook_base3", hookBase3, PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, -1.2217304763960306F, 0.0F, -3.141592653589793F));
 		PartDefinition hookBaseData4 = mainData.addOrReplaceChild("hook_base4", hookBase4, PartPose.offsetAndRotation(0.0F, -5.0F, 0.0F, 1.9198621771937625F, -1.5707963267948966F, 0.0F));
@@ -55,8 +53,8 @@ public class GrapplingHookEntityModel extends Model {
 		return LayerDefinition.create(modelData, 32, 32);
 	}
 
-    @Override
-    public void renderToBuffer(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        this.base.render(matrices, vertexConsumer, light, overlay);
-    }
+	@Override
+	public void renderToBuffer(@NotNull PoseStack matrices, @NotNull VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+		this.base.render(matrices, vertexConsumer, light, overlay);
+	}
 }

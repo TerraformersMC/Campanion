@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class RopeLadderBlock extends LadderBlock {
 
@@ -24,7 +25,7 @@ public class RopeLadderBlock extends LadderBlock {
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+	public BlockState getStateForPlacement(@NotNull BlockPlaceContext ctx) {
 		BlockState state = super.getStateForPlacement(ctx);
 		if (state == null) {
 			state = defaultBlockState();
@@ -37,12 +38,12 @@ public class RopeLadderBlock extends LadderBlock {
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+	public boolean canSurvive(@NotNull BlockState state, @NotNull LevelReader world, @NotNull BlockPos pos) {
 		return super.canSurvive(state, world, pos) || world.getBlockState(pos.above()).getBlock() instanceof RopeLadderBlock;
 	}
 
 	@Override
-	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+	public void setPlacedBy(@NotNull Level world, BlockPos pos, @NotNull BlockState state, LivingEntity placer, @NotNull ItemStack itemStack) {
 		BlockPos.MutableBlockPos progress = pos.mutable();
 		// Variable to get more ladders from other parts of the inventory if the one in the hand runs out
 		int extraLaddersLocation = -1;
@@ -121,7 +122,7 @@ public class RopeLadderBlock extends LadderBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
 		ItemStack stackInHand = player.getItemInHand(hand);
 		if (stackInHand.getItem() == CampanionBlocks.ROPE_LADDER.asItem()) {
 			for (int i = 1; i < world.getHeight(); i++) {
@@ -144,7 +145,7 @@ public class RopeLadderBlock extends LadderBlock {
 	}
 
 	@Override
-	public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+	public void playerWillDestroy(@NotNull Level world, BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
 		BlockPos.MutableBlockPos progress = pos.mutable();
 		int count;
 		for (count = 0; count < pos.getY(); count++) {

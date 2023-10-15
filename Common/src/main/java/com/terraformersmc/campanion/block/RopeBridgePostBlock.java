@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -36,12 +37,12 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
 		return new RopeBridgePostBlockEntity(pos, state);
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public @NotNull InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
 		BlockEntity entity = world.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePostBlockEntity) {
 			RopeBridgePostBlockEntity be = (RopeBridgePostBlockEntity) entity;
@@ -78,7 +79,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 								//Check for obstructions
 								for (Pair<BlockPos, ?> pair : planks) {
 									BlockPos planksPos = pair.getLeft();
-									if (!world.getBlockState(planksPos).getMaterial().isReplaceable() && world.getBlockState(planksPos).getBlock() != CampanionBlocks.ROPE_BRIDGE_POST) {
+									if (!world.getBlockState(planksPos).canBeReplaced() && world.getBlockState(planksPos).getBlock() != CampanionBlocks.ROPE_BRIDGE_POST) {
 										player.displayClientMessage(Component.translatable("message.campanion.rope_bridge.obstructed", planksPos.getX(), planksPos.getY(), planksPos.getZ(), Component.translatable(world.getBlockState(planksPos).getBlock().getDescriptionId())), false);
 										return InteractionResult.PASS;
 									}
@@ -123,7 +124,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 	}
 
 	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+	public void onRemove(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull BlockState newState, boolean moved) {
 		BlockEntity entity = world.getBlockEntity(pos);
 		if (entity instanceof RopeBridgePostBlockEntity) {
 			for (BlockPos position : ((RopeBridgePostBlockEntity) entity).getLinkedPositions()) {
@@ -143,7 +144,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction facing, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+	public @NotNull BlockState updateShape(@NotNull BlockState state, @NotNull Direction facing, @NotNull BlockState neighborState, @NotNull LevelAccessor world, @NotNull BlockPos pos, @NotNull BlockPos neighborPos) {
 		if (facing == Direction.DOWN && !world.getBlockState(pos.below()).isFaceSturdy(world, pos, Direction.UP)) {
 			world.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 		}
@@ -151,7 +152,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+	public boolean canSurvive(@NotNull BlockState state, LevelReader world, BlockPos pos) {
 		return world.getBlockState(pos.below()).isFaceSturdy(world, pos, Direction.UP);
 	}
 
@@ -186,7 +187,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 				for (int j = 0; j < Math.min(RopeBridge.PLANKS_PER_ITEM - i, planks.size()); j++) {
 					if (!(be instanceof RopeBridgePlanksBlockEntity)) {
 						BlockState state = world.getBlockState(planksPos);
-						if (!state.getMaterial().isReplaceable()) {
+						if (!state.canBeReplaced()) {
 							player.displayClientMessage(Component.translatable("message.campanion.rope_bridge.obstructed", planksPos.getX(), planksPos.getY(), planksPos.getZ(), Component.translatable(world.getBlockState(planksPos).getBlock().getDescriptionId())), false);
 							return false;
 						}
@@ -194,8 +195,7 @@ public class RopeBridgePostBlock extends RopeBridgePlanksBlock {
 						be = world.getBlockEntity(planksPos);
 					}
 
-					if (be instanceof RopeBridgePlanksBlockEntity) {
-						RopeBridgePlanksBlockEntity planksBlockEntity = (RopeBridgePlanksBlockEntity) be;
+					if (be instanceof RopeBridgePlanksBlockEntity planksBlockEntity) {
 						RopeBridgePlank plank = planks.get(0);
 						planksBlockEntity.addPlank(plank);
 						planks.remove(plank);

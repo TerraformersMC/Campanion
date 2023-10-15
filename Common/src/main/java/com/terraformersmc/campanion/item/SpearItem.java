@@ -24,7 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -69,7 +69,7 @@ public class SpearItem extends TridentItem {
 	}
 
 	@Override
-	public boolean isValidRepairItem(ItemStack stack, ItemStack ingredient) {
+	public boolean isValidRepairItem(@NotNull ItemStack stack, @NotNull ItemStack ingredient) {
 		return this.material.getRepairIngredient().test(ingredient) || super.isValidRepairItem(stack, ingredient);
 	}
 
@@ -78,29 +78,29 @@ public class SpearItem extends TridentItem {
 	}
 
 	@Override
-	public boolean canAttackBlock(BlockState state, Level world, BlockPos pos, Player miner) {
+	public boolean canAttackBlock(@NotNull BlockState state, @NotNull Level world, @NotNull BlockPos pos, Player miner) {
 		return !miner.isCreative();
 	}
 
 	@Override
-	public float getDestroySpeed(ItemStack stack, BlockState state) {
+	public float getDestroySpeed(@NotNull ItemStack stack, BlockState state) {
 		Block block = state.getBlock();
 		if (block == Blocks.COBWEB) {
 			return 15.0F;
 		} else {
-			Material material = state.getMaterial();
+			Block material = state.getBlock();
 			return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && material != Material.MOSS && !state.is(BlockTags.LEAVES) && material != Material.VEGETABLE ? 1.0F : 1.5F;
 		}
 	}
 
 	@Override
-	public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+	public boolean hurtEnemy(ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
 		stack.hurtAndBreak(1, attacker, entity -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
 		return true;
 	}
 
 	@Override
-	public boolean mineBlock(ItemStack stack, Level world, BlockState state, BlockPos pos, LivingEntity miner) {
+	public boolean mineBlock(@NotNull ItemStack stack, @NotNull Level world, BlockState state, @NotNull BlockPos pos, @NotNull LivingEntity miner) {
 		if (state.getDestroySpeed(world, pos) != 0.0F) {
 			stack.hurtAndBreak(2, miner, entity -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
 		}
@@ -109,14 +109,13 @@ public class SpearItem extends TridentItem {
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
+	public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(@NotNull EquipmentSlot equipmentSlot) {
 		return equipmentSlot == EquipmentSlot.MAINHAND ? attributeModifiers : super.getDefaultAttributeModifiers(equipmentSlot);
 	}
 
 	@Override
-	public void releaseUsing(ItemStack stack, Level world, LivingEntity user, int remainingUseTicks) {
-		if (user instanceof Player) {
-			Player playerEntity = (Player) user;
+	public void releaseUsing(@NotNull ItemStack stack, @NotNull Level world, @NotNull LivingEntity user, int remainingUseTicks) {
+		if (user instanceof Player playerEntity) {
 			int i = this.getUseDuration(stack) - remainingUseTicks;
 			if (i >= 10) {
 				if (!world.isClientSide) {

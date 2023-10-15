@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class BackpackItem extends Item {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player user, @NotNull InteractionHand hand) {
 		ItemStack stackInHand = user.getItemInHand(hand);
 		EquipmentSlot equipmentSlot = Mob.getEquipmentSlotForItem(stackInHand);
 		ItemStack equippedStack = user.getItemBySlot(equipmentSlot);
@@ -55,11 +56,11 @@ public class BackpackItem extends Item {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+	public void appendHoverText(@NotNull ItemStack stack, @Nullable Level world, @NotNull List<Component> tooltip, @NotNull TooltipFlag context) {
 		LocalPlayer player = Minecraft.getInstance().player;
-		if(player != null && player.getItemBySlot(EquipmentSlot.CHEST) == stack) {
+		if (player != null && player.getItemBySlot(EquipmentSlot.CHEST) == stack) {
 			for (ItemStack itemStack : ((BackpackStorePlayer) player).getBackpackStacks()) {
-				if(!itemStack.isEmpty()) {
+				if (!itemStack.isEmpty()) {
 					tooltip.add(BACKPACK_HAS_ITEMS1);
 					tooltip.add(BACKPACK_HAS_ITEMS2);
 					break;
@@ -70,6 +71,7 @@ public class BackpackItem extends Item {
 	}
 
 	private static int MAX_SLOTS = 0;
+
 	public static int getMaxSlots() {
 		return MAX_SLOTS;
 	}

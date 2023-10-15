@@ -22,7 +22,7 @@ public interface BackpackStorePlayer {
 
 	default void syncChanges() {
 		Player player = (Player) this;
-		if(!player.level.isClientSide) {
+		if (!player.level().isClientSide) {
 			Services.NETWORK.sendToPlayer(new S2CSyncBackpackContents(this.getBackpackStacks()), (ServerPlayer) player);
 		}
 	}
@@ -34,7 +34,7 @@ public interface BackpackStorePlayer {
 		NonNullList<ItemStack> stacks = this.getBackpackStacks();
 
 		while (stacks.size() > newCapacity) {
-			Containers.dropItemStack(player.level, pos.getX(), pos.getY()+eyeHeight, pos.getZ(), stacks.remove(newCapacity));
+			Containers.dropItemStack(player.level(), pos.getX(), pos.getY() + eyeHeight, pos.getZ(), stacks.remove(newCapacity));
 		}
 
 		syncChanges();

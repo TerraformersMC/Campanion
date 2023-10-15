@@ -1,15 +1,14 @@
 package com.terraformersmc.campanion.sound;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.terraformersmc.campanion.Campanion.MOD_ID;
 
 public class CampanionSoundEvents {
-
 	private static final Map<ResourceLocation, SoundEvent> SOUNDS = new LinkedHashMap<>();
 
 	public static final SoundEvent HOWL = add("howl");
@@ -20,7 +19,8 @@ public class CampanionSoundEvents {
 
 	private static SoundEvent add(String id) {
 		ResourceLocation identifier = new ResourceLocation(MOD_ID, id);
-		SoundEvent event = new SoundEvent(identifier);
+		SoundEvent event = SoundEvent.createVariableRangeEvent(identifier);
+		//SoundEvent event = new SoundEvent(identifier);
 		SOUNDS.put(identifier, event);
 		return event;
 	}

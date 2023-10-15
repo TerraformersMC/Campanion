@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class BackpackContainerFactory implements MenuProvider {
@@ -21,12 +22,12 @@ public class BackpackContainerFactory implements MenuProvider {
 	}
 
 	@Override
-	public Component getDisplayName() {
+	public @NotNull Component getDisplayName() {
 		return Component.translatable("container.campanion." + this.type.name().toLowerCase());
 	}
 
 	@Override
-	public @Nullable AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
+	public @Nullable AbstractContainerMenu createMenu(int syncId, @NotNull Inventory inv, @NotNull Player player) {
 		BackpackStorePlayer storePlayer = (BackpackStorePlayer) player;
 		NonNullList<ItemStack> stacks = storePlayer.getBackpackStacks();
 		SimpleContainer inventory = new SimpleContainer(this.type.getSlots());

@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -27,7 +28,7 @@ public class TentPreviewImmediate extends MultiBufferSource.BufferSource {
 	}
 
 	@Override
-	public VertexConsumer getBuffer(RenderType type) {
+	public @NotNull VertexConsumer getBuffer(@NotNull RenderType type) {
 		//We always render as translucent, so might as well enforce it.
 		return super.getBuffer(RenderType.translucent());
 	}

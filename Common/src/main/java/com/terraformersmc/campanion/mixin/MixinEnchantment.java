@@ -14,14 +14,14 @@ public class MixinEnchantment {
 	@Inject(method = "canEnchant", at = @At("HEAD"), cancellable = true)
 	private void canEnchant(ItemStack stack, CallbackInfoReturnable<Boolean> info) {
 		//Note by default, all trident enchantments will be enabled.
-		if(stack.getItem() instanceof SpearItem) {
+		if (stack.getItem() instanceof SpearItem) {
 			//Non trident enchantments we want to have
 			if (((Object) this == Enchantments.PIERCING)) {
 				info.setReturnValue(true);
 			}
 
 			//Trident enchants we don't want to have
-			if((Object) this == Enchantments.LOYALTY || (Object) this == Enchantments.CHANNELING) {
+			if ((Object) this == Enchantments.LOYALTY || (Object) this == Enchantments.CHANNELING) {
 				info.setReturnValue(false);
 			}
 		}

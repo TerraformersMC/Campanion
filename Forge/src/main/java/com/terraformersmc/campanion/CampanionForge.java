@@ -1,8 +1,5 @@
 package com.terraformersmc.campanion;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.terraformersmc.campanion.block.CampanionBlocks;
 import com.terraformersmc.campanion.blockentity.CampanionBlockEntities;
 import com.terraformersmc.campanion.client.BridgePlanksUnbakedGeometry;
@@ -12,11 +9,9 @@ import com.terraformersmc.campanion.item.CampanionItems;
 import com.terraformersmc.campanion.recipe.CampanionRecipeSerializers;
 import com.terraformersmc.campanion.sound.CampanionSoundEvents;
 import com.terraformersmc.campanion.stat.CampanionStats;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.model.geometry.IGeometryLoader;
-import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;

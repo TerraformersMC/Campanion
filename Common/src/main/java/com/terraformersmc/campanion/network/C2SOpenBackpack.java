@@ -2,7 +2,6 @@ package com.terraformersmc.campanion.network;
 
 import com.terraformersmc.campanion.backpack.BackpackContainerFactory;
 import com.terraformersmc.campanion.item.BackpackItem;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;

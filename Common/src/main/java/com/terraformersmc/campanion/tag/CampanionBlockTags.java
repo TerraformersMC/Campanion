@@ -1,7 +1,7 @@
 package com.terraformersmc.campanion.tag;
 
 import com.terraformersmc.campanion.Campanion;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -15,7 +15,7 @@ public class CampanionBlockTags {
 	public static final TagKey<Block> TENT_POLES = get("tent_poles");
 
 	private static TagKey<Block> get(String id) {
-		return TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(Campanion.MOD_ID, id));
+		return TagKey.create(Registries.BLOCK, new ResourceLocation(Campanion.MOD_ID, id));
 	}
 
 	public static void load() {

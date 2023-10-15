@@ -2,6 +2,7 @@ package com.terraformersmc.campanion.stat;
 
 import com.terraformersmc.campanion.Campanion;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
@@ -12,7 +13,7 @@ public class CampanionStats {
 
 	private static ResourceLocation register(String id, StatFormatter formatter) {
 		ResourceLocation identifier = new ResourceLocation(Campanion.MOD_ID, id);
-		Registry.register(Registry.CUSTOM_STAT, id, identifier);
+		Registry.register(BuiltInRegistries.CUSTOM_STAT, id, identifier);
 		Stats.CUSTOM.get(identifier, formatter);
 		return identifier;
 	}

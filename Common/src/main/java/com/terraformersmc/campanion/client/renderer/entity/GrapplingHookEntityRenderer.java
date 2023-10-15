@@ -2,7 +2,7 @@ package com.terraformersmc.campanion.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.terraformersmc.campanion.Campanion;
 import com.terraformersmc.campanion.client.model.entity.GrapplingHookEntityModel;
 import com.terraformersmc.campanion.entity.GrapplingHookEntity;
@@ -20,6 +20,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEntity> {
 
@@ -32,14 +33,14 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 	}
 
 	@Override
-	public void render(GrapplingHookEntity entity, float yaw, float tickDelta, PoseStack stack, MultiBufferSource vertexConsumers, int light) {
+	public void render(GrapplingHookEntity entity, float yaw, float tickDelta, @NotNull PoseStack stack, @NotNull MultiBufferSource vertexConsumers, int light) {
 		Player player = entity.getPlayer();
 		if (player != null) {
 			stack.pushPose();
 
 			stack.pushPose();
-			stack.mulPose(Vector3f.YP.rotationDegrees(Mth.lerp(tickDelta, entity.yRotO, entity.getYRot()) - 90.0F));
-			stack.mulPose(Vector3f.ZP.rotationDegrees(Mth.lerp(tickDelta, entity.xRotO, entity.getXRot()) + 90.0F));
+			stack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(tickDelta, entity.yRotO, entity.getYRot()) - 90.0F));
+			stack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(tickDelta, entity.xRotO, entity.getXRot()) + 90.0F));
 			VertexConsumer vertexConsumer = ItemRenderer.getArmorFoilBuffer(vertexConsumers, model.renderType(this.getTextureLocation(entity)), false, false);
 			this.model.renderToBuffer(stack, vertexConsumer, light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 			stack.popPose();
@@ -55,14 +56,14 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 			float l = Mth.lerp(tickDelta, player.yBodyRotO, player.yBodyRot) * 0.017453292F;
 			double sinYaw = Mth.sin(l);
 			double cosYaw = Mth.cos(l);
-			double arm = (double)armOffset * 0.35D;
+			double arm = (double) armOffset * 0.35D;
 			double playerX;
 			double playerY;
 			double playerZ;
 			float playerEye;
 			if ((this.entityRenderDispatcher.options == null || this.entityRenderDispatcher.options.getCameraType().isFirstPerson()) && player == Minecraft.getInstance().player) {
 				double x = 960.0D / this.entityRenderDispatcher.options.fov().get();
-				Vec3 vec3d = this.entityRenderDispatcher.camera.getNearPlane().getPointOnPlane((float)armOffset * 0.525F, -0.1F);
+				Vec3 vec3d = this.entityRenderDispatcher.camera.getNearPlane().getPointOnPlane((float) armOffset * 0.525F, -0.1F);
 				vec3d = vec3d.scale(x);
 				vec3d = vec3d.yRot(k * 0.5F);
 				vec3d = vec3d.xRot(-k * 0.7F);
@@ -72,7 +73,7 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 				playerEye = player.getEyeHeight();
 			} else {
 				playerX = Mth.lerp(tickDelta, player.xo, player.getX()) - cosYaw * arm - sinYaw * 0.8D;
-				playerY = player.yo + player.getEyeHeight() + (player.getY() - player.yo) * (double)tickDelta - 0.45D;
+				playerY = player.yo + player.getEyeHeight() + (player.getY() - player.yo) * (double) tickDelta - 0.45D;
 				playerZ = Mth.lerp(tickDelta, player.zo, player.getZ()) - sinYaw * arm + cosYaw * 0.8D;
 				playerEye = player.isCrouching() ? -0.1875F : 0.0F;
 			}
@@ -113,7 +114,7 @@ public class GrapplingHookEntityRenderer extends EntityRenderer<GrapplingHookEnt
 
 
 	@Override
-	public ResourceLocation getTextureLocation(GrapplingHookEntity hook) {
+	public @NotNull ResourceLocation getTextureLocation(@NotNull GrapplingHookEntity hook) {
 		return TEXTURE;
 	}
 }

@@ -11,6 +11,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class MarshmallowOnAStickItem extends Item {
 
@@ -27,7 +28,7 @@ public class MarshmallowOnAStickItem extends Item {
 
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player user, @NotNull InteractionHand hand) {
 		if (!user.isCreative()) {
 			user.getItemInHand(hand).shrink(1);
 		}
@@ -37,7 +38,7 @@ public class MarshmallowOnAStickItem extends Item {
 	}
 
 	@Override
-	public InteractionResult useOn(UseOnContext context) {
+	public @NotNull InteractionResult useOn(UseOnContext context) {
 		BlockState state = context.getLevel().getBlockState(context.getClickedPos());
 		if (state.getBlock() instanceof CampfireBlock && state.getValue(CampfireBlock.LIT)) {
 			ItemStack stack = context.getItemInHand();

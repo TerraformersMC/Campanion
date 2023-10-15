@@ -22,13 +22,14 @@ public class FabricBlockModelPartCreator implements BlockModelPartCreator {
 
 		this.meshBuilder = renderer.meshBuilder();
 		this.emitter = this.meshBuilder.getEmitter();
-		this.material = renderer.materialFinder().blendMode(0, BlendMode.CUTOUT).find();
+		this.material = renderer.materialFinder().blendMode(BlendMode.CUTOUT).find();
+		//this.material = renderer.materialFinder().blendMode(0, BlendMode.CUTOUT).find();
 	}
 
 
 	@Override
 	public void beginQuad() {
-		if(this.buildingQuad) {
+		if (this.buildingQuad) {
 			throw new RuntimeException("Tried to begin builder twice");
 		}
 		this.currentVertex = 0;
@@ -44,7 +45,7 @@ public class FabricBlockModelPartCreator implements BlockModelPartCreator {
 
 	@Override
 	public BlockModelPartCreator uv(float u, float v) {
-		this.emitter.sprite(this.currentVertex, 0, u ,v);
+		this.emitter.sprite(this.currentVertex, 0, u, v);
 		return this;
 	}
 
@@ -63,17 +64,17 @@ public class FabricBlockModelPartCreator implements BlockModelPartCreator {
 	@Override
 	public void finishVertex() {
 		this.currentVertex++;
-		if(this.currentVertex > 4) {
+		if (this.currentVertex > 4) {
 			throw new RuntimeException("Tried finishing more than 4 vertices");
 		}
 	}
 
 	@Override
 	public void finishQuad() {
-		if(!this.buildingQuad) {
+		if (!this.buildingQuad) {
 			throw new RuntimeException("Tried to finish building without starting");
 		}
-		if(this.currentVertex != 4) {
+		if (this.currentVertex != 4) {
 			throw new RuntimeException("Tried to finish with " + this.currentVertex + " number of vertices");
 		}
 		this.buildingQuad = false;

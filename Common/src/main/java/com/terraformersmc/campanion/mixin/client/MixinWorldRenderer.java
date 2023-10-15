@@ -1,27 +1,22 @@
 package com.terraformersmc.campanion.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
 import com.terraformersmc.campanion.client.renderer.item.BuiltTentItemRenderer;
 import com.terraformersmc.campanion.client.util.TentPreviewImmediate;
 import com.terraformersmc.campanion.item.PlaceableTentItem;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderBuffers;
+import net.minecraft.client.renderer.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,7 +25,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
-import java.util.Random;
 
 @Mixin(LevelRenderer.class)
 public class MixinWorldRenderer {
@@ -68,7 +62,7 @@ public class MixinWorldRenderer {
 							for (BlockPos pos : list) {
 								matrices.pushPose();
 								matrices.translate(pos.getX() - placePos.getX(), pos.getY() - placePos.getY(), pos.getZ() - placePos.getZ());
-								if (this.minecraft.level.getBlockState(pos).getMaterial() == Material.AIR) {
+								if (this.minecraft.level.getBlockState(pos).getBlock() == Blocks.AIR) {
 									BlockState stone = Blocks.STONE.defaultBlockState();
 									Minecraft.getInstance().getBlockRenderer().renderBatched(stone, pos, this.minecraft.level, matrices, immediate.getBuffer(ItemBlockRenderTypes.getChunkRenderType(stone)), false, RandomSource.create());
 								} else {

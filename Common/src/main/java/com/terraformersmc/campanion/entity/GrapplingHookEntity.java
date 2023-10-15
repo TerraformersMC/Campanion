@@ -7,6 +7,7 @@ import com.terraformersmc.campanion.platform.services.OmniNetwork;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -21,6 +22,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 public class GrapplingHookEntity extends Entity {
 
@@ -63,12 +65,12 @@ public class GrapplingHookEntity extends Entity {
 	}
 
 	@Override
-	protected void readAdditionalSaveData(CompoundTag compoundTag) {
+	protected void readAdditionalSaveData(@NotNull CompoundTag compoundTag) {
 
 	}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundTag compoundTag) {
+	protected void addAdditionalSaveData(@NotNull CompoundTag compoundTag) {
 
 	}
 
@@ -87,8 +89,8 @@ public class GrapplingHookEntity extends Entity {
 
 		if (this.player == null) {
 			this.remove(RemovalReason.DISCARDED);
-		} else if (this.level.isClientSide || this.removeIfInvalid()) {
-			if (!this.level.isClientSide) {
+		} else if (this.level().isClientSide || this.removeIfInvalid()) {
+			if (!this.level().isClientSide) {
 				this.checkForCollision();
 			}
 			if (!this.entityData.get(IS_IN_BLOCK)) {
@@ -144,9 +146,9 @@ public class GrapplingHookEntity extends Entity {
 		boolean isHookedEntity = ((GrapplingHookUser) this.player).getGrapplingHook() == this;
 		double dist = this.distanceToSqr(this.player);
 		if (
-				this.player.isRemoved() || !this.player.isAlive() || !isHookedEntity
-						|| (!inMainHand && !inOffHand) || dist > 16384 ||
-						(this.entityData.get(IS_IN_BLOCK) && dist < 2)) {
+			this.player.isRemoved() || !this.player.isAlive() || !isHookedEntity
+				|| (!inMainHand && !inOffHand) || dist > 16384 ||
+				(this.entityData.get(IS_IN_BLOCK) && dist < 2)) {
 			this.remove(RemovalReason.DISCARDED);
 			return false;
 		} else {
@@ -155,7 +157,7 @@ public class GrapplingHookEntity extends Entity {
 	}
 
 	private void checkForCollision() {
-		HitResult hitResult = ProjectileUtil.getHitResult(this, entity -> false);
+		HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector(this, entity -> false);
 
 		if (hitResult.getType() == HitResult.Type.BLOCK && this.grappleTicks == -1) {
 			this.previousPlayerPos = this.player.position();
@@ -169,7 +171,7 @@ public class GrapplingHookEntity extends Entity {
 	}
 
 	@Override
-	public void remove(RemovalReason reason) {
+	public void remove(@NotNull RemovalReason reason) {
 		if (this.player != null) {
 			((GrapplingHookUser) this.player).setGrapplingHook(null);
 		}
@@ -182,7 +184,7 @@ public class GrapplingHookEntity extends Entity {
 			double dx = this.getX() - this.player.getX();
 			double dy = this.getY() - this.player.getY() + 1;
 			double dz = this.getZ() - this.player.getZ();
-			double xzDist = (double) Mth.sqrt((float) (dx * dx + dz * dz));
+			double xzDist = Mth.sqrt((float) (dx * dx + dz * dz));
 
 			double theta = Math.atan2(dy, xzDist);
 			double xzTheta = Math.atan2(dz, dx);
@@ -194,7 +196,7 @@ public class GrapplingHookEntity extends Entity {
 			boolean zCollide = false;
 
 			AABB box = this.player.getBoundingBox().expandTowards(movement.normalize().x, 0, movement.normalize().z);
-			for (VoxelShape shape : this.level.getBlockCollisions(this.player, box)) {
+			for (VoxelShape shape : this.level().getBlockCollisions(this.player, box)) {
 				xCollide |= box.contains(shape.max(Direction.Axis.X), box.minY, box.minZ) || box.contains(shape.max(Direction.Axis.X), box.minY, box.minZ);
 				zCollide |= box.contains(box.minX, box.minY, shape.min(Direction.Axis.Z)) || box.contains(box.minX, box.minY, shape.max(Direction.Axis.Z));
 			}
@@ -224,8 +226,8 @@ public class GrapplingHookEntity extends Entity {
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
-		return Services.NETWORK.toVanillaPacket(new S2CEntitySpawnGrapplingHookPacket(this), OmniNetwork.PacketType.PLAY_S2C);
+	public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
+		return (Packet<ClientGamePacketListener>) Services.NETWORK.toVanillaPacket(new S2CEntitySpawnGrapplingHookPacket(this), OmniNetwork.PacketType.PLAY_S2C);
 	}
 
 	public void setPlayer(Player player) {
