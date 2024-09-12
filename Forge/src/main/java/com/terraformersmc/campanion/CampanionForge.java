@@ -14,10 +14,12 @@ import com.terraformersmc.campanion.sound.CampanionSoundEvents;
 import com.terraformersmc.campanion.stat.CampanionStats;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.model.geometry.IGeometryLoader;
 import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -55,8 +57,8 @@ public class CampanionForge {
 			CampanionStats.loadClass();
 		});
 
-		CampanionForgeClient.registerEvents(modEventBus);
-		modEventBus.addListener((FMLClientSetupEvent event) -> CampanionForgeClient.init());
+
+		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> CampanionForgeClient::new);
 
 		modEventBus.addListener((ModelEvent.RegisterGeometryLoaders event) ->
 			event.register("bridge_planks", (IGeometryLoader<BridgePlanksUnbakedGeometry>) (jsonObject, deserializationContext) -> new BridgePlanksUnbakedGeometry())
