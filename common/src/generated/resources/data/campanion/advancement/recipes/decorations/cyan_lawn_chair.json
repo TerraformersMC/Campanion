@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cyan_carpet": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:cyan_carpet"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "campanion:cyan_lawn_chair"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cyan_carpet"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "campanion:cyan_lawn_chair"
+    ]
+  }
+}

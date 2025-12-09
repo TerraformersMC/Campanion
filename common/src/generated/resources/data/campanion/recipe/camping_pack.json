@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "P": {
+      "item": "campanion:leather_pouch"
+    },
+    "R": {
+      "item": "campanion:rope"
+    },
+    "T": {
+      "item": "campanion:tanned_leather_pouch"
+    }
+  },
+  "pattern": [
+    " I ",
+    "RTR",
+    " P "
+  ],
+  "result": {
+    "count": 1,
+    "id": "campanion:camping_pack"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "dyed_lawn_chair",
+  "ingredients": [
+    {
+      "tag": "campanion:lawn_chairs"
+    },
+    {
+      "item": "minecraft:lime_dye"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "campanion:lime_lawn_chair"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "skips": {
+      "conditions": {
+        "skips": {
+          "min": 6
+        }
+      },
+      "trigger": "campanion:killed_with_stone"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.campanion.adventure.kill_with_stone_after_skips.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "campanion:skipping_stone"
+    },
+    "title": {
+      "translate": "advancements.campanion.adventure.kill_with_stone_after_skips.title"
+    }
+  },
+  "requirements": [
+    [
+      "skips"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "lawn_chair",
+  "key": {
+    "C": {
+      "item": "minecraft:black_carpet"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "P  ",
+    "PCP",
+    "S S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "campanion:black_lawn_chair"
+  }
+}

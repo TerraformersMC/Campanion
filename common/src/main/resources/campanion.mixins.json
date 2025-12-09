@@ -1,0 +1,39 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.terraformersmc.campanion.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "AccessorBiomeAccess",
+    "AccessorCreativeModeTabs",
+    "AccessorStructureTemplate",
+    "InvokerCriteria",
+    "InvokerEntity",
+    "MixinEnchantment",
+    "MixinEnchantmentHelper",
+    "MixinEntity",
+    "MixinLivingEntity",
+    "MixinPlayerEntity",
+    "MixinPlayerInventory",
+    "MixinPlayerManager",
+    "MixinServerPlayerEntity",
+    "MixinWolfEntity"
+  ],
+  "client": [
+    "client.AccessorMultiBufferSourceBufferSource",
+    "client.MixinCamera",
+    "client.MixinCampfireSmokeParticle",
+    "client.MixinItemRenderer",
+    "client.MixinItemStack",
+    "client.MixinMinecraftClient",
+    "client.MixinPlayerEntityRenderer",
+    "client.MixinScreen",
+    "client.MixinWolfEntityClient",
+    "client.MixinWolfEntityModel",
+    "client.MixinWorldRenderer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "campanion.refmap.json"
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "campanion:proteins"
+    },
+    {
+      "tag": "campanion:fruits"
+    },
+    {
+      "tag": "campanion:grains"
+    },
+    {
+      "tag": "campanion:vegetables"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "campanion:mre"
+  }
+}

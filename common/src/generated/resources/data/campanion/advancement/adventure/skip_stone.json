@@ -1,0 +1,31 @@
+{
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "skips": {
+      "conditions": {
+        "count": {
+          "min": 6
+        }
+      },
+      "trigger": "campanion:stone_skips"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.campanion.adventure.skip_stone.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "campanion:skipping_stone"
+    },
+    "title": {
+      "translate": "advancements.campanion.adventure.skip_stone.title"
+    }
+  },
+  "requirements": [
+    [
+      "skips"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

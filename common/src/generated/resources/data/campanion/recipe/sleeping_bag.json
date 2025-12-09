@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "T": {
+      "item": "campanion:wool_tarp"
+    }
+  },
+  "pattern": [
+    "TT"
+  ],
+  "result": {
+    "count": 1,
+    "id": "campanion:sleeping_bag"
+  }
+}

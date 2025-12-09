@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": {
+      "item": "campanion:rope"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "RSR",
+    "RSR",
+    "RSR"
+  ],
+  "result": {
+    "count": 16,
+    "id": "campanion:rope_ladder"
+  }
+}

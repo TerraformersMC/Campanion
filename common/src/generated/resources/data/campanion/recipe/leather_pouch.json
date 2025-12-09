@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    "L L",
+    "SLS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "campanion:leather_pouch"
+  }
+}

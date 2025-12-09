@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_purple_carpet": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:purple_carpet"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "campanion:purple_lawn_chair"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_purple_carpet"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "campanion:purple_lawn_chair"
+    ]
+  }
+}

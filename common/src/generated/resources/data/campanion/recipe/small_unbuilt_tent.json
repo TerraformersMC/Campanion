@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "R": {
+      "item": "campanion:rope"
+    },
+    "S": {
+      "item": "campanion:wooden_rod"
+    },
+    "T": {
+      "item": "campanion:wool_tarp"
+    }
+  },
+  "pattern": [
+    " T ",
+    "TST",
+    "R R"
+  ],
+  "result": {
+    "count": 1,
+    "id": "campanion:small_unbuilt_tent"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:adventure/sleep_in_bed",
+  "criteria": {
+    "slept_in_sleeping_bag": {
+      "trigger": "campanion:slept_in_sleeping_bag"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.campanion.adventure.sleep_in_sleeping_bag.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "campanion:sleeping_bag"
+    },
+    "title": {
+      "translate": "advancements.campanion.adventure.sleep_in_sleeping_bag.title"
+    }
+  },
+  "requirements": [
+    [
+      "slept_in_sleeping_bag"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
